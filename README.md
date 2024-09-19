@@ -6,21 +6,21 @@ Lygma's Peer Assessment System is a simple and user-friendly app for students wo
 
 ## Features
 
-* Easy Peer Reviews: Students can rate teammates on a 7-point scale and leave optional comments, all anonymously.
-* Instructor Dashboard: Instructors can create teams, see how students are performing, and export results in a handy CSV file.
-* Score Sharing: After all reviews are in, students and instructors get an overview of scores and feedback, helping everyone improve.
-* Simple Login: Role-based access for students and instructors with secure logins.
+* __Easy Peer Reviews__: Students can rate teammates on a 7-point scale and leave optional comments, all anonymously.
+* __Instructor Dashboard__: Instructors can create teams, see how students are performing, and export results in a handy CSV file.
+* __Score Sharing__: After all reviews are in, students and instructors get an overview of scores and feedback, helping everyone improve.
+* __Simple Login__: Role-based access for students and instructors with secure logins.
 
 Lygma's PAS makes team evaluations easy and encourages fair feedback for everyone involved!
 
 
 ## Team Members
-* Daniel Ayasss: Front-end Developer, and UI/UX Designer
-* Kourosh Fadaei Naeini: Backend Developer
-* Yassine Hajou: Full Stack Developer, and UI/UX Designer
-* Luqman Hakim: Backend Developer, and Scrum Master
-* Ahmad Saadawi: Full Stack Developer, and Dev-Ops
-* Gabriel Shufelt: Lead Full Stack Developer, and Product Owner
+* __Daniel Ayasss__: Front-end Developer, and UI/UX Designer
+* __Kourosh Fadaei Naeini__: Backend Developer
+* __Yassine Hajou__: Full Stack Developer, and UI/UX Designer
+* __Luqman Hakim__: Backend Developer, and Scrum Master
+* __Ahmad Saadawi__: Full Stack Developer, and Dev-Ops
+* __Gabriel Shufelt__: Lead Full Stack Developer, and Product Owner
 
 ## Development
 # Windows
@@ -50,5 +50,9 @@ $ yarn --version
 ```
 gem install rails
 ```
-13. Make sure it was installed correctly by typing: `rails --version` in a new terminal. 
+13. Make sure it was installed correctly by typing: 
+```
+$ rails --version
+Rails 7.1.4
+``` 
                                                                                                                                                                                
