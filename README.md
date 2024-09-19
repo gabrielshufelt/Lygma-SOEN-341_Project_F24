@@ -23,7 +23,7 @@ Lygma's PAS makes team evaluations easy and encourages fair feedback for everyon
 * __Gabriel Shufelt__: Lead Full Stack Developer, and Product Owner
 
 ## Development
-# Windows
+### Windows Installation
 1. Install the latest version of Ruby with the DevKit from [here](https://rubyinstaller.org/downloads/).
 2. After installation is complete, make sure to check "Launch MSYS2"
 3. Once the terminal opens, install all components by pressing `Enter`.
@@ -55,4 +55,14 @@ gem install rails
 $ rails --version
 Rails 7.1.4
 ``` 
-                                                                                                                                                                               
+
+### Getting Started
+* If you are using VSCode, navigate to File > Open Workspace from File. Select `lygma.code-workspace` located in the root directory of the project.
+* Whenever you pull new changes from the repository, make sure to run `bundle install` (from your `source` folder). This will install any missing gems needed to run the application.
+* In order to always have the most recent version of the database, make sure to run:
+```
+db:reset    # drops database, re-creates it, and runs pending migrations
+db:seed     # populates the database with data defined in db/seeds.rb
+```
+* With all of these steps complete, you should be able to start your server by running `rails server` (from your `source` folder).
+                                                                                                                                     
