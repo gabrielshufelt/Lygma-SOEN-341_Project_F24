@@ -147,6 +147,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
+    ostruct (0.6.0)
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
@@ -251,6 +252,7 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
+  ostruct
   puma (>= 5.0)
   rails (~> 7.1.4)
   selenium-webdriver
