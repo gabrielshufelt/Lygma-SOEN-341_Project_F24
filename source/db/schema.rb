@@ -11,6 +11,30 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_09_22_022624) do
+  create_table "evaluations", force: :cascade do |t|
+    t.string "status", null: false
+    t.date "date_completed", null: false
+    t.integer "project_id", null: false
+    t.integer "student_id", null: false
+    t.float "cooperation_rating", null: false
+    t.float "conceptual_rating", null: false
+    t.float "practical_rating", null: false
+    t.float "work_ethic_rating", null: false
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.date "due_date"
+    t.integer "team_id"
+    t.integer "instructor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -31,13 +55,4 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_22_022624) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "projects", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.date "due_date"
-    t.integer "team_id"
-    t.integer "instructor_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 end
