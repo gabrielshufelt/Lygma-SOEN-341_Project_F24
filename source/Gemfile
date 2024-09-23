@@ -65,3 +65,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# Devise for User Authentication
+gem 'devise', '~> 4.9', '>= 4.9.4'
