@@ -10,7 +10,15 @@
 
 # just a model to test the seeds
 Evaluation.create!([
-    {status: "completed", date_completed: "2022-09-21", project_id: 1, student_id: 1, cooperation_rating: 4.0, conceptual_rating: 4.0, practical_rating: 4.0, work_ethic_rating: 4.0, comment: "Great job!"},
+    {
+      status: "completed", 
+      date_completed: "2022-09-21", 
+      project_id: 1, student_id: 1, 
+      cooperation_rating: 4.0, 
+      conceptual_rating: 4.0, 
+      practical_rating: 4.0, 
+      work_ethic_rating: 4.0, 
+      comment: "Great job!"}
 ])
 
 # Create Example Students
