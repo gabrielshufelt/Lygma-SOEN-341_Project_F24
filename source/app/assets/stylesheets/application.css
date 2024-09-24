@@ -65,10 +65,11 @@ p {
 .simple-form {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 35%;
   padding: 40px;
 
   .fields {
+    padding-top: 24px;
     display: flex;
     justify-content: space-between;
 
@@ -86,6 +87,7 @@ p {
   }
 
   .actions {
+    padding-top: 24px;
     display: flex;
     justify-content: center;
   }
@@ -103,12 +105,23 @@ p {
   .actions input:hover {
     background-color: var(--dark-red);
   }
+
+  .input-error {
+    border: 2px solid red;
+    box-shadow: none;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
 }
 
 .simple-form input,
 .simple-form select {
   padding: 16px;
-  margin-bottom: 16px;
   background-color: white;
   border: 1px solid var(--light-gray);
   border-radius: 16px;
