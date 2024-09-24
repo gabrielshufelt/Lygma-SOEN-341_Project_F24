@@ -14,4 +14,12 @@ Rails.application.routes.draw do
   root 'pages#home'
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Defines the root path route ("/")
+  # root "posts#index"
+
+  # Added custom routes cause I was trying to debug an error
+  get 'about', to: 'pages#about'
+  get 'contact', to: 'pages#contact'
+
 end

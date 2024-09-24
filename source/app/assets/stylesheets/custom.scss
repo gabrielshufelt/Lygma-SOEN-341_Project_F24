@@ -1,0 +1,8 @@
+.navbar .nav-link {
+    color: #000000 !important; // Black text
+}
+
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
