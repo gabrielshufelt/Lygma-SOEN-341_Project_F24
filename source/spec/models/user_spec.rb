@@ -29,7 +29,7 @@ RSpec.describe User, type: :model do
 
   it 'does not allow more than 6 users to belong to the same team' do
     team = Team.create!(name: "Team 1", instructor: instructor)  # Ensure the instructor is assigned properly
-    6.times {User.create!(role: "student", first_name: "Test", last_name: "User", email: Faker::Internet.email, password: "password", team: team) }
+    7.times {User.create!(role: "student", first_name: "Test", last_name: "User", email: Faker::Internet.email, password: "password", team: team) }
 
     new_student = User.new(role: "student", first_name: "Extra", last_name: "User", email: "extra@example.com", password: "password", team: team)
     team.valid?

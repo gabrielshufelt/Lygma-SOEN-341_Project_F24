@@ -10,7 +10,7 @@ class Team < ApplicationRecord
 
 
   def validate_team_size
-    if students.count >= 6
+    if students.count > 6
       errors.add(:team, "cannot have more than 6 students")
     end
   end
