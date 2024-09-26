@@ -7,6 +7,7 @@ class Team < ApplicationRecord
   has_many :students, class_name: "User", foreign_key: "team_id", dependent: :nullify
   belongs_to :instructor, class_name: "User", foreign_key: "instructor_id"
   has_many :projects, dependent: :destroy
+  has_many :evaluations, through: :students, source: :evaluations_as_evaluatee
 
 
   def validate_team_size
