@@ -14,6 +14,7 @@ instructor1 = User.find_or_create_by(email: "john@example.com") do |user|
   user.first_name = "John"
   user.last_name = "Daquavious"
   user.role = "instructor"
+  user.sex = 'male'
 end
 
 # Create Example Students
@@ -27,6 +28,7 @@ student1 = User.find_or_create_by(email: "alice@example.com") do |user|
   user.conceptual_rating = 4.2
   user.practical_rating = 6.9
   user.work_ethic_rating = 4.7
+  user.sex = 'male'
 end
 
 student2 = User.find_or_create_by(email: "bob@example.com") do |user|
@@ -39,6 +41,7 @@ student2 = User.find_or_create_by(email: "bob@example.com") do |user|
   user.conceptual_rating = 0.0
   user.practical_rating = 0.0
   user.work_ethic_rating = 0.0
+  user.sex = 'male'
 end
 
 student3 = User.find_or_create_by(email: "carol@example.com") do |user|
@@ -51,6 +54,7 @@ student3 = User.find_or_create_by(email: "carol@example.com") do |user|
   user.conceptual_rating = 6.5
   user.practical_rating = 5.1
   user.work_ethic_rating = 4.0
+  user.sex = 'male'
 end
 
 student4 = User.find_or_create_by(email: "dave@example.com") do |user|
@@ -63,6 +67,7 @@ student4 = User.find_or_create_by(email: "dave@example.com") do |user|
   user.conceptual_rating = 5.7
   user.practical_rating = 6.3
   user.work_ethic_rating = 4.8
+  user.sex = 'male'
 end
 
 student5 = User.find_or_create_by(email: "eve@example.com") do |user|
@@ -75,6 +80,7 @@ student5 = User.find_or_create_by(email: "eve@example.com") do |user|
   user.conceptual_rating = 7.0
   user.practical_rating = 6.0
   user.work_ethic_rating = 7.0
+  user.sex = 'male'
 end
 
 student6 = User.find_or_create_by(email: "frank@example.com") do |user|
@@ -87,6 +93,7 @@ student6 = User.find_or_create_by(email: "frank@example.com") do |user|
   user.conceptual_rating = 6.8
   user.practical_rating = 2.5
   user.work_ethic_rating = 6.6
+  user.sex = 'male'
 end
 
 team1 = Team.find_or_create_by(id: 1000) do |team|

@@ -40,6 +40,18 @@
         </div>
       </div>
 
+    <div class="fields">
+        <div class="full">
+          <%= f.label :sex %>
+          <%= f.select :sex, [["Male", "male"], ["Female", "female"], ["Other", "other"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:sex].any?}" %>
+          <% if resource.errors[:sex].any? %>
+            <div class="error-message">
+              <%= "Sex " + resource.errors[:sex].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
       <div class="fields">
         <div class="full">
           <%= f.label :email %>
