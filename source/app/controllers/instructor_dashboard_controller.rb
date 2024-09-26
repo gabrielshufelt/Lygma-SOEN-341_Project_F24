@@ -47,7 +47,6 @@ class InstructorDashboardController < ApplicationController
   end
 
   def average_rating(category)
-    @instructor.teams.joins(:evaluations).average("evaluations.#{category}_rating")
     @instructor.teams_as_instructor.joins(students: :evaluations_as_evaluatee).average("evaluations.#{category}_rating")
   end
 
