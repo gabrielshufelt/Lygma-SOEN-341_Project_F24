@@ -8,7 +8,6 @@ class InstructorDashboardController < ApplicationController
     @avg_overall_ratings = avg_overall_ratings
     @all_ratings = all_ratings
 
-    # Render the HTML dashboard view
     respond_to do |format|
       format.html { render :index} # This will render app/views/instructor_dashboard/index.html.erb
       format.json { render json: { num_of_teams: @num_of_teams, evaluations_completed: @evaluations_completed, evaluations_pending: @evaluations_pending, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
