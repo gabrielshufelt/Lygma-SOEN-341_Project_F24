@@ -2,24 +2,36 @@ class InstructorDashboardController < ApplicationController
   before_action :set_instructor, only: [:index, :teams, :results]
 
   def index
-    render json: {
-      num_of_teams: @instructor.teams_as_instructor.count,
-      evaluations_completed: evaluations_completed,
-      evaluations_pending: evaluations_pending,
-      avg_overall_ratings: avg_overall_ratings,
-      all_ratings: all_ratings
-    }
+    @num_of_teams = @instructor.teams_as_instructor.count
+    @evaluations_completed = evaluations_completed
+    @evaluations_pending = evaluations_pending
+    @avg_overall_ratings = avg_overall_ratings
+    @all_ratings = all_ratings
+
+    # Render the HTML dashboard view
+    respond_to do |format|
+      format.html { render :index} # This will render app/views/instructor_dashboard/index.html.erb
+      format.json { render json: { num_of_teams: @num_of_teams, evaluations_completed: @evaluations_completed, evaluations_pending: @evaluations_pending, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
+    end
   end
 
   def teams
     @teams = @instructor.teams_as_instructor
     @available_students = User.where(team: nil, role: "student")
-    render json: { teams: @teams, available_students: @available_students }
+    
+    respond_to do |format|
+      format.html {render :teams} # Render teams view
+      format.json { render json: { teams: @teams, available_students: @available_students } }
+    end
   end
 
   def results
     @results = Evaluation.joins(student: { team: :instructor }).where(status: 'completed')
-    render json: @results
+
+    respond_to do |format|
+      format.html {render :results} # Render results view
+      format.json { render json: @results }
+    end
   end
 
   private
