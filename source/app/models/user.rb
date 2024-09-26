@@ -6,8 +6,6 @@ class User < ApplicationRecord
 
   has_many :projects, foreign_key: "instructor_id", dependent: :destroy  # Instructor oversees multiple projects
   has_many :teams_as_instructor, class_name: "Team", foreign_key: "instructor_id", dependent: :nullify  # Instructor manages multiple teams
-  has_many :students, class_name: "User", foreign_key: "instructor_id", dependent: :nullify
-  has_many :evaluations_as_evaluatee, class_name: "Evaluation", foreign_key: "student_id", dependent: :destroy
 
   
   before_save :validate_role

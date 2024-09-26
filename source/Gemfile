@@ -74,6 +74,3 @@ end
 
 # Devise for User Authentication
 gem 'devise', '~> 4.9', '>= 4.9.4'
-
-# Use Sass to process CSS
-gem "sassc-rails"
