@@ -16,9 +16,23 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   # Validations
-  validates :first_name, :last_name, presence: true
+  validates :first_name, :last_name, :sex, presence: true
   validates :role, inclusion: ["student", "instructor"], presence: true
   validate :validate_role
+
+  def honorifics
+    case sex
+    when 'male'
+      'Mr.'
+    when 'female'
+      'Ms.'
+    when 'other'
+      'Mx.'
+    else
+      '' 
+    end
+  end
+
 
   def student?
     role == "student"
