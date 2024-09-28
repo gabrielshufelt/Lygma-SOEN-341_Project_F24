@@ -1,5 +1,7 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: [:index, :teams, :results]
+  before_action :set_instructor, only: [:index, :teams, :results]  
+  before_action :authenticate_user!
+  before_action :ensure_instructor_role
 
   def index
     @num_of_teams = @instructor.teams_as_instructor.count
@@ -34,6 +36,13 @@ class InstructorDashboardController < ApplicationController
   end
 
   private
+
+  def ensure_instructor_role
+    unless current_user.instructor?
+      flash[:alert] = "Access denied. Instructors only."
+      redirect_to root_path # Or another appropriate path
+    end
+  end
 
   def set_instructor
     @instructor = current_user if current_user.instructor?
