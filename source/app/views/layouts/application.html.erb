@@ -14,7 +14,11 @@
   </head>
 
   <body>
-    <%= render 'layouts/home-navbar', selected: @selected %>
+    <% if user_signed_in? %>
+      <!-- Placeholder for the dashboard navbar -->
+    <% else %>
+      <%= render 'layouts/home-navbar', selected: @selected %>
+    <% end %>
     <div class="content">
       <%= yield %>
     </div>
