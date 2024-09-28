@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Source</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Real Ratings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
     <%= javascript_importmap_tags %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="<%= asset_path('logo2.png') %>" type="image/png">
   </head>
 
   <body>
-    <%= yield %>
+    <% if user_signed_in? %>
+      <!-- Placeholder for the dashboard navbar -->
+    <% else %>
+      <%= render 'layouts/home-navbar', selected: @selected %>
+    <% end %>
+    <div class="content">
+      <%= yield %>
+    </div>
+    <%= render 'layouts/footer' %>
   </body>
 </html>

@@ -1,0 +1,174 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+ @import "bootstrap";
+
+ :root {
+     --red: #BD2611;
+     --dark-red: #992111;
+     --light-red: #f1e8e8;
+     --light-gray: #ccc;
+ }
+ 
+ body,
+ html {
+     height: 100%;
+     margin: 0;
+     font-family: "Montserrat", sans-serif;
+ }
+ 
+ body {
+     display: flex;
+     flex-direction: column;
+ }
+ 
+ h1 {
+     font-size: 3rem;
+     margin-top: 0.33em;
+     margin-bottom: 0.33em;
+ }
+ 
+ p {
+     margin-top: 0.5em;
+     margin-bottom: 0.5em;
+ }
+ 
+ .containers {
+     &.registrations,
+     &.sessions {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100%;
+         background-image: url('home-sign-up.jpg');
+         background-repeat: no-repeat;
+         background-size: cover;
+     }
+ }
+ 
+ .title {
+     padding: 40px;
+ }
+ 
+ .gradient-filter {
+     height: 100%;
+     width: 100%;
+     background-image: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.5) 100%);
+ }
+ 
+ .simple-form {
+     display: flex;
+     flex-direction: column;
+     width: 35%;
+     padding: 40px;
+ 
+     .fields {
+         padding-top: 24px;
+         display: flex;
+         justify-content: space-between;
+ 
+         .full {
+             display: flex;
+             flex-direction: column;
+             width: 100%;
+         }
+ 
+         .half {
+             display: flex;
+             flex-direction: column;
+             width: 48%;
+         }
+     }
+ 
+     .actions {
+         padding-top: 24px;
+         display: flex;
+         justify-content: center;
+     }
+ 
+     .actions input {
+         padding: 16px 32px 16px 32px;
+         background-color: var(--red);
+         border: none;
+         border-radius: 24px;
+         color: white;
+         font-weight: 600;
+         cursor: pointer;
+     }
+ 
+     .actions input:hover {
+         background-color: var(--dark-red);
+     }
+ 
+     .input-error {
+         border: 2px solid red;
+         box-shadow: none;
+     }
+ 
+     .error-message {
+         color: red;
+         font-size: 0.9rem;
+         margin-top: 5px;
+     }
+ }
+ 
+ .simple-form input,
+ .simple-form select {
+     padding: 16px;
+     background-color: white;
+     border: 1px solid var(--light-gray);
+     border-radius: 16px;
+     font-size: 1em;
+ }
+ 
+ .simple-form input::placeholder {
+     color: #b5b5b5;
+     font-style: italic;
+ }
+ 
+ .field_with_errors {
+     display: inline;
+     margin: 0;
+     padding: 0;
+     border: none;
+ }
+ 
+ .field_with_errors input,
+ .field_with_errors select,
+ .field_with_errors textarea {
+     width: 100%;
+     box-sizing: border-box;
+ }
+ 
+ .content {
+     flex: 1;
+ }
+ 
+ footer {
+     background-color: #343a40;
+     color: white;
+     padding: 1rem 0;
+ }
+ 
+ 
+ .navbar .nav-link {
+     color: #000000 !important; // Black text
+ }
+ 
+ .nav-link.active {
+     font-weight: bold;
+     text-decoration: underline;
+ }
