@@ -2,12 +2,46 @@
 	<div class="gradient-filter">
 		<header class="title teams">
 			<h1>Teams</h1>
-			<div class="button primary">
-				<i class="fa-solid fa-plus"></i>&nbsp
-				<%= link_to "Create a new team", new_team_path %>
-			</div>
 		</header>
 		<section class="instructor-dashboard-teams">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Team Name</th>
+            <th>Course</th>
+            <th>Members</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @teams.each do |team| %>
+            <tr>
+              <td><%= team.name %></td>
+              <td><%= team.course_name %></td>
+              <td>
+                <% if team.students.count > 0 %>
+                  <% team.students.each_with_index do |s, index| %>
+                    <%= s.first_name + ' ' + s.last_name %><%= ', ' unless index == team.students.size - 1 %>
+                  <% end %>
+                <% else %>
+                  No members.
+                <% end %>
+              </td>
+              <td>
+                <%= link_to edit_team_path(team) do %>
+                  <i class="fa-solid fa-pen-to-square"></i>
+                <% end %>
+                <%= link_to team_path(team), method: :delete, data: { turbo_method: :delete } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= button_to new_team_path, class: "button primary", method: :get do %>
+        <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+      <% end %>
 		</section>
 	</div>
 </div>

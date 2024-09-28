@@ -1,6 +1,6 @@
 class Team < ApplicationRecord
   # Validations
-  validates :name, :instructor_id, presence: true
+  validates :name, :instructor_id, :course_name, presence: true
   validate :validate_team_size
 
   # Associations

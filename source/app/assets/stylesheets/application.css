@@ -55,6 +55,7 @@ p {
   &.sessions {
     background-image: url('home-sign-up.jpg');
   }
+
   &.hall-building {
     background-image: url('hall-building.jpg');
   }
@@ -166,28 +167,82 @@ p {
   justify-content: center;
   align-items: center;
   max-height: 32px;
+  padding: 16px;
+  background-color: var(--dark-red);
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  max-width: 200px;
+  text-decoration: none;
+}
 
-  a {
-    text-decoration: none;
+.button.primary {
+  background-color: var(--dark-red);
+  color: white;
+}
+
+.button.primary:hover {
+  background-color: var(--darker-red);
+}
+
+.button:focus {
+  outline: none;
+}
+
+
+.table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  background-color: white;
+}
+
+.table thead tr {
+  background-color: white;
+  color: white;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+
+  &.bold {
+    font-weight: bold;
   }
+}
 
-  &.primary {
-    padding: 16px;
-    background-color: var(--dark-red);
-    border: none;
-    border-radius: 24px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
+.table tbody tr {
+  border-bottom: #ddd;
+}
 
-    a {
-      color: white;
-    }
+.table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table tbody tr:hover {
+  background-color: #e8d7d3;
+}
+
+.table tbody tr:last-of-type {
+  border-bottom: 2px solid var(--dark-red);
+}
+
+.table th {
+  background-color: var(--dark-red);
+  color: white;
+
+  &.corner-icon {
+    text-align: right;
   }
+}
 
-  &.primary:hover {
-    background-color: var(--darker-red);
-  }
+.table td {
+  color: var(--dark-gray);
 }
 
 .instructor-dashboard {
@@ -203,7 +258,7 @@ p {
     justify-content: space-between;
     align-items: center;
 
-    > div {
+    >div {
       flex: 1;
       text-align: center;
       margin-right: 10px;
@@ -212,7 +267,7 @@ p {
       border-radius: 25px;
     }
 
-    > div:last-child {
+    >div:last-child {
       margin-right: 0;
     }
 
@@ -236,4 +291,8 @@ p {
     color: white;
     height: 500px;
   }
+}
+
+.instructor-dashboard-teams {
+  padding: 40px;
 }

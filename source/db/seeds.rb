@@ -98,6 +98,7 @@ end
 
 team1 = Team.find_or_create_by(id: 1000) do |team|
   team.name = "Real Ratings"
+  team.course_name = "SOEN 341 - Software Process"
   team.instructor_id = instructor1.id
 end
 
