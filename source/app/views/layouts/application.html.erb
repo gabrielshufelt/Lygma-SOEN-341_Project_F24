@@ -14,6 +14,11 @@
   </head>
 
   <body>
+    <% if user_signed_in? %>
+      <%= render 'instructor/navbar' %>
+    <% else %>
+    <% end %>
     <%= yield %>
+  
   </body>
 </html>
