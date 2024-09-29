@@ -15,13 +15,15 @@
   </head>
 
   <body>
-    <% if user_signed_in? %>
-      <!-- Placeholder for the dashboard navbar -->
-    <% else %>
-      <%= render 'layouts/home-navbar', selected: @selected %>
-    <% end %>
-    <div class="content">
-      <%= yield %>
+    <div class="<%= user_signed_in? ? 'signed-in' : 'not-signed-in' %>">
+      <% if user_signed_in? %>
+        <%= render '/instructor_dashboard/navbar' %>
+      <% else %>
+        <%= render 'layouts/home-navbar', selected: @selected %>
+      <% end %>
+      <div class="content">
+        <%= yield %>
+      </div>
     </div>
     <%= render 'layouts/footer' %>
   </body>
