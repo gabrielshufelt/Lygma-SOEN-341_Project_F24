@@ -18,11 +18,6 @@ Rails.application.routes.draw do
   get 'instructor/teams', to: 'instructor_dashboard#teams'
   get 'instructor/results', to: 'instructor_dashboard#results'
   get 'instructor/settings', to: 'instructor_dashboard#settings'
-
-  # Defines the root path route ("/")
-  # root "posts#index"
-
-  # Added custom routes cause I was trying to debug an error
   get 'about', to: 'pages#about'
   get 'contact', to: 'pages#contact'
 
