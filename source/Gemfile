@@ -84,3 +84,6 @@ gem 'devise', '~> 4.9', '>= 4.9.4'
 
 # Use Sass to process CSS
 gem "sassc-rails"
+
+# Font Awesome for custom icons
+gem "font-awesome-sass"

@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   root 'pages#home'
 
   get "up" => "rails/health#show", as: :rails_health_check
+  get 'instructor', to: 'instructor_dashboard#index'
+  get 'instructor/teams', to: 'instructor_dashboard#teams'
+  get 'instructor/results', to: 'instructor_dashboard#results'
+  get 'instructor/settings', to: 'instructor_dashboard#settings'
 
   # Defines the root path route ("/")
   # root "posts#index"
