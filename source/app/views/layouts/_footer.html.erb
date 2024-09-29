@@ -1,0 +1,16 @@
+<!-- Footer renders only copy right stuff if logged in, and if not it renders the whole thing, we could develop on this later on -->
+<% if user_signed_in? %>
+  <!-- Simple Footer for Signed-In Users -->
+  <footer class="bg-dark text-white text-center py-2">
+    <div class="container">
+      <p class="mb-0 small">© 2024 Real Ratings Inc.</p>
+    </div>
+  </footer>
+<% else %>
+  <!-- Simplified Footer for Signed-Out Users -->
+  <footer class="bg-dark text-white text-center py-2">
+    <div class="container">
+      <p class="small mt-2 mb-2">© 2024 Real Ratings Inc.</p>
+    </div>
+  </footer>
+<% end %>

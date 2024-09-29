@@ -1,4 +1,4 @@
-<div class="container registrations">
+<div class="containers registrations">
   <div class="gradient-filter">
     <div class="title">
       <h1>Create a new account.</h1>
@@ -35,6 +35,18 @@
           <% if resource.errors[:role].any? %>
             <div class="error-message">
               <%= "Role " + resource.errors[:role].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    <div class="fields">
+        <div class="full">
+          <%= f.label :sex %>
+          <%= f.select :sex, [["Male", "male"], ["Female", "female"], ["Other", "other"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:sex].any?}" %>
+          <% if resource.errors[:sex].any? %>
+            <div class="error-message">
+              <%= "Sex " + resource.errors[:sex].first %>
             </div>
           <% end %>
         </div>
