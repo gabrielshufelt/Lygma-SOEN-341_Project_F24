@@ -4,23 +4,23 @@
     </div>
     <div class="nav-signedin-options">
         <%= link_to instructor_path , class: "nav-signedin-link #{'active' if current_page?(instructor_path)}" do %>
-            <%= image_tag 'dashboard_icon.png', alt: 'Dashboard Icon' , size: '16x16' , class:"navbar-signedin-icon" %> Dashboard
+            <i class="fa-solid fa-bars"></i> Dashboard
         <% end %>
 
         <%= link_to instructor_teams_path , class: "nav-signedin-link #{'active' if current_page?(instructor_teams_path)}" do %>
-            <%= image_tag 'teams_icon.png', alt: 'Dashboard Icon' , size: '16x16' , class:"navbar-signedin-icon" %> Teams
+            <i class="fa-solid fa-users"></i> Teams
         <% end %>
 
         <%= link_to instructor_results_path , class: "nav-signedin-link #{'active' if current_page?(instructor_results_path)}" do %>
-            <%= image_tag 'results_icon.png', alt: 'Dashboard Icon' , size: '16x16' , class:"navbar-signedin-icon" %> Results
+            <i class="fa-solid fa-chart-simple"></i> Results
         <% end %>
         
         <%= link_to instructor_settings_path , class: "nav-signedin-link #{'active' if current_page?(instructor_settings_path)}" do %>
-            <%= image_tag 'settings_icon.png', alt: 'Dashboard Icon' , size: '16x16' , class:"navbar-signedin-icon" %> Settings
+            <i class="fa-solid fa-gear"></i> Settings
         <% end %>
         
         <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete } , class: "nav-signedin-link" do %>
-            <%= image_tag 'signout_icon.png', alt: 'Sign Out Icon' , size: '16x16' , class:"navbar-signedin-icon" %> Sign Out
+            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
         <% end %>
     </div>
 </div>
