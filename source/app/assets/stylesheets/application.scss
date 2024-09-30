@@ -27,6 +27,8 @@ html {
     height: 100%;
     margin: 0;
     font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
@@ -175,6 +177,7 @@ p {
 }
 
 .content {
+    min-height: 100vh;
     flex-grow: 1;
 
     &.dashboard {
