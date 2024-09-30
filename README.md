@@ -1,7 +1,7 @@
-# Lygma-SOEN-341_Project_F24
+# Real-Ratings-SOEN-341_Project_F24
 ## Description
 
-Lygma's Peer Assessment System is a simple and user-friendly app for students working on team projects. It lets students anonymously rate their teammates based on crtierias like cooperation, contributions, and work ethic, giving everyone a chance to provide honest feedback.
+Real Ratings' Peer Assessment System is a simple and user-friendly app for students working on team projects. It lets students anonymously rate their teammates based on crtierias like cooperation, contributions, and work ethic, giving everyone a chance to provide honest feedback.
 
 
 ## Features
@@ -11,7 +11,7 @@ Lygma's Peer Assessment System is a simple and user-friendly app for students wo
 * __Score Sharing__: After all reviews are in, students and instructors get an overview of scores and feedback, helping everyone improve.
 * __Simple Login__: Role-based access for students and instructors with secure logins.
 
-Lygma's PAS makes team evaluations easy and encourages fair feedback for everyone involved!
+Real Ratings' PAS makes team evaluations easy and encourages fair feedback for everyone involved!
 
 
 ## Team Members
