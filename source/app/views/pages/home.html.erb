@@ -1,6 +1,19 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
-
-<% if user_signed_in? %>
-  <%= link_to 'Log Out', destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: 'btn btn-dark ms-2' %>
-<% end %>
+<div class="container mt4">
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <%= image_tag 'home-page-guy.png', class: 'd-block mx-lg-auto img-fluid', alt: 'Home Page Guy', width: 700, height: 500, loading: 'lazy' %>
+    </div>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold lh-1 mb-3" style="font-size: 5rem">Real Ratings</h1>
+      <p class="lead">
+        Real Rating's Peer Assessment System is a user-friendly app that lets students anonymously rate their teammates on cooperation, contributions, and work ethic, fostering honest and constructive feedback in team projects.
+      </p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <%= link_to new_user_registration_path, class: "button primary" do %>
+          Get Started &nbsp
+          <i class="fa-solid fa-arrow-right"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
