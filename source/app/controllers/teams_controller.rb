@@ -21,7 +21,7 @@ class TeamsController < ApplicationController
 
   # POST /teams or /teams.json
   def create
-    @team = Team.new(team_params)
+    @team = Team.new(team_params.merge(instructor_id: current_user.id))
 
     respond_to do |format|
       if @team.save
@@ -65,6 +65,6 @@ class TeamsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def team_params
-      params.require(:team).permit(:name, :course_name, :instructor_id)
+      params.require(:team).permit(:name, :course_name)
     end
 end

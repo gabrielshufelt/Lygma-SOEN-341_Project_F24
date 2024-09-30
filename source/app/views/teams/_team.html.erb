@@ -1,17 +1,28 @@
-<div id="<%= dom_id team %>">
-  <p>
-    <strong>Name:</strong>
-    <%= team.name %>
-  </p>
-
-  <p>
-    <strong>Course name:</strong>
-    <%= team.course_name %>
-  </p>
-
-  <p>
-    <strong>Instructor:</strong>
-    <%= team.instructor_id %>
-  </p>
-
-</div>
+<section class="instructor-dashboard-teams">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Members</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= team.course_name %></td>
+        <td>
+          <% if team.students.count > 0 %>
+            <% team.students.each_with_index do |s, index| %>
+              <%= s.first_name + ' ' + s.last_name %><%= ", " unless index == team.students.count - 1 %>
+            <% end %>
+          <% else %>
+            No members.
+          <% end %>
+        </td>
+        <td>
+          <div class="button primary">Edit Members</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

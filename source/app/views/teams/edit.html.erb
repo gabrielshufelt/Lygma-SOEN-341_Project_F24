@@ -1,10 +1,9 @@
-<p style="color: green"><%= notice %></p>
-<div class="container registrations">
+<div class="containers registrations">
   <div class="gradient-filter">
     <div class="title">
     <h1>Edit team</h1>
     </div>
+    <%= render "team", team: @team %>
     <%= render "form", team: @team %>
-    <%= link_to "Back to teams", teams_path %>
   </div>
 </div>
