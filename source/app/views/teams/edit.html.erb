@@ -1,7 +1,7 @@
-<div class="containers registrations">
+<div class="containers registrations" data-controller="team-members" data-team-id="<%= @team.id %>">
   <div class="gradient-filter">
     <div class="title">
-    <h1>Edit team</h1>
+      <h1>Edit team</h1>
     </div>
     <%= render "team", team: @team %>
     <%= render "form", team: @team %>

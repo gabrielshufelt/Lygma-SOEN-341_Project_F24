@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: %i[ show edit update destroy ]
+  before_action :set_team, only: %i[show edit update destroy add_member remove_member search_members]
 
   # GET /teams or /teams.json
   def index
@@ -57,14 +57,45 @@ class TeamsController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_team
-      @team = Team.find(params[:id])
+  # POST /teams/:id/add_member
+  def add_member
+    user = User.find(params[:user_id])
+    if user.team_id != @team.id
+      user.update!(team_id: @team.id)
+      render json: @team.students, status: :ok
+    else
+      render json: { message: 'User is already a member of this team.' }, status: :unprocessable_entity
     end
+  end
+  
 
-    # Only allow a list of trusted parameters through.
-    def team_params
-      params.require(:team).permit(:name, :course_name)
+  # DELETE /teams/:id/remove_member
+  def remove_member
+    user = User.find(params[:user_id])
+    user.update(team_id: nil)
+    respond_to do |format|
+      format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
+      format.json { render json: @team.students, status: :ok }
     end
+  end
+
+  # GET /teams/:id/search_members
+  def search_members
+    @users = User.where("first_name LIKE ? OR last_name LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
+                 .where.not(id: @team.students.pluck(:id))
+                 .order(:first_name)
+    render json: @users
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_team
+    @team = Team.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def team_params
+    params.require(:team).permit(:name, :course_name)
+  end
 end

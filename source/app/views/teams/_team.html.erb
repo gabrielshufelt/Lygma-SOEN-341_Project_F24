@@ -20,9 +20,24 @@
           <% end %>
         </td>
         <td>
-          <div class="button primary">Edit Members</div>
+          <div class="button primary" id="show-add-member-section" data-action="click->team-members#showAddMemberSection">Edit Members</div>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div id="add-member-section" style="display: none;">
+    <input type="text" id="search-input" data-team-members-target="searchInput" data-action="input->team-members#search" placeholder="Search for members...">
+    <select id="search-results" data-team-members-target="searchResults"></select>
+    <button id="add-member-button" data-team-members-target="addMemberButton" data-action="team-members#addMember" disabled>Add Member</button>
+  </div>
+
+  <ul id="team-members-list" data-team-members-target="teamMembersList">
+    <% team.students.each do |s| %>
+      <li>
+        <%= s.first_name + ' ' + s.last_name %>
+        <button data-action="team-members#removeMember" data-user-id="<%= s.id %>">Remove</button>
+      </li>
+    <% end %>
+  </ul>
 </section>

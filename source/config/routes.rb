@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
-  resources :teams
+
+  # updated resources here
+  resources :teams do
+    member do
+      post 'add_member'
+      delete 'remove_member'
+      get 'search_members'
+    end
+  end
+
 
   devise_for :users, controllers: { registrations: "users/registrations" }
 
