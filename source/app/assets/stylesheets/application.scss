@@ -325,6 +325,16 @@ footer {
     outline: none;
 }
 
+.button.secondary {
+    background-color: transparent;
+    color: var(--dark-red);
+    border: 1px solid var(--dark-red);
+}
+
+.button.secondary:hover {
+    color: var(--darker-red);
+}
+
 .table {
     border-collapse: collapse;
     margin: 25px 0;
