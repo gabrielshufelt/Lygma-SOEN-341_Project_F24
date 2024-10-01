@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # updated resources here
   resources :teams do
     member do
-      post 'add_member'
+      patch 'add_member'
       delete 'remove_member'
       get 'search_members'
     end

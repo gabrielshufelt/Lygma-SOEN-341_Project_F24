@@ -1,9 +1,18 @@
-<div class="containers registrations" data-controller="team-members" data-team-id="<%= @team.id %>">
+<div class="containers hall-building" data-controller="team-members" data-team-id="<%= @team.id %>">
   <div class="gradient-filter">
     <div class="title">
       <h1>Edit team</h1>
     </div>
-    <%= render "team", team: @team %>
-    <%= render "form", team: @team %>
+    <div style="display: flex; flex-direction: row">
+      <div style="width: 50%">
+        <%= render "form", team: @team %>
+      </div>
+      <div style="width: 50%">
+        <%= turbo_frame_tag 'edit_members_form' do %>
+          <%= render 'edit_members_form', available_students: @available_students %>
+        <% end %>
+      </div>
+    </div>
+
   </div>
 </div>

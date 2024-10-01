@@ -98,6 +98,10 @@ p {
     width: 35%;
     padding: 40px;
 
+    &.full {
+        width: 100%;
+    }
+
     .fields {
         padding-top: 24px;
         display: flex;

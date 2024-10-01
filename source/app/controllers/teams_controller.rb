@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: %i[show edit update destroy add_member remove_member search_members]
+  before_action :set_team, only: %i[show edit update destroy add_member remove_member]
 
   # GET /teams or /teams.json
   def index
@@ -17,6 +17,9 @@ class TeamsController < ApplicationController
 
   # GET /teams/1/edit
   def edit
+    @team = Team.find(params[:id])
+    @team_members = @team.students
+    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
   end
 
   # POST /teams or /teams.json
@@ -38,7 +41,7 @@ class TeamsController < ApplicationController
   def update
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to @team, notice: "Team was successfully updated." }
+        format.html { redirect_to instructor_teams_path, notice: "Team was successfully updated." }
         format.json { render :show, status: :ok, location: @team }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -57,34 +60,52 @@ class TeamsController < ApplicationController
     end
   end
 
-  # POST /teams/:id/add_member
+  # PATCH /teams/:id/add_member
   def add_member
-    user = User.find(params[:user_id])
-    if user.team_id != @team.id
-      user.update!(team_id: @team.id)
-      render json: @team.students, status: :ok
+    @team = Team.find(params[:id])
+    @user = User.find(params[:user_id])
+    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+  
+    if @team.has_space
+      @user.update(team_id: @team.id)
+      @team_members = @team.students
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
+            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
+          ]
+        end
+        format.html { redirect_to edit_team_path(@team), notice: 'Team member added successfully.' }
+        format.json { render json: @team.students, status: :ok }
+      end
     else
-      render json: { message: 'User is already a member of this team.' }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: user.errors, status: :unprocessable_entity }
+      end
     end
   end
   
 
   # DELETE /teams/:id/remove_member
   def remove_member
+    @team = Team.find(params[:id])
     user = User.find(params[:user_id])
     user.update(team_id: nil)
+    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+    @team_members = @team.students
+
     respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
+          turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
+        ]
+      end
       format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
       format.json { render json: @team.students, status: :ok }
     end
-  end
-
-  # GET /teams/:id/search_members
-  def search_members
-    @users = User.where("first_name LIKE ? OR last_name LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
-                 .where.not(id: @team.students.pluck(:id))
-                 .order(:first_name)
-    render json: @users
   end
 
   private
