@@ -10,6 +10,7 @@
             <th>Team Name</th>
             <th>Course</th>
             <th>Members</th>
+            <th>Capacity</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -26,6 +27,11 @@
                 <% else %>
                   No members.
                 <% end %>
+              </td>
+              <td>
+                <span style="<%= 'color: var(--red)' unless team.has_space %>">
+                  <%= team.students.count %>/6
+                </span>
               </td>
               <td>
                 <%= link_to edit_team_path(team) do %>

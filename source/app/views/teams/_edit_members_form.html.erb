@@ -22,10 +22,16 @@
     </table>
   </turbo-frame>
   <div id="search-team-member">
-    <%= form_with url: add_member_team_path(@team), method: :patch, remote: true do %>
-      <%= label_tag :user_id, 'Search for Student:' %>
-      <%= render "available_students"%>
-      <%= button_to "Add", add_member_team_path(@team), method: :patch, data: { turbo_stream: true }, class: "button primary" %>
+    <%= form_with url: add_member_team_path(@team), method: :patch, remote: true, class: "simple-form full" do %>
+      <div class="fields">
+        <div class="full">
+          <%= label_tag :user_id, 'Search for Student:' %>
+          <%= render "available_students"%>
+        </div>
+      </div>
+      <div class="actions">
+        <%= button_to "Add Student", add_member_team_path(@team), method: :patch, data: { turbo_stream: true }, class: "button primary" %>
+      </div>
     <% end %>
   </div>
 </section>

@@ -127,7 +127,7 @@ p {
 
         input {
             padding: 16px 32px;
-            background-color: var(--red);
+            background-color: var(--dark-red);
             border: none;
             border-radius: 24px;
             color: white;
@@ -136,7 +136,7 @@ p {
         }
 
         input:hover {
-            background-color: var(--dark-red);
+            background-color: var(--darker-red);
         }
     }
 
