@@ -40,7 +40,7 @@ class InstructorDashboardController < ApplicationController
   def ensure_instructor_role
     unless current_user.instructor?
       flash[:alert] = "Access denied. Instructors only."
-      redirect_to root_path
+      redirect_to root_path # Or another appropriate path
     end
   end
 
