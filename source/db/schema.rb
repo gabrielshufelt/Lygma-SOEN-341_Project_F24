@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema[7.1].define(version: 2024_09_26_231449) do
   create_table "evaluations", force: :cascade do |t|
-    t.string "status", default: "pending", null: false
+    t.string "status", null: false
     t.date "date_completed", null: false
     t.integer "project_id", null: false
     t.integer "student_id", null: false

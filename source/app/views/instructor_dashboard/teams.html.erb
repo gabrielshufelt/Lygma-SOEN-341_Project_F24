@@ -1,15 +1,16 @@
 <div class="containers hall-building">
-	<div class="gradient-filter">
-		<header class="title teams">
-			<h1>Teams</h1>
-		</header>
-		<section class="instructor-dashboard-teams">
+  <div class="gradient-filter">
+    <header class="title teams">
+      <h1>Teams</h1>
+    </header>
+    <section class="instructor-dashboard-teams">
       <table class="table">
         <thead>
           <tr>
             <th>Team Name</th>
             <th>Course</th>
             <th>Members</th>
+            <th>Capacity</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -28,6 +29,11 @@
                 <% end %>
               </td>
               <td>
+                <span style="<%= 'color: var(--red)' unless team.has_space %>">
+                  <%= team.students.count %>/6
+                </span>
+              </td>
+              <td>
                 <%= link_to edit_team_path(team) do %>
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
@@ -42,6 +48,6 @@
       <%= button_to new_team_path, class: "button primary", method: :get do %>
         <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
       <% end %>
-		</section>
-	</div>
+    </section>
+  </div>
 </div>

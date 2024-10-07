@@ -27,6 +27,8 @@ html {
     height: 100%;
     margin: 0;
     font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
@@ -96,6 +98,10 @@ p {
     width: 35%;
     padding: 40px;
 
+    &.full {
+        width: 100%;
+    }
+
     .fields {
         padding-top: 24px;
         display: flex;
@@ -121,7 +127,7 @@ p {
 
         input {
             padding: 16px 32px;
-            background-color: var(--red);
+            background-color: var(--dark-red);
             border: none;
             border-radius: 24px;
             color: white;
@@ -130,7 +136,7 @@ p {
         }
 
         input:hover {
-            background-color: var(--dark-red);
+            background-color: var(--darker-red);
         }
     }
 
@@ -175,6 +181,7 @@ p {
 }
 
 .content {
+    min-height: 100vh;
     flex-grow: 1;
 
     &.dashboard {

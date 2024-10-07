@@ -15,4 +15,8 @@ class Team < ApplicationRecord
       errors.add(:team, "cannot have more than 6 students")
     end
   end
+
+  def has_space
+    students.count < 6
+  end
 end
