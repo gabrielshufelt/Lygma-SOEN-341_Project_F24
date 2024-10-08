@@ -1,0 +1,51 @@
+<section class="instructor-dashboard-teams">
+  <turbo-frame id="team-members">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Members</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @team.students.each do |student| %>
+          <tr>
+            <td><%= student.first_name + ' ' + student.last_name %></td>
+            <td>
+              <%= link_to remove_member_team_path(@team, user_id: student.id), method: :delete, data: { turbo_method: :delete } do %>
+                <i class="fa-solid fa-trash"></i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </turbo-frame>
+  <div id="search-team-member">
+    <%= form_with url: add_member_team_path(@team), method: :patch, remote: true, class: "simple-form full" do %>
+      <div class="fields">
+        <div class="full">
+          <%= label_tag :user_id, 'Search for Student:' %>
+          <%= render "available_students"%>
+        </div>
+      </div>
+      <div class="actions">
+        <%= button_to "Add Student", add_member_team_path(@team), method: :patch, data: { turbo_stream: true }, class: "button primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+<script>
+  document.addEventListener("turbo:load", function() {
+    const dropdown = document.querySelector('.search-dropdown');
+    const button = document.querySelector('#add-team-member-button');
+
+    dropdown.addEventListener('change', function() {
+      if (dropdown.value) {
+        button.disabled = false;
+      } else {
+        button.disabled = true;
+      }
+    });
+  });
+</script>

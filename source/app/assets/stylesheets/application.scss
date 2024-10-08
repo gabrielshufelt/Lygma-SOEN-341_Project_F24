@@ -1,0 +1,448 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap";
+
+:root {
+    --red: #BD2611;
+    --dark-red: #992111;
+    --darker-red: #771a0d;
+    --light-red: #f1e8e8;
+    --light-gray: #ccc;
+    --lighter-gray: #eaeaea;
+    --light-green: #00bc35;
+    --dark-gray: #333;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 3rem;
+    margin-top: 0.33em;
+    margin-bottom: 0.33em;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.containers {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    &.flex {
+        display: flex;
+    }
+
+    &.registrations,
+    &.sessions {
+        background-image: url('home-sign-up.jpg');
+    }
+
+    &.hall-building {
+        background-image: url('hall-building.jpg');
+        background-position: center;
+    }
+}
+
+.title {
+    padding: 40px;
+}
+
+.gradient-filter {
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.5) 100%);
+}
+
+.simple-form {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    padding: 40px;
+
+    &.full {
+        width: 100%;
+    }
+
+    .fields {
+        padding-top: 24px;
+        display: flex;
+        justify-content: space-between;
+
+        .full {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .half {
+            display: flex;
+            flex-direction: column;
+            width: 48%;
+        }
+    }
+
+    .actions {
+        padding-top: 24px;
+        display: flex;
+        justify-content: center;
+
+        input {
+            padding: 16px 32px;
+            background-color: var(--dark-red);
+            border: none;
+            border-radius: 24px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        input:hover {
+            background-color: var(--darker-red);
+        }
+    }
+
+    .input-error {
+        border: 2px solid red;
+        box-shadow: none;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+}
+
+.simple-form input,
+.simple-form select {
+    padding: 16px;
+    background-color: white;
+    border: 1px solid var(--light-gray);
+    border-radius: 16px;
+    font-size: 1em;
+}
+
+.simple-form input::placeholder {
+    color: #b5b5b5;
+    font-style: italic;
+}
+
+.field_with_errors {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: none;
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.content {
+    min-height: 100vh;
+    flex-grow: 1;
+
+    &.dashboard {
+        background-color: #F5F7FA;
+    }
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem 0;
+}
+
+.navbar .nav-link {
+    color: #000000 !important;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.signed-in {
+    display: flex;
+    flex-direction: row;
+}
+
+.not-signed-in {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-signedin {
+    background-color: var(--red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+    width: 20vw;
+    min-width: 225px;
+}
+
+.nav-signedin-logo {
+    margin: 12px;
+    background-color: white;
+    padding: 0px;
+    border-radius: 10px;
+}
+
+.nav-signedin-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-signedin-link {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    align-items: center;
+}
+
+.nav-signedin-link:hover {
+    background-color: var(--dark-red);
+    border-radius: 10px;
+}
+
+.nav-signedin-link.active {
+    width: 100vf;
+    background-color: var(--dark-red);
+    border-radius: 10px;
+}
+
+.nav-signedin-logo {
+    vertical-align: middle;
+
+}
+
+.alert {
+    position: relative;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1.5;
+    border: 1px solid transparent;
+    display: flex;
+    justify-content: space-between;
+}
+
+.alert-info,
+.alert-notice {
+    color: #0c600c;
+    background-color: #d1f1de;
+    border-color: #beebc8;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-error,
+.alert-alert {
+    color: #850f04;
+    background-color: #ffcecd;
+    border-color: #ffc3ba;
+}
+
+.dismiss-alert:hover {
+    cursor: pointer;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background-color: var(--dark-red);
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    max-width: 250px;
+    text-decoration: none;
+}
+
+.button.primary {
+    background-color: var(--dark-red);
+    color: white;
+}
+
+.button.primary:hover {
+    background-color: var(--darker-red);
+}
+
+.button:focus {
+    outline: none;
+}
+
+.button.secondary {
+    background-color: transparent;
+    color: var(--dark-red);
+    border: 1px solid var(--dark-red);
+}
+
+.button.secondary:hover {
+    color: var(--darker-red);
+}
+
+.table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.table thead tr {
+    background-color: white;
+    color: white;
+    text-align: left;
+}
+
+.table th,
+.table td {
+    padding: 12px 15px;
+
+    &.bold {
+        font-weight: bold;
+    }
+}
+
+.table tbody {
+    vertical-align: middle;
+}
+
+.table tbody tr {
+    border-bottom: #ddd;
+}
+
+.table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.table tbody tr:hover {
+    background-color: #e8d7d3;
+}
+
+.table tbody tr:last-of-type {
+    border-bottom: 2px solid var(--dark-red);
+}
+
+.table th {
+    background-color: var(--dark-red);
+    color: white;
+}
+
+.table td {
+    color: var(--dark-gray);
+}
+
+.instructor-dashboard {
+    .stats {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        >div {
+            flex: 1;
+            text-align: center;
+            margin-right: 10px;
+            color: white;
+            padding: 20px;
+            border-radius: 25px;
+        }
+
+        >div:last-child {
+            margin-right: 0;
+        }
+
+        .total-teams {
+            background-color: var(--dark-gray);
+        }
+
+        .evaluations-completed {
+            background-color: var(--light-green);
+        }
+
+        .evaluations-pending {
+            background-color: var(--red);
+        }
+    }
+
+    .teams-progression-chart {
+        margin-top: 20px;
+        background-color: white;
+        border-radius: 25px;
+        color: white;
+        height: 450px;
+    }
+}
+
+.instructor-dashboard-teams {
+    padding: 40px;
+}

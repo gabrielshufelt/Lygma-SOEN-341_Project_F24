@@ -1,5 +1,7 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: [:index, :teams, :results]
+  before_action :set_instructor, only: [:index, :teams, :results]  
+  before_action :authenticate_user!
+  before_action :ensure_instructor_role
 
   def index
     @num_of_teams = @instructor.teams_as_instructor.count
@@ -8,7 +10,6 @@ class InstructorDashboardController < ApplicationController
     @avg_overall_ratings = avg_overall_ratings
     @all_ratings = all_ratings
 
-    # Render the HTML dashboard view
     respond_to do |format|
       format.html { render :index} # This will render app/views/instructor_dashboard/index.html.erb
       format.json { render json: { num_of_teams: @num_of_teams, evaluations_completed: @evaluations_completed, evaluations_pending: @evaluations_pending, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
@@ -35,6 +36,13 @@ class InstructorDashboardController < ApplicationController
   end
 
   private
+
+  def ensure_instructor_role
+    unless current_user.instructor?
+      flash[:alert] = "Access denied. Instructors only."
+      redirect_to root_path # Or another appropriate path
+    end
+  end
 
   def set_instructor
     @instructor = current_user if current_user.instructor?

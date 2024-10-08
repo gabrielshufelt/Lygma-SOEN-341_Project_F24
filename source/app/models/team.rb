@@ -1,6 +1,6 @@
 class Team < ApplicationRecord
   # Validations
-  validates :name, :instructor_id, presence: true
+  validates :name, :instructor_id, :course_name, presence: true
   validate :validate_team_size
 
   # Associations
@@ -14,5 +14,9 @@ class Team < ApplicationRecord
     if students.count > 6
       errors.add(:team, "cannot have more than 6 students")
     end
+  end
+
+  def has_space
+    students.count < 6
   end
 end
