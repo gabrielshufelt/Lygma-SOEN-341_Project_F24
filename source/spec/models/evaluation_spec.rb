@@ -2,10 +2,10 @@ require 'rails_helper'
 require 'faker'
 
 RSpec.describe Evaluation, type: :model do
-  let(:student) { User.create!(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password") }
+  let(:student) { User.create!(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password", sex: "female") }
   let(:project) { Project.create!(title: "Project 1", due_date: Date.today, team: team, instructor: instructor) }
-  let(:team) { Team.create!(name: "Team 1", instructor: instructor) }
-  let(:instructor) { User.create!(role: "instructor", first_name: "John", last_name: "Doe", email: "instructor@example.com", password: "password") }
+  let(:team) { Team.create!(name: "Team 1", instructor: instructor, course_name: "SOEN 341") }
+  let(:instructor) { User.create!(role: "instructor", first_name: "John", last_name: "Doe", email: "instructor@example.com", password: "password", sex: "male") }
 
   # Test for presence validation
   it 'is invalid without all necessary fields' do
