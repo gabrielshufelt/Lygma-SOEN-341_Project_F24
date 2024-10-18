@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Course, type: :model do
-  let(:course) { Course.new(title: "Software Process", code: "SOEN 341") }
+  let (:instructor) { User.create!(first_name: "John", last_name: "Daquavious", role: "instructor", sex: 'male', email: "john.daquavious@example.com", password: "password") }
+  let(:course) { Course.new(title: "Software Process", code: "SOEN 341", instructor_id: instructor.id) }
 
   it "is valid with all attributes" do
     expect(course).to be_valid
@@ -27,5 +28,9 @@ RSpec.describe Course, type: :model do
     duplicate_course = Course.new(title: "Software Engineering", code: "SOEN 341")
     expect(duplicate_course).to_not be_valid
     expect(duplicate_course.errors[:code]).to include("has already been taken")
+  end
+
+  it "is associated to a unique instructor" do
+    expect(course.instructor.first_name).to eq("John") 
   end
 end
