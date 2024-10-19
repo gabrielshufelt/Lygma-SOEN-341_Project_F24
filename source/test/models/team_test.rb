@@ -8,8 +8,8 @@ class TeamTest < ActiveSupport::TestCase
     @instructor = User.create!(name: "Instructor", email: "instructor@example.com")
     @team = Team.new(
       name: "Team Alpha",
-      instructor_id: @instructor.id,
-      course_name: "SOEN 341"
+      description: "We are so alpha",
+      project_id: 1
     )
   end
 
@@ -24,10 +24,10 @@ class TeamTest < ActiveSupport::TestCase
     assert_not @team.valid?, "Team should be invalid without a name"
   end
 
-  # Test that the team is invalid without an instructor_id
-  test "should be invalid without an instructor_id" do
-    @team.instructor_id = nil
-    assert_not @team.valid?, "Team should be invalid without an instructor_id"
+  # Test that the team is invalid without a project_id
+  test "should be invalid without a project_id" do
+    @team.project_id = nil
+    assert_not @team.valid?, "Team should be invalid without a project_id"
   end
 
   # Test that the team is invalid without a course_name

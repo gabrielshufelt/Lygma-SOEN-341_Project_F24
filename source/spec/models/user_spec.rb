@@ -17,23 +17,31 @@ RSpec.describe User, type: :model do
     expect(user.errors[:sex]).to include("can't be blank")
   end
 
-p
-  it 'does not allow an instructor to have a team or ratings' do
-    instructor.team_id = 1
+  it 'does not allow an instructor to ratings' do
     instructor.cooperation_rating = 5
     instructor.valid? # Ensure validation is called
-    expect(instructor.errors[:team_id]).to include("Must be nil for instructors")
     expect(instructor.errors[:base]).to include("Instructors cannot have ratings")
   end
 
+  describe "instructor" do
+    it "can teach one or many courses" do
+      course = Course.find_or_initialize_by(code: "SOEN 341")
+      course.update!(title: "Software Process", instructor_id: instructor.id)
+      expect(instructor.courses_taught.count).to eq(1)
+    end
+  end
 
-
-  it 'does not allow more than 6 users to belong to the same team' do
-    team = Team.create!(name: "Team 1", instructor: instructor, course_name: "SOEN 341")  # Ensure the instructor is assigned properly
-    7.times {User.create!(role: "student", first_name: "Test", last_name: "User", email: Faker::Internet.email, password: "password", team: team, sex: "other") }
-
-    new_student = User.new(role: "student", first_name: "Extra", last_name: "User", email: "extra@example.com", password: "password", team: team, sex: "other")
-    team.valid?
-    expect(team.errors[:team]).to include("cannot have more than 6 students")
+  describe "student" do
+    it "can have many classes" do
+      course1 = Course.find_or_initialize_by(code: "SOEN 341")
+      course1.update!(title: "Software Process", instructor_id: instructor.id)
+      course2 = Course.find_or_initialize_by(code: "ENGR 371")
+      course2.update!(title: "Probability and Statistics", instructor_id: instructor.id)
+      course3 = Course.find_or_initialize_by(code: "COMP 352")
+      course3.update!(title: "Data Structures and Algorithms", instructor_id: instructor.id)
+      student.courses << [course1, course2, course3]
+      student.save!
+      expect(student.courses.count).to eq(3)
+    end
   end
 end

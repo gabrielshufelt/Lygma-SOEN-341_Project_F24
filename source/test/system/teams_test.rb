@@ -15,7 +15,7 @@ class TeamsTest < ApplicationSystemTestCase
     click_on "New team"
 
     fill_in "Course name", with: @team.course_name
-    fill_in "Instructor", with: @team.instructor_id
+    fill_in "Project", with: @team.project_id
     fill_in "Name", with: @team.name
     click_on "Create Team"
 
@@ -28,7 +28,7 @@ class TeamsTest < ApplicationSystemTestCase
     click_on "Edit this team", match: :first
 
     fill_in "Course name", with: @team.course_name
-    fill_in "Instructor", with: @team.instructor_id
+    fill_in "Project", with: @team.project_id
     fill_in "Name", with: @team.name
     click_on "Update Team"
 

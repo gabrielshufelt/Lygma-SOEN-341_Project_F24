@@ -4,7 +4,7 @@ class InstructorDashboardController < ApplicationController
   before_action :ensure_instructor_role
 
   def index
-    @num_of_teams = @instructor.teams_as_instructor.count
+    @num_of_teams = @instructor.teams.count
     @evaluations_completed = evaluations_completed
     @evaluations_pending = evaluations_pending
     @avg_overall_ratings = avg_overall_ratings
@@ -17,7 +17,7 @@ class InstructorDashboardController < ApplicationController
   end
 
   def teams
-    @teams = @instructor.teams_as_instructor
+    @teams = @instructor.teams
     @available_students = User.where(team: nil, role: "student")
     
     respond_to do |format|
@@ -49,11 +49,11 @@ class InstructorDashboardController < ApplicationController
   end
 
   def evaluations_completed
-    @instructor.teams_as_instructor.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'completed' }).count
+    @instructor.teams.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'completed' }).count
   end
 
   def evaluations_pending
-    @instructor.teams_as_instructor.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'pending' }).count
+    @instructor.teams.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'pending' }).count
   end
 
   def avg_overall_ratings
@@ -67,12 +67,12 @@ class InstructorDashboardController < ApplicationController
   end
 
   def average_rating(category)
-    @instructor.teams_as_instructor.joins(students: :evaluations_as_evaluatee).average("evaluations.#{category}_rating")
+    @instructor.teams.joins(students: :evaluations_as_evaluatee).average("evaluations.#{category}_rating")
   end
 
   def all_ratings
     teams_ratings = {}
-    @instructor.teams_as_instructor.each do |team|
+    @instructor.teams.each do |team|
       teams_ratings[team.name] = {
         ratings: {
           conceptual_rating: team.evaluations.average(:conceptual_rating),

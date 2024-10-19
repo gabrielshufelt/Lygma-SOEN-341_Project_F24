@@ -15,7 +15,6 @@ student1.update!(
   first_name: "Alice",
   last_name: "Johnson",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 4.5,
   conceptual_rating: 4.2,
   practical_rating: 6.9,
@@ -29,7 +28,6 @@ student2.update!(
   first_name: "Bob",
   last_name: "Smith",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 0.0,
   conceptual_rating: 0.0,
   practical_rating: 0.0,
@@ -43,7 +41,6 @@ student3.update!(
   first_name: "Carol",
   last_name: "Anderson",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 6.8,
   conceptual_rating: 6.5,
   practical_rating: 5.1,
@@ -57,7 +54,6 @@ student4.update!(
   first_name: "Dave",
   last_name: "Williams",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 4.9,
   conceptual_rating: 5.7,
   practical_rating: 6.3,
@@ -71,7 +67,6 @@ student5.update!(
   first_name: "Eve",
   last_name: "Taylor",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 7.0,
   conceptual_rating: 7.0,
   practical_rating: 6.0,
@@ -86,7 +81,6 @@ student6.update!(
   first_name: "Frank",
   last_name: "Brown",
   role: "student",
-  team_id: 1000,
   cooperation_rating: 4.0,
   conceptual_rating: 6.8,
   practical_rating: 2.5,
@@ -94,30 +88,56 @@ student6.update!(
   sex: 'male'
 )
 
-team1 = Team.find_or_initialize_by(id: 1000)
-team1.update!(
-  name: "Real Ratings",
-  course_name: "SOEN 341 - Software Process",
+course1 = Course.find_or_initialize_by(code: "SOEN 341")
+course1.update!(
+  title: "Software Process",
   instructor_id: instructor1.id
 )
+
+course2 = Course.find_or_initialize_by(code: "ENGR 371")
+course2.update!(
+  title: "Probability and Statistics",
+  instructor_id: instructor1.id
+)
+
+course3 = Course.find_or_initialize_by(code: "COMP 352")
+course3.update!(
+  title: "Data Structures and Algorithms",
+  instructor_id: instructor1.id
+)
+
+# Students enrolling in courses
+course1.students << [student1, student2, student5, student6]
+course2.students << [student2, student4, student6]
+course3.students << [student1, student2, student3, student4, student5, student6]
 
 project1 = Project.find_or_initialize_by(id: 1)
 project1.update!(
   title: "Sprint 1",
-  team_id: team1.id,
   due_date: Date.new(2024, 9, 29),
-  instructor_id: instructor1.id
+  course_id: course1.id
 )
 
-evaluation1 = Evaluation.find_or_initialize_by(student_id: student1.id)
+team1 = Team.find_or_initialize_by(id: 1000)
+team1.update!(
+  name: "Real Ratings",
+  description: "Providing Real Ratings for Real People",
+  project_id: project1.id
+)
+
+evaluation1 = Evaluation.find_or_initialize_by(evaluator_id: student1.id)
 evaluation1.update!(
   status: "completed", 
   date_completed: "2022-09-21", 
   project_id: project1.id,
-  student_id: student1.id,
+  evaluator_id: student1.id,
+  evaluatee_id: student2.id,
+  team_id: team1.id,
   cooperation_rating: 4.0, 
   conceptual_rating: 4.0, 
   practical_rating: 4.0, 
   work_ethic_rating: 4.0, 
   comment: "Great job!"
 )
+
+team1.students << [student1, student2, student3]

@@ -1,22 +1,34 @@
 class Team < ApplicationRecord
   # Validations
-  validates :name, :instructor_id, :course_name, presence: true
-  validate :validate_team_size
+  validates :name, :project_id, presence: true
 
   # Associations
-  has_many :students, class_name: "User", foreign_key: "team_id", dependent: :nullify
-  belongs_to :instructor, class_name: "User", foreign_key: "instructor_id"
-  has_many :projects, dependent: :destroy
-  has_many :evaluations, through: :students, source: :evaluations_as_evaluatee
+  belongs_to :project
 
+  has_many :team_memberships, dependent: :destroy
+  has_many :students, through: :team_memberships, source: :user
+  
+  has_many :evaluations, through: :students, source: :evaluations_as_evaluatee, dependent: :destroy
 
-  def validate_team_size
-    if students.count > 6
+  def add_student(student)
+    if students.size < 6
+      students << student
+    else
       errors.add(:team, "cannot have more than 6 students")
+      false
+    end
+  end
+
+  def remove_student(student)
+    if students.exists?(student.id)
+      students.delete(student)
+    else
+      errors.add(:team, "student is not part of this team")
+      false
     end
   end
 
   def has_space
-    students.count < 6
+    students.size < 6
   end
 end

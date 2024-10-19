@@ -4,12 +4,10 @@ one:
   title: MyString
   description: MyText
   due_date: 2024-09-21
-  team_id: 1
-  instructor_id: 1
+  course_id: 1
 
 two:
   title: MyString
   description: MyText
   due_date: 2024-09-21
-  team_id: 1
-  instructor_id: 1
+  course_id: 1

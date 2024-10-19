@@ -19,12 +19,13 @@ class TeamsController < ApplicationController
   def edit
     @team = Team.find(params[:id])
     @team_members = @team.students
-    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+    # refactor to include students with no teams
+    @available_students = User.where(role: "student").order(:first_name)
   end
 
   # POST /teams or /teams.json
   def create
-    @team = Team.new(team_params.merge(instructor_id: current_user.id))
+    @team = Team.new
 
     respond_to do |format|
       if @team.save
@@ -64,10 +65,12 @@ class TeamsController < ApplicationController
   def add_member
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
-    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+    # refactor to include students with no teas
+    @available_students = User.where(role: "student").order(:first_name)
   
     if @team.has_space
-      @user.update(team_id: @team.id)
+      # REFACTOR!!
+      # @user.update(team_id: @team.id)
       @team_members = @team.students
       respond_to do |format|
         format.turbo_stream do
@@ -92,8 +95,9 @@ class TeamsController < ApplicationController
   def remove_member
     @team = Team.find(params[:id])
     user = User.find(params[:user_id])
-    user.update(team_id: nil)
-    @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+    # Refactor
+    # user.update(team_id: nil)
+    # @available_students = User.where(role: "student", team_id: nil).order(:first_name)
     @team_members = @team.students
 
     respond_to do |format|
