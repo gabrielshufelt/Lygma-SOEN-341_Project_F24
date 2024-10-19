@@ -26,11 +26,6 @@ class Evaluation < ApplicationRecord
         end
     end
 
-    # Helper method to check if the evaluation is completed
-    def completed?
-        status == 'completed'
-    end
-
     private
 
     # Automatically set status and date based on ratings
