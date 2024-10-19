@@ -1,6 +1,6 @@
 class Project < ApplicationRecord
   # Validations
-  validates :title, :due_date, presence: true
+  validates :title, :due_date, :course_id, presence: true
 
   # Associations
   belongs_to :course

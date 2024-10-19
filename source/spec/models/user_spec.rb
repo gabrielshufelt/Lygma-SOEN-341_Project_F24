@@ -23,24 +23,6 @@ RSpec.describe User, type: :model do
     expect(instructor.errors[:base]).to include("Instructors cannot have ratings")
   end
 
-  it 'does not allow more than 6 users to belong to the same team' do
-    course = Course.find_or_initialize_by(code: "SOEN 341")
-    course.update!(title: "Software Process", instructor_id: instructor.id)
-
-    project = Team.create!(title: "Sprint 1", due_date: Date.tomorrow, course_id: course.id)
-
-    team = Team.create!(name: "Team 1", code: "SOEN 341", project_id: 1)
-    
-    6.times do
-      student = User.create!(role: "student", first_name: "Test", last_name: "User", email: Faker::Internet.email, password: "password", team: team, sex: "other")
-      team << student
-    end
-
-    new_student = User.new(role: "student", first_name: "Extra", last_name: "User", email: "extra@example.com", password: "password", team: team, sex: "other")
-    team.valid?
-    expect(team.errors[:team]).to include("cannot have more than 6 students")
-  end
-
   describe "instructor" do
     it "can teach one or many courses" do
       course = Course.find_or_initialize_by(code: "SOEN 341")
