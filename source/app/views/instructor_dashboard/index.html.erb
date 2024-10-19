@@ -10,21 +10,21 @@
 					<div class="total-teams">
 						<h2>
 							<i class="fa-solid fa-users fa-lg"></i><br/>
-							<%= @num_of_teams %><br/>
+							<%= @teams.count %><br/>
 							Teams
 						</h2>
 					</div>
 					<div class="evaluations-completed">
 						<h2>
 							<i class="fa-solid fa-check fa-lg"></i><br/>
-							<%= @evaluations_completed %><br/>
+							<%= @completed_evaluations.count %><br/>
 							Evaluations Completed
 						</h2>
 					</div>
 					<div class="evaluations-pending">
 						<h2>
 							<i class="fa-solid fa-xmark fa-lg"></i><br/>
-							<%= @evaluations_pending %><br/>
+							<%= @pending_evaluations.count %><br/>
 							Evaluations Pending
 						</h2>
 					</div>

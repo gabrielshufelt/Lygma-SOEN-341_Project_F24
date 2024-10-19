@@ -4,22 +4,24 @@ class InstructorDashboardController < ApplicationController
   before_action :ensure_instructor_role
 
   def index
-    @num_of_teams = @instructor.teams.count
-    @evaluations_completed = evaluations_completed
-    @evaluations_pending = evaluations_pending
-    @avg_overall_ratings = avg_overall_ratings
-    @all_ratings = all_ratings
+    load_instructor_teams
+    load_instructor_evaluations
+    load_all_ratings
 
     respond_to do |format|
       format.html { render :index} # This will render app/views/instructor_dashboard/index.html.erb
-      format.json { render json: { num_of_teams: @num_of_teams, evaluations_completed: @evaluations_completed, evaluations_pending: @evaluations_pending, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
+      format.json { render json: { teams: @teams, completed_evaluations: @completed_evaluations, pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
     end
   end
 
   def teams
-    @teams = @instructor.teams
-    @available_students = User.where(team: nil, role: "student")
-    
+    load_instructor_teams
+    @available_students = User
+      .left_outer_joins(:teams)
+      .where(role: "student")
+      .group('users.id')
+      .having('COUNT(teams.id) = 0')
+
     respond_to do |format|
       format.html {render :teams} # Render teams view
       format.json { render json: { teams: @teams, available_students: @available_students } }
@@ -37,6 +39,29 @@ class InstructorDashboardController < ApplicationController
 
   private
 
+  def load_instructor_teams
+    @teams = Team.where(project_id: Project.where(course_id: current_user.courses_taught.pluck(:id)))
+  end
+
+  def load_instructor_evaluations
+    instructor_projects = Project.where(course_id: current_user.courses_taught.pluck(:id))
+    instructor_evaluations = Evaluation.where(project_id: instructor_projects.pluck(:id))
+
+    @completed_evaluations = instructor_evaluations.where(status: "completed")
+    @pending_evaluations = instructor_evaluations.where(status: "pending")
+  end
+
+  def load_all_instructor_ratings
+    @avg_overall_ratings = {
+      conceptual_rating: average_rating(:conceptual),
+      practical_rating: average_rating(:practical),
+      cooperation_rating: average_rating(:cooperation),
+      work_ethic_rating: average_rating(:work_ethic)
+    }
+
+    @all_ratings = load_all_ratings
+  end
+
   def ensure_instructor_role
     unless current_user.instructor?
       flash[:alert] = "Access denied. Instructors only."
@@ -48,40 +73,33 @@ class InstructorDashboardController < ApplicationController
     @instructor = current_user if current_user.instructor?
   end
 
-  def evaluations_completed
-    @instructor.teams.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'completed' }).count
-  end
-
-  def evaluations_pending
-    @instructor.teams.joins(students: :evaluations_as_evaluatee).where(evaluations: { status: 'pending' }).count
-  end
-
-  def avg_overall_ratings
-    ratings_by_category = {
-      conceptual_rating: average_rating(:conceptual),
-      practical_rating: average_rating(:practical),
-      cooperation_rating: average_rating(:cooperation),
-      work_ethic_rating: average_rating(:work_ethic)
-    }
-    ratings_by_category
-  end
-
   def average_rating(category)
     @instructor.teams.joins(students: :evaluations_as_evaluatee).average("evaluations.#{category}_rating")
   end
 
-  def all_ratings
+  def load_all_ratings
     teams_ratings = {}
-    @instructor.teams.each do |team|
-      teams_ratings[team.name] = {
+    team_ratings = @instructor.teams
+                              .joins(:evaluations)
+                              .group('teams.id', 'teams.name')
+                              .select(
+                                'teams.name',
+                                'AVG(evaluations.conceptual_rating) AS conceptual_avg',
+                                'AVG(evaluations.practical_rating) AS practical_avg',
+                                'AVG(evaluations.cooperation_rating) AS cooperation_avg',
+                                'AVG(evaluations.work_ethic_rating) AS work_ethic_avg'
+                              )
+
+    team_ratings.each do |team_rating|
+      teams_ratings[team_rating.name] = {
         ratings: {
-          conceptual_rating: team.evaluations.average(:conceptual_rating),
-          practical_rating: team.evaluations.average(:practical_rating),
-          cooperation_rating: team.evaluations.average(:cooperation_rating),
-          work_ethic_rating: team.evaluations.average(:work_ethic_rating)
+          conceptual_rating: team_rating.conceptual_avg,
+          practical_rating: team_rating.practical_avg,
+          cooperation_rating: team_rating.cooperation_avg,
+          work_ethic_rating: team_rating.work_ethic_avg
         }
       }
     end
     teams_ratings
-  end
+  end  
 end
