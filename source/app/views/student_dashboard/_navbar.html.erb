@@ -11,8 +11,8 @@
             <i class="fa-solid fa-users"></i> Teams
         <% end %>
 
-        <%= link_to student_results_path , class: "nav-signedin-link #{'active' if current_page?(student_results_path)}" do %>
-            <i class="fa-solid fa-chart-simple"></i> Results
+        <%= link_to student_evaluations_path , class: "nav-signedin-link #{'active' if current_page?(student_evaluations_path)}" do %>
+            <i class="fa-solid fa-chart-simple"></i> Evaluations
         <% end %>
 
         <%= link_to student_feedback_path , class: "nav-signedin-link #{'active' if current_page?(student_feedback_path)}" do %>

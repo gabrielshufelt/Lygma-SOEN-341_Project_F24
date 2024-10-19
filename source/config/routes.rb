@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   authenticated :user, ->(u) { u.student? } do
     # this will change to student_dashboard#index
-    root to: 'pages#home', as: :student_root
+    root to: 'student_dashboard#index', as: :student_root
   end
 
   unauthenticated do
@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   # student dashboard routes
   get 'student', to: 'student_dashboard#index'
   get 'student/teams', to: 'student_dashboard#teams'
-  get 'student/results', to: 'student_dashboard#results'
+  get 'student/evaluations', to: 'student_dashboard#evaluations'
   get 'student/feedback', to: 'student_dashboard#feedback'
   get 'student/settings', to: 'student_dashboard#settings'
 

@@ -4,23 +4,23 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
-    render json: { upcoming_evaluations: @upcoming_evaluations, avg_ratings: @avg_ratings }
+    # render json: { upcoming_evaluations: @upcoming_evaluations, avg_ratings: @avg_ratings }
   end
 
   def teams
     @student_teams = student_teams
-    render json: @student_teams
+    # render json: @student_teams
   end
 
   def evaluations
     @student_evaluations = student_evaluations
-    render json: @student_evaluations
+    # render json: @student_evaluations
   end
 
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
-    render json: { avg_ratings: @avg_ratings, received_evaluations: @received_evaluations }
+    # render json: { avg_ratings: @avg_ratings, received_evaluations: @received_evaluations }
   end
 
   private
