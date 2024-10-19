@@ -1,5 +1,6 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy add_member remove_member]
+  before_action :authenticate_user!
 
   # GET /teams or /teams.json
   def index
@@ -13,19 +14,21 @@ class TeamsController < ApplicationController
   # GET /teams/new
   def new
     @team = Team.new
+    load_projects_for_instructors
   end
 
   # GET /teams/1/edit
   def edit
     @team = Team.find(params[:id])
     @team_members = @team.students
-    # refactor to include students with no teams
-    @available_students = User.where(role: "student").order(:first_name)
+    available_students
+    load_projects_for_instructors
   end
 
   # POST /teams or /teams.json
   def create
-    @team = Team.new
+    @team = Team.new(team_params)
+    load_projects_for_instructors
 
     respond_to do |format|
       if @team.save
@@ -40,6 +43,9 @@ class TeamsController < ApplicationController
 
   # PATCH/PUT /teams/1 or /teams/1.json
   def update
+    available_students    
+    load_projects_for_instructors
+
     respond_to do |format|
       if @team.update(team_params)
         format.html { redirect_to instructor_teams_path, notice: "Team was successfully updated." }
@@ -61,16 +67,30 @@ class TeamsController < ApplicationController
     end
   end
 
+  def load_projects_for_instructors
+    if current_user.role == 'instructor'
+      @projects = Project.where(course_id: current_user.courses_taught.pluck(:id))
+    else
+      @projects = []
+    end
+  end
+
+  def available_students
+    @available_students = User
+      .left_outer_joins(:teams)
+      .where(role: "student")
+      .group('users.id')
+      .having('COUNT(teams.id) = 0')
+  end
+
   # PATCH /teams/:id/add_member
   def add_member
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
-    # refactor to include students with no teas
-    @available_students = User.where(role: "student").order(:first_name)
+    available_students
   
     if @team.has_space
-      # REFACTOR!!
-      # @user.update(team_id: @team.id)
+      @team.add_student(@user)
       @team_members = @team.students
       respond_to do |format|
         format.turbo_stream do
@@ -94,11 +114,12 @@ class TeamsController < ApplicationController
   # DELETE /teams/:id/remove_member
   def remove_member
     @team = Team.find(params[:id])
-    user = User.find(params[:user_id])
-    # Refactor
-    # user.update(team_id: nil)
-    # @available_students = User.where(role: "student", team_id: nil).order(:first_name)
+    @user = User.find(params[:user_id])
+    
+    @team.remove_student(@user)
+
     @team_members = @team.students
+    available_students
 
     respond_to do |format|
       format.turbo_stream do
@@ -121,6 +142,6 @@ class TeamsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def team_params
-    params.require(:team).permit(:name, :course_name)
+    params.require(:team).permit(:name, :description, :project_id)
   end
 end

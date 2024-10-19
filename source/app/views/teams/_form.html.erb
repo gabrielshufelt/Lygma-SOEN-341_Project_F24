@@ -19,8 +19,15 @@
 
   <div class="fields">
     <div class="full">
-      <%= form.label :course_name, style: "display: block" %>
-      <%= form.text_field :course_name %>
+      <%= form.label :description, style: "display: block" %>
+      <%= form.text_field :description %>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="full">
+      <%= form.label :project_id, "Project", style: "display: block" %>
+      <%= form.select :project_id, @projects.collect { |p| [p.title, p.id] }, { prompt: "Select a project" } %>
     </div>
   </div>
 
