@@ -8,8 +8,9 @@
         <thead>
           <tr>
             <th>Team Name</th>
-            <th>Course</th>
+            <th>Description</th>
             <th>Members</th>
+            <th>Project</th>
             <th>Capacity</th>
             <th>Actions</th>
           </tr>
@@ -18,7 +19,7 @@
           <% @teams.each do |team| %>
             <tr>
               <td><%= team.name %></td>
-              <td><%= team.course_name %></td>
+              <td><%= team.description %></td>
               <td>
                 <% if team.students.count > 0 %>
                   <% team.students.each_with_index do |s, index| %>
@@ -28,6 +29,7 @@
                   No members.
                 <% end %>
               </td>
+              <td><%= team.project.title %></td>
               <td>
                 <span style="<%= 'color: var(--red)' unless team.has_space %>">
                   <%= team.students.count %>/6
