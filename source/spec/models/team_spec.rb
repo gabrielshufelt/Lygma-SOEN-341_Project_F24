@@ -14,7 +14,7 @@ RSpec.describe Team, type: :model do
   end
 
   it 'does not allow more than 6 users to belong to the same team' do
-    team = Team.create!(name: "Team 1", project_id: 1)
+    team = Team.create!(name: "Team 1", project_id: 1, project:project)
 
     # Add 6 students
     6.times do

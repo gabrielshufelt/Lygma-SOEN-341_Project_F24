@@ -65,7 +65,7 @@ class StudentDashboardController < ApplicationController
       projects.map do |project|
         {
           project_id: project.id,
-          student_team: project.teams.find_by(id: @student.team_memberships.pluck(:team_id)),
+          student_team: @student.teams.where(project_id: project.id),
           all_teams: project.teams
         }
       end
