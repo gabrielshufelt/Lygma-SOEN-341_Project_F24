@@ -1,6 +1,6 @@
 class Evaluation < ApplicationRecord
     # Validations
-    validates :status, :date_completed, :project_id, :evaluatee_id, :evaluator_id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, presence: true
+    validates :status, :project_id, :evaluatee_id, :evaluator_id, presence: true
     validate :completed_date_cannot_be_in_the_future
     validate :evaluator_cannot_be_evaluatee
 
@@ -9,6 +9,9 @@ class Evaluation < ApplicationRecord
     belongs_to :evaluatee, class_name: "User"
     belongs_to :project
     belongs_to :team
+
+    # Callbacks
+    before_save :set_status_and_date
 
     # Custom validation for date_completed
     def completed_date_cannot_be_in_the_future
@@ -20,6 +23,19 @@ class Evaluation < ApplicationRecord
     def evaluator_cannot_be_evaluatee
         if evaluator == evaluatee
             errors.add(:evaluator, "cannot be evaluatee")
+        end
+    end
+
+    private
+
+    # Automatically set status and date based on ratings
+    def set_status_and_date
+        if cooperation_rating.present? && conceptual_rating.present? && practical_rating.present? && work_ethic_rating.present?
+            self.status = 'completed'
+            self.date_completed ||= Date.today # Only set date_completed if it hasn't been set yet
+        else
+            self.status = 'pending'
+            self.date_completed = nil
         end
     end
 end

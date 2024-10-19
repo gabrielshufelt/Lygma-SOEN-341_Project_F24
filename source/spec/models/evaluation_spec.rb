@@ -13,10 +13,9 @@ RSpec.describe Evaluation, type: :model do
   it 'is invalid without all necessary fields' do
     evaluation = Evaluation.new
     expect(evaluation).not_to be_valid
-    expect(evaluation.errors[:cooperation_rating]).to include("can't be blank")
-    expect(evaluation.errors[:conceptual_rating]).to include("can't be blank")
-    expect(evaluation.errors[:practical_rating]).to include("can't be blank")
-    expect(evaluation.errors[:work_ethic_rating]).to include("can't be blank")
+    expect(evaluation.errors[:project_id]).to include("can't be blank")
+    expect(evaluation.errors[:evaluatee_id]).to include("can't be blank")
+    expect(evaluation.errors[:evaluator_id]).to include("can't be blank")
   end
 
   # Test to ensure evaluations cannot have a completed date in the future
