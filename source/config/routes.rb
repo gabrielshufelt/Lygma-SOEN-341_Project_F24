@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   # student dashboard routes
   get 'student', to: 'student_dashboard#index'
   get 'student/teams', to: 'student_dashboard#teams'
-  get 'student/results', to: 'student_dashboard#results'
+  get 'student/evaluations', to: 'student_dashboard#evaluations'
   get 'student/feedback', to: 'student_dashboard#feedback'
   get 'student/settings', to: 'student_dashboard#settings'
 
