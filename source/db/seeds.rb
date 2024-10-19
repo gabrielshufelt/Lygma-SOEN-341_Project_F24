@@ -88,34 +88,6 @@ student6.update!(
   sex: 'male'
 )
 
-team1 = Team.find_or_initialize_by(id: 1000)
-team1.update!(
-  name: "Real Ratings",
-  course_name: "SOEN 341 - Software Process",
-  instructor_id: instructor1.id
-)
-
-project1 = Project.find_or_initialize_by(id: 1)
-project1.update!(
-  title: "Sprint 1",
-  team_id: team1.id,
-  due_date: Date.new(2024, 9, 29),
-  instructor_id: instructor1.id
-)
-
-evaluation1 = Evaluation.find_or_initialize_by(student_id: student1.id)
-evaluation1.update!(
-  status: "completed", 
-  date_completed: "2022-09-21", 
-  project_id: project1.id,
-  student_id: student1.id,
-  cooperation_rating: 4.0, 
-  conceptual_rating: 4.0, 
-  practical_rating: 4.0, 
-  work_ethic_rating: 4.0, 
-  comment: "Great job!"
-)
-
 course1 = Course.find_or_initialize_by(code: "SOEN 341")
 course1.update!(
   title: "Software Process",
@@ -138,3 +110,34 @@ course3.update!(
 course1.students << [student1, student2, student5, student6]
 course2.students << [student2, student4, student6]
 course3.students << [student1, student2, student3, student4, student5, student6]
+
+project1 = Project.find_or_initialize_by(id: 1)
+project1.update!(
+  title: "Sprint 1",
+  due_date: Date.new(2024, 9, 29),
+  course_id: course1.id
+)
+
+team1 = Team.find_or_initialize_by(id: 1000)
+team1.update!(
+  name: "Real Ratings",
+  description: "Providing Real Ratings for Real People",
+  project_id: project1.id
+)
+
+evaluation1 = Evaluation.find_or_initialize_by(evaluator_id: student1.id)
+evaluation1.update!(
+  status: "completed", 
+  date_completed: "2022-09-21", 
+  project_id: project1.id,
+  evaluator_id: student1.id,
+  evaluatee_id: student2.id,
+  team_id: team1.id,
+  cooperation_rating: 4.0, 
+  conceptual_rating: 4.0, 
+  practical_rating: 4.0, 
+  work_ethic_rating: 4.0, 
+  comment: "Great job!"
+)
+
+team1.students << [student1, student2, student3]

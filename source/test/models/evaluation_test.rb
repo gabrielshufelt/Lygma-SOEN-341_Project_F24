@@ -32,7 +32,8 @@ class EvaluationTest < ActiveSupport::TestCase
       status: "completed",
       date_completed: "2022-09-21",
       project_id: 1,
-      student_id: 1,
+      evaluator_id: 1,
+      evaluatee_id: 2,
       cooperation_rating: 4.0,
       conceptual_rating: 4.0,
       practical_rating: 4.0,
@@ -60,8 +61,13 @@ class EvaluationTest < ActiveSupport::TestCase
     assert_not @evaluation.valid?
   end
 
-  test "should be invalid without student_id" do
-    @evaluation.student_id = nil
+  test "should be invalid without evaluator_id" do
+    @evaluation.evaluator_id = nil
+    assert_not @evaluation.valid?
+  end
+
+  test "should be invalid without evaluatee_id" do
+    @evaluation.evaluatee_id = nil
     assert_not @evaluation.valid?
   end
 

@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Course, type: :model do
   let (:instructor) { User.create!(first_name: "John", last_name: "Daquavious", role: "instructor", sex: 'male', email: "john.daquavious@example.com", password: "password") }
-  let(:course) { Course.new(title: "Software Process", code: "SOEN 341", instructor_id: instructor.id) }
+  let(:course) { Course.find_or_initialize_by(code: "SOEN 341") }
 
   it "is valid with all attributes" do
+    course.update!(title: "Software Process", instructor_id: instructor.id)
     expect(course).to be_valid
   end
 

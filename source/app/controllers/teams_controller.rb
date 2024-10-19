@@ -25,7 +25,7 @@ class TeamsController < ApplicationController
 
   # POST /teams or /teams.json
   def create
-    @team = Team.new(team_params.merge(instructor_id: current_user.id))
+    @team = Team.new
 
     respond_to do |format|
       if @team.save

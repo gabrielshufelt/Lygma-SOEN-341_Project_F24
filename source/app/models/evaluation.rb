@@ -1,11 +1,13 @@
 class Evaluation < ApplicationRecord
     # Validations
-    validates :status, :date_completed, :project_id, :student_id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, presence: true
+    validates :status, :date_completed, :project_id, :evaluatee_id, :evaluator_id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, presence: true
     validate :completed_date_cannot_be_in_the_future
 
     # Associations
+    belongs_to :evaluator, class_name: "User"
+    belongs_to :evaluatee, class_name: "User"
     belongs_to :project
-    belongs_to :student, class_name: "User"
+    belongs_to :team
 
     # Custom validation for date_completed
     def completed_date_cannot_be_in_the_future

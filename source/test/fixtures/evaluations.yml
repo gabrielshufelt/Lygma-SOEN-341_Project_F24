@@ -4,7 +4,8 @@ one:
   status: MyString
   date_completed: 2024-09-20
   project_id: 1
-  student_id: 1
+  evaluator_id: 1
+  evaluatee_id: 2
   cooperation_rating: 1.5
   conceptual_rating: 1.5
   practical_rating: 1.5
@@ -15,7 +16,8 @@ two:
   status: MyString
   date_completed: 2024-09-20
   project_id: 1
-  student_id: 1
+  evaluator_id: 1
+  evaluatee_id: 2
   cooperation_rating: 1.5
   conceptual_rating: 1.5
   practical_rating: 1.5

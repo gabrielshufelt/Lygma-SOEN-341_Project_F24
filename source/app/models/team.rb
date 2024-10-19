@@ -1,15 +1,15 @@
 class Team < ApplicationRecord
   # Validations
-  validates :name, :instructor_id, :course_name, presence: true
+  validates :name, :project_id, presence: true
   validate :validate_team_size
 
   # Associations
-  # Refactor
-  belongs_to :instructor, class_name: "User", foreign_key: "instructor_id"
-  has_many :projects, dependent: :destroy
-  has_many :students, class_name: "User", through: :projects, dependent: :nullify
-  has_many :evaluations, through: :students, source: :evaluations_as_evaluatee
+  belongs_to :project
 
+  has_many :team_memberships, dependent: :destroy
+  has_many :students, through: :team_memberships, source: :user
+  
+  has_many :evaluations, through: :students, source: :evaluations_as_evaluatee, dependent: :destroy
 
   def validate_team_size
     if students.count > 6

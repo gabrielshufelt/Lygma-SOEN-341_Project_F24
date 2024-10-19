@@ -1,13 +1,15 @@
 class User < ApplicationRecord
   # Instructor Associations
   has_many :courses_taught, class_name: 'Course', foreign_key: 'instructor_id'
-  has_many :projects, foreign_key: "instructor_id", dependent: :destroy  # Instructor oversees multiple projects
-  has_many :teams_as_instructor, class_name: "Team", foreign_key: "instructor_id", dependent: :nullify  # Instructor manages multiple teams
 
   # Student Associations
   has_and_belongs_to_many :courses, join_table: 'course_registrations'
-  belongs_to :team, optional: true
-  has_many :evaluations_as_evaluatee, class_name: "Evaluation", foreign_key: "student_id", dependent: :destroy
+  
+  has_many :evaluations_as_evaluatee, class_name: "Evaluation", foreign_key: "evaluatee_id", dependent: :destroy
+  has_many :evaluations_as_evaluator, class_name: "Evaluation", foreign_key: "evaluator_id", dependent: :destroy
+  
+  has_many :team_memberships, dependent: :destroy
+  has_many :teams, through: :team_memberships
   
   before_save :validate_role
 

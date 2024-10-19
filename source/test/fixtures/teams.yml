@@ -2,10 +2,8 @@
 
 one:
   name: MyString
-  course_name: MyString
-  instructor_id: 1
+  project_id: 1
 
 two:
   name: MyString
-  course_name: MyString
-  instructor_id: 1
+  project_id: 1
