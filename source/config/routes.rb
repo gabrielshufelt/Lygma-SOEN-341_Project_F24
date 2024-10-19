@@ -40,6 +40,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :student_dashboard, only: [:index] do
+    collection do
+      get 'teams'
+      get 'evaluations'
+      get 'feedback'
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
   get 'instructor', to: 'instructor_dashboard#index'
   get 'instructor/teams', to: 'instructor_dashboard#teams'
