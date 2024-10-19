@@ -18,13 +18,19 @@
   <body>
     <div class="<%= user_signed_in? ? 'signed-in' : 'not-signed-in' %>">
       <% if user_signed_in? %>
-        <%= render '/instructor_dashboard/navbar' %>
+        <% if current_user.instructor? %>
+          <%= render '/instructor_dashboard/navbar' %>
+        <% elsif current_user.student? %>
+          <%= render '/student_dashboard/navbar' %>
+        <% end %>
       <% else %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
+      
       <div class="content">
         <%= yield %>
       </div>
+
       <% unless user_signed_in? %>
           <%= render 'layouts/footer' %>
       <% end %>
