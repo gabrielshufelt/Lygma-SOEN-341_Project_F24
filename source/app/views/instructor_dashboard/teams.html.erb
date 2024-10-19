@@ -17,7 +17,8 @@
         <tbody>
           <% @teams.each do |team| %>
             <tr>
-              <td><%= team.name %></td>
+              <td>
+                <%= team.name %></td>
               <td><%= team.course_name %></td>
               <td>
                 <% if team.students.count > 0 %>
@@ -38,9 +39,12 @@
                   <i class="fa-solid fa-pen-to-square"></i>
                 <% end %>
                 <%= link_to team_path(team), method: :delete, data: { turbo_method: :delete } do %>
-                  <i class="fa-solid fa-trash"></i>
+                  <i class="fa-solid fa-trash"></i>                 
                 <% end %>
-              </td>
+                <%= link_to team do %>
+                 <i class="fa-solid fa-eye"></i>
+                <% end %>
+             </td>
             </tr>
           <% end %>
         </tbody>

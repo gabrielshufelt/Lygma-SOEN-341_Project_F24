@@ -1,4 +1,11 @@
-<%= render @team %>
+<div class="containers hall-building">
+  <div class="gradient-filter">
+    <header class="title teams">
+      <h1><%= @team.name %></h1>
+    </header>
+  </div>
+</div>
+
 
 <div>
   <%= link_to "Edit this team", edit_team_path(@team) %> |
@@ -6,3 +13,4 @@
 
   <%= button_to "Destroy this team", @team, method: :delete %>
 </div>
+
