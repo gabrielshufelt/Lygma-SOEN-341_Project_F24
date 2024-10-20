@@ -446,3 +446,55 @@ footer {
 .instructor-dashboard-teams {
     padding: 40px;
 }
+
+.button-container {
+    position: fixed;
+    bottom: 200px;
+    width: 83%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: #BD2611;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .button.primary {
+    background-color: #BD2611;
+  }
+  
+  .button.danger {
+    background-color: #BD2611;
+  }
+  
+  .button:hover {
+    opacity: 0.8;
+  }
+  
+  .center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh; 
+    text-align: center;
+  }
+  
+  .center-content {
+    display: block;
+  }
+  
+  .center-content ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .center-content li {
+    margin: 5px 0;
+  }
