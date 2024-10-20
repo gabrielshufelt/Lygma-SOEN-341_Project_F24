@@ -907,3 +907,64 @@ footer {
     background-color: rgba(255, 255, 255, 1);
   }
 }
+
+.student-overview {
+	margin: 30px 0px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 8px;
+	width: auto;
+}
+
+.overview {
+	color: white;
+	padding: 15px 12px;
+	border-radius: 17px;
+	white-space: nowrap;
+	&.one {
+		background-color: rgb(59, 210, 59);
+	}
+	&.two {
+		background-color: black;
+	}
+	&.three {
+		background-color: var(--red);
+	}
+	&.four {
+		background-color: blue;
+	}
+}
+
+.upcoming-evaluation {
+	padding: 20px;
+	background-color: white;
+	border-radius: 25px;
+	width: 270px;
+	height: 130px;
+	box-shadow: black 0px 0px 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.clock-icon {
+	margin-right: 12px;
+}
+
+.upcoming-info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.student-chart {
+	margin-top: 20px;
+	background-color: white;
+	border-radius: 25px;
+	box-shadow: black 0px 0px 10px;
+	color: white;
+	height: 500px;
+}
