@@ -16,7 +16,7 @@
             <div class="upcoming-evaluations">
                 <% if @upcoming_evaluations.present? %>
                     <% @upcoming_evaluations.each do |evaluation| %>
-                        <% render partial: 'evaluation', locals: {evaluation: evaluation} %>
+                        <%= render partial: 'evaluation', locals: {evaluation: evaluation} %>
                     <% end %>
                 <% else %>
                     <h3>--No upcoming evaluations--</h3>

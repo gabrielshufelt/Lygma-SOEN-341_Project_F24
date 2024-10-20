@@ -1,9 +1,9 @@
 <div class="upcoming-evaluation">
-    <h3> <% evaluation.project.title %></h3>
+    <h3> <%= evaluation.project.title %></h3>
     <div class="upcoming-info">
         <div class="clock-icon"><i class="fa-solid fa-clock"></i></div>
             <div> 
-                <% evaluation.count %> evaluations due for <strong><% evaluation.due_date.strftime("%B %d") %><strong>
+                <%= evaluation.count %> evaluations due for <strong><%= evaluation.due_date.strftime("%B %d") %><strong>
             </div>
         </div>
 </div>
