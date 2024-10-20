@@ -4,25 +4,26 @@
 			<h1>Hello <%= current_user.first_name %>!</h1>
 			<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
             <div class="student-overview">
-                <div class="overview one">Cooperation: </div>
-                <div class="overview two">Conceptual Contribution: </div>
-                <div class="overview three">Practical Contribution:</div>
-                <div class="overview four">Work Ethic: </div>
+                <div class="overview one">Cooperation: <% @avg_ratings[:cooperation]%> </div>
+                <div class="overview two">Conceptual Contribution: <% @avg_ratings[:conceptual]%></div>
+                <div class="overview three">Practical Contribution: <% @avg_ratings[:practical]%></div>
+                <div class="overview four">Work Ethic: <% @avg_ratings[:work_ethic]%></div>
             </div>
 		</header>
+
 		<section class="section">
 			<h2>Upcoming Evaluations</h2>
-            <%# for each upcoming evaluation, create the following div: %>
-            <div class="upcoming-evaluation">
-                <h3>Title</h3>
-                <div class="upcoming-info">
-                    <div class="clock-icon"><i class="fa-solid fa-clock"></i></div>
-                    <div> 
-                        #OfEVALUATIONS due for <strong>DATE<strong>
-                    </div>
-                </div>
-            </div> 
+            <div class="upcoming-evaluations">
+                <% if @upcoming_evaluations.present? %>
+                    <% @upcoming_evaluations.each do |evaluation| %>
+                        <% render partial: 'evaluation', locals: {evaluation: evaluation} %>
+                    <% end %>
+                <% else %>
+                    <h3>--No upcoming evaluations--</h3>
+                <% end %>
+            </div>
 		</section>
+
         <section class="section"> 
             <h2>Progression Chart</h2>
             <div class="student-chart"></div>
