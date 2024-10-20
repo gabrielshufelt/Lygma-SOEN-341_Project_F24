@@ -82,8 +82,17 @@ p {
 	}
 }
 
-.title {
-	padding: 40px;
+.section {
+	margin: 0px 30px;
+	> h2 {
+		font-weight: bold;
+		font-size: 2rem;
+		margin-bottom: 0.33em;
+		margin-top: 1em;
+	}
+	&.one {
+		padding-top: 70px;
+	}
 }
 
 .gradient-filter {
@@ -454,4 +463,65 @@ footer {
 
 .instructor-dashboard-teams {
 	padding: 40px;
+}
+
+.student-overview {
+	margin: 30px 0px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 8px;
+	width: auto;
+}
+
+.overview {
+	color: white;
+	padding: 15px 12px;
+	border-radius: 17px;
+	white-space: nowrap;
+	&.one {
+		background-color: rgb(59, 210, 59);
+	}
+	&.two {
+		background-color: black;
+	}
+	&.three {
+		background-color: var(--red);
+	}
+	&.four {
+		background-color: blue;
+	}
+}
+
+.upcoming-evaluation {
+	padding: 20px;
+	background-color: white;
+	border-radius: 25px;
+	width: 270px;
+	height: 130px;
+	box-shadow: black 0px 0px 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.clock-icon {
+	margin-right: 12px;
+}
+
+.upcoming-info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.student-chart {
+	margin-top: 20px;
+	background-color: white;
+	border-radius: 25px;
+	box-shadow: black 0px 0px 10px;
+	color: white;
+	height: 500px;
 }
