@@ -3,6 +3,11 @@
         <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
     </div>
     <div class="nav-signedin-options">
+        
+        <%= link_to '#', class: "nav-signedin-link select-course" do %>
+            <i class="fa-solid fa-arrow-left"></i> Select Course
+        <% end %>
+        
         <%= link_to instructor_path , class: "nav-signedin-link #{'active' if current_page?(instructor_path)}" do %>
             <i class="fa-solid fa-bars"></i> Dashboard
         <% end %>
