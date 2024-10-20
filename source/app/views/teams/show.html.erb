@@ -1,8 +1,29 @@
-<%= render @team %>
-
-<div>
-  <%= link_to "Edit this team", edit_team_path(@team) %> |
-  <%= link_to "Back to teams", teams_instructor_dashboard_index_path %>
-
-  <%= button_to "Destroy this team", @team, method: :delete %>
+<div class="containers hall-building">
+  <div class="gradient-filter">
+    <header class="title teams">
+      <h1><%= @team.name %></h1>
+    </header>
+    
+    <div class="center-wrapper">
+<section class="center-content">
+  <h2>Team Members</h2>
+  <ul>
+    <% if @team.students.present? %>
+      <% @team.students.each do |s| %>
+        <li><%= s.first_name + ' ' + s.last_name %></li>
+      <% end %>
+    <% else %>
+      <li>No members.</li>
+    <% end %>
+  </ul>
+</section>
 </div>
+<div class="button-container">
+  <%= link_to "Edit this team", edit_team_path(@team), class: "button primary" %> 
+  <%= link_to "Back to teams", teams_instructor_dashboard_index_path, class: "button" %>
+  
+  <%= button_to "Destroy this team", @team, method: :delete, class: "button danger" %>
+</div>
+</div>
+
+
