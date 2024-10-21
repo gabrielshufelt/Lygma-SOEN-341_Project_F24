@@ -104,3 +104,6 @@ gem 'chartkick'
 
 # For course thumbnail
 gem 'pexels'
+
+# ChartKick for beautiful charts
+gem 'chartkick'
