@@ -107,9 +107,9 @@ course3.update!(
 )
 
 # Students enrolling in courses
-course1.students << [student1, student2, student5, student6]
-course2.students << [student2, student4, student6]
-course3.students << [student1, student2, student3, student4, student5, student6]
+course1.enroll(student1, student2, student5, student6)
+course2.enroll(student2, student4, student6)
+course3.enroll(student1, student2, student3, student4, student5, student6)
 
 project1 = Project.find_or_initialize_by(id: 1)
 project1.update!(
