@@ -233,7 +233,7 @@ footer {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	height: 100vh;
+	height: 100%;
 	width: 20vw;
 	min-width: 225px;
 	padding-top: 20px;
@@ -518,7 +518,7 @@ footer {
 }
 
 .student-chart {
-	margin-top: 20px;
+	margin: 20px;
 	background-color: white;
 	border-radius: 25px;
 	box-shadow: black 0px 0px 10px;
