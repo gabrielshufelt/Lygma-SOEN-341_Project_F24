@@ -202,7 +202,7 @@ GEM
       ast (~> 2.4.1)
       racc
     popper_js (2.11.8)
-    prism (0.29.0)
+    prism (1.2.0)
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
@@ -261,7 +261,8 @@ GEM
       activerecord (>= 6.1.5)
       activesupport (>= 6.1.5)
       i18n
-    rbs (2.8.4)
+    rbs (3.6.1)
+      logger
     rdoc (6.7.0)
       psych (>= 4.0.0)
     regexp_parser (2.9.2)
@@ -313,9 +314,10 @@ GEM
       rubocop (~> 1.51)
     rubocop-thread_safety (0.5.1)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.17.2)
+    ruby-lsp (0.20.1)
       language_server-protocol (~> 3.17.0)
-      prism (>= 0.29.0, < 0.30)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 4)
       sorbet-runtime (>= 0.5.10782)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
