@@ -482,7 +482,7 @@ footer {
 	white-space: nowrap;
 
 	&.one {
-		background-color: rgb(59, 210, 59);
+		background-color: #3bd23b;
 	}
 
 	&.two {
@@ -494,7 +494,7 @@ footer {
 	}
 
 	&.four {
-		background-color: blue;
+		background-color: #0000ff;
 	}
 }
 
@@ -522,12 +522,12 @@ footer {
 }
 
 .student-chart {
+	padding: 48px;
 	margin: 20px;
 	background-color: white;
 	border-radius: 25px;
 	box-shadow: black 0px 0px 10px;
 	color: white;
-	height: 500px;
 }
 
 .button-container {
