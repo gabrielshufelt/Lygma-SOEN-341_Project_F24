@@ -11,7 +11,7 @@ class Team < ApplicationRecord
   has_many :evaluations, through: :students, source: :evaluations_as_evaluatee, dependent: :destroy
 
   def add_student(student)
-    if students.size < 6
+    if students.size < 6 && !students.exists?(student.id)
       students << student
     else
       errors.add(:team, "cannot have more than 6 students")
