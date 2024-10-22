@@ -1,0 +1,36 @@
+<h2>Select a Course</h2>
+
+<% if current_user.instructor? %>
+  <h3>Your Courses</h3>
+  <ul>
+    <% @courses.each do |course| %>
+      <li>
+        <%= course.title %> - <%= course.code %>
+        <%= button_to "Select", select_course_course_selection_index_path(course_id: course.id), method: :post %>
+      </li>
+    <% end %>
+  </ul>
+<% elsif current_user.student? %>
+  <h3>Your Enrolled Courses</h3>
+  <ul>
+    <% @student_courses.each do |course| %>
+      <li>
+        <%= course.title %> - <%= course.code %>
+        <%= button_to "Select", select_course_course_selection_index_path(course_id: course.id), method: :post %>
+        <%= button_to "Drop", update_course_selection_course_selection_index_path(course_id: course.id, action_type: "drop"), method: :post %>
+      </li>
+    <% end %>
+  </ul>
+  
+  <h3>Available Courses</h3>
+  <ul>
+    <% @courses.each do |course| %>
+      <li>
+        <%= course.title %> - <%= course.code %>
+        <% unless @student_courses.include?(course) %>
+          <%= button_to "Add", update_course_selection_course_selection_index_path(course_id: course.id, action_type: "add"), method: :post %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

@@ -1,5 +1,8 @@
 class StudentDashboardController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_student_role
   before_action :set_student
+  before_action :set_selected_course
 
   def index
     @upcoming_evaluations = upcoming_evaluations
@@ -21,6 +24,13 @@ class StudentDashboardController < ApplicationController
   end
 
   private
+
+  def ensure_student_role
+    unless current_user.student?
+      flash[:alert] = "Access denied. Students only."
+      redirect_to root_path
+    end
+  end
 
   def set_student
     @student = current_user if current_user.role == 'student'
@@ -92,6 +102,9 @@ class StudentDashboardController < ApplicationController
         end
       }
     end
+  rescue => e
+    Rails.logger.error "Error fetching student evaluations: #{e.message}"
+    []
   end
 
   def received_evaluations

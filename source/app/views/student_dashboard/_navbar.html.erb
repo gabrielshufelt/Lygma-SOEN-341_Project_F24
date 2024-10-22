@@ -1,35 +1,31 @@
 <div class="nav-signedin">
-    <div class="nav-signedin-logo">
-        <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
-    </div>
-    <div class="nav-signedin-options">
-        
-        <%= link_to '#', class: "nav-signedin-link select-course" do %>
-            <i class="fa-solid fa-arrow-left"></i> Select Course
-        <% end %>
+  <div class="nav-signedin-logo">
+    <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
+  </div>
+  <div class="nav-signedin-options">
+    <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
+      <i class="fa-solid fa-exchange-alt"></i> Change Course
+    <% end %>
 
-        <%= link_to student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(student_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-bars"></i> Dashboard
-        <% end %>
+    <%= link_to course_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(course_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
+      <i class="fa-solid fa-bars"></i> Dashboard
+    <% end %>
 
-        <%= link_to teams_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(teams_student_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-users"></i> Teams
-        <% end %>
+    <%= link_to teams_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(teams_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
+      <i class="fa-solid fa-users"></i> Teams
+    <% end %>
 
-        <%= link_to evaluations_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(evaluations_student_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-chart-simple"></i> Evaluations
-        <% end %>
+    <%= link_to evaluations_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(evaluations_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
+      <i class="fa-solid fa-clipboard-check"></i> Evaluations
+    <% end %>
 
-        <%= link_to feedback_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(feedback_student_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-message"></i> Feedback
-        <% end %>
-        
-        <%= link_to settings_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(settings_student_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-gear"></i> Settings
-        <% end %>
-        
-        <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete } , class: "nav-signedin-link" do %>
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-        <% end %>
-    </div>
+    <%= link_to feedback_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(feedback_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
+      <i class="fa-solid fa-comment"></i> Feedback
+    <% end %>
+
+    <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "nav-signedin-link" do %>
+      <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+    <% end %>
+  </div>
 </div>
+

@@ -1,31 +1,32 @@
 <div class="nav-signedin">
-    <div class="nav-signedin-logo">
-        <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
-    </div>
-    <div class="nav-signedin-options">
-        
-        <%= link_to '#', class: "nav-signedin-link select-course" do %>
-            <i class="fa-solid fa-arrow-left"></i> Select Course
-        <% end %>
-        
-        <%= link_to instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(instructor_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-bars"></i> Dashboard
-        <% end %>
+  <div class="nav-signedin-logo">
+    <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
+  </div>
+  <div class="nav-signedin-options">
+    <% if @selected_course && @selected_course.id %>
+      <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
+        <i class="fa-solid fa-exchange-alt"></i> Change Course
+      <% end %>
 
-        <%= link_to teams_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(teams_instructor_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-users"></i> Teams
-        <% end %>
+      <%= link_to course_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(course_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-bars"></i> Dashboard
+      <% end %>
 
-        <%= link_to results_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(results_instructor_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-chart-simple"></i> Results
-        <% end %>
-        
-        <%= link_to settings_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(settings_instructor_dashboard_index_path)}" do %>
-            <i class="fa-solid fa-gear"></i> Settings
-        <% end %>
-        
-        <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete } , class: "nav-signedin-link" do %>
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-        <% end %>
-    </div>
+      <%= link_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(teams_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-users"></i> Teams
+      <% end %>
+
+      <%= link_to results_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(results_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-chart-simple"></i> Results
+      <% end %>
+
+      <%= link_to settings_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(settings_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-gear"></i> Settings
+      <% end %>
+    <% end %>
+    
+    <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "nav-signedin-link" do %>
+      <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+    <% end %>
+  </div>
 </div>
