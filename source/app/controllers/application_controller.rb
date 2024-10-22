@@ -1,23 +1,15 @@
 class ApplicationController < ActionController::Base
   before_action :sign_out_on_public_pages
+  before_action :set_selected_course
 
-  # Redirect instructors to dashboard after sign in
+  # Redirect instructors and students to the course selection menu after sign in
   def after_sign_in_path_for(resource)
-    if resource.instructor?
-      instructor_dashboard_index_path  # Redirect instructors to the dashboard
-    else
-      root_path  # Redirect students to the home page
-    end
+    course_selection_index_path  
   end
 
   # Use the same logic for sign up
   def after_sign_up_path_for(resource)
-    after_sign_in_path_for(resource)
-  end
-
-  # Redirect all users to home page after signing out
-  def after_sign_out_path_for(resource_or_scope)
-    root_path
+    course_selection_index_path 
   end
 
   private
@@ -29,6 +21,22 @@ class ApplicationController < ActionController::Base
     if user_signed_in? && public_pages.include?(request.path)
       sign_out(current_user)
       redirect_to root_path, alert: 'You have been signed out.'
+    end
+  end
+
+  # Ensure @selected_course is set based on session or the first available course
+  def set_selected_course
+    if current_user
+      if current_user.instructor?
+        @selected_course = Course.find_by(id: session[:selected_course_id]) || current_user.courses_taught.first
+      elsif current_user.student?
+        @selected_course = Course.find_by(id: session[:selected_course_id]) || current_user.enrolled_courses.first
+      end
+
+      unless @selected_course
+        flash[:alert] = "No courses available for selection."
+        redirect_to course_selection_index_path and return # Or another appropriate path
+      end
     end
   end
 end

@@ -54,4 +54,9 @@ class User < ApplicationRecord
       self.work_ethic_rating = nil
     end
   end
+
+  # Add this method
+  def enrolled_courses
+    student? ? courses : []
+  end
 end

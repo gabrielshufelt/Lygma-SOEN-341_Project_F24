@@ -1,0 +1,28 @@
+<% content_for :navbar do %>
+  <%= render 'navbar' %>
+<% end %>
+
+<h1>My Feedback</h1>
+
+<h2>Average Ratings</h2>
+<ul>
+  <li>Conceptual: <%= @avg_ratings[:conceptual].round(2) %></li>
+  <li>Cooperation: <%= @avg_ratings[:cooperation].round(2) %></li>
+  <li>Practical: <%= @avg_ratings[:practical].round(2) %></li>
+  <li>Work Ethic: <%= @avg_ratings[:work_ethic].round(2) %></li>
+</ul>
+
+<h2>Received Evaluations</h2>
+<% if @received_evaluations.any? %>
+  <ul>
+    <% @received_evaluations.each do |evaluation| %>
+      <li>
+        From: <%= evaluation.evaluator.name %>
+        Project: <%= evaluation.project.name %>
+        Date: <%= evaluation.updated_at.to_date %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No received evaluations yet.</p>
+<% end %>

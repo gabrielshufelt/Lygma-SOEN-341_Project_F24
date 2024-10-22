@@ -1,0 +1,25 @@
+<% content_for :navbar do %>
+  <%= render 'navbar' %>
+<% end %>
+
+<h1>My Teams</h1>
+
+<% if @student_teams.any? %>
+  <% @student_teams.each do |project| %>
+    <h3>Project: <%= project[:project_id] %></h3>
+    <h4>Your Team:</h4>
+    <ul>
+      <% project[:student_team].each do |team| %>
+        <li><%= team.name %></li>
+      <% end %>
+    </ul>
+    <h4>All Teams:</h4>
+    <ul>
+      <% project[:all_teams].each do |team| %>
+        <li><%= team.name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% else %>
+  <p>You are not part of any teams yet.</p>
+<% end %>
