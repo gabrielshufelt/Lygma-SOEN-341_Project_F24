@@ -1,4 +1,8 @@
-# app/controllers/course_selection_controller.rb
+require 'pexels'
+
+PexelsClient = Pexels::Client.new('69kRe1bxCkAleKHlNmfA2bBkId7CTHadUE79PZ9tHrXCuOoDUNOz4aTG')
+
+
 class CourseSelectionController < ApplicationController
   before_action :authenticate_user!
 
@@ -99,15 +103,17 @@ class CourseSelectionController < ApplicationController
   end
 
   def fetch_image_url(course_title)
-    search_results = Unsplash::Photo.search(course_title, 1, 1) # Fetch 1 result
-    if search_results.any?
-      search_results.first.urls['regular'] # Use the regular-sized image URL
-    else
-      "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder image URL
+    begin
+      search_results = PexelsClient.photos.search(course_title, per_page: 1)
+      if search_results && search_results.photos.any?
+        search_results.photos.first.src['medium'] # Use the medium-sized image URL
+      else
+        "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder image URL
+      end
+    rescue => e
+      Rails.logger.error "Error fetching image for #{course_title}: #{e.message}"
+      "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder on error
     end
-  rescue => e
-    Rails.logger.error "Error fetching image for #{course_title}: #{e.message}"
-    "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder on error
   end
   
 end

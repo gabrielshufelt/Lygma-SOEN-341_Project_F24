@@ -103,4 +103,4 @@ gem 'font-awesome-sass'
 gem 'chartkick'
 
 # For course thumbnail
-gem 'unsplash'
+gem 'pexels'
