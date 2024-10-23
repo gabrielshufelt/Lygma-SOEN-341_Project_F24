@@ -454,9 +454,9 @@ footer {
     display: flex;
     justify-content: center;
     gap: 20px;
-  }
-  
-  .button {
+}
+
+.button {
     padding: 10px 20px;
     text-align: center;
     background-color: #BD2611;
@@ -464,37 +464,46 @@ footer {
     border: none;
     cursor: pointer;
     text-decoration: none;
-  }
-  
-  .button.primary {
+}
+
+.button.primary {
     background-color: #BD2611;
-  }
-  
-  .button.danger {
+}
+
+.button.danger {
     background-color: #BD2611;
-  }
-  
-  .button:hover {
+}
+
+.button:hover {
     opacity: 0.8;
-  }
-  
-  .center-wrapper {
+}
+
+.center-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30vh; 
+    height: 30vh;
     text-align: center;
-  }
-  
-  .center-content {
+}
+
+.center-content {
     display: block;
-  }
-  
-  .center-content ul {
+}
+
+.center-content ul {
     list-style-type: none;
     padding: 0;
-  }
-  
-  .center-content li {
+}
+
+.center-content li {
     margin: 5px 0;
-  }
+}
+
+.course-box {
+    width: 250px;
+    height: 120px;
+    background-color: lightgreen;
+    border: 2px solid green;
+    padding: 15px;
+    margin: 15px;
+}
