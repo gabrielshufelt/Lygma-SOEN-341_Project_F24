@@ -101,3 +101,6 @@ gem 'font-awesome-sass'
 
 # ChartKick for beautiful charts
 gem 'chartkick'
+
+# For course thumbnail
+gem 'unsplash'

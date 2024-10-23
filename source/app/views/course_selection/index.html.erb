@@ -1,41 +1,37 @@
 <div class="containers hall-building">
-	<div class="gradient-filter">
-		<header class="title">
-      <% if current_user.instructor? %>
-        <h1>Your Courses</h1>
-      <% elsif current_user.student? %>
-        <h1>Your Enrolled Courses</h1>
-      <% end %>
-		</header>
-		<section class="course-selection">
-      <% if current_user.instructor? %>
-        <% @courses.each do |course| %>
-          <%= render 'course_box', course: course %>
+  <div class="gradient-filter">
+    <header class="title">
+      <h1>Select a Course</h1>
+      <div class="logout-container">
+        <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "logout-button" do %>
+          <i class="fa-solid fa-right-from-bracket"></i> Log out
         <% end %>
-      <% elsif current_user.student? %>
-        <ul>
-          <% @student_courses.each do |course| %>
-            <li>
-              <%= course.title %> - <%= course.code %>
-              <%= button_to "Select", select_course_course_selection_index_path(course_id: course.id), method: :post %>
-              <%= button_to "Drop", update_course_selection_course_selection_index_path(course_id: course.id, action_type: "drop"), method: :post %>
-            </li>
-          <% end %>
-        </ul>
+      </div>
+    </header>
+    <section class="courses-container">
+      <% if current_user.instructor? %>
+        <% if @courses.present? %>
+          <div class="course-cards-grid">
+            <% @courses.each do |course| %>
+              <%= render 'course_box', course: course %>
+            <% end %>
+            <%= render 'create_course_box' %>
+          </div>
+        <% else %>
+          <p>You haven't created any courses yet.</p>
+          <%= render 'create_course_box' %>
+        <% end %>
         
-        <h3>Available Courses</h3>
-        <ul>
-          <% @courses.each do |course| %>
-            <li>
-              <%= course.title %> - <%= course.code %>
-              <% unless @student_courses.include?(course) %>
-                <%= button_to "Add", update_course_selection_course_selection_index_path(course_id: course.id, action_type: "add"), method: :post %>
-              <% end %>
-            </li>
+      <% elsif current_user.student? %>
+        <div class="course-cards-grid">
+          <% if @student_courses.present? %>
+            <% @student_courses.each do |course| %>
+              <%= render 'course_box', course: course %>
+            <% end %>
           <% end %>
-        </ul>
+          <%= render 'add_course_box' if @available_courses.present? %>
+        </div>
       <% end %>
-		</section>
-	</div>
+    </section>
+  </div>
 </div>
-
