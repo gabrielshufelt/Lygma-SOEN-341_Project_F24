@@ -107,9 +107,9 @@ course3.update!(
 )
 
 # Students enrolling in courses
-course1.enroll(student1, student2, student5, student6)
-course2.enroll(student2, student4, student6)
-course3.enroll(student1, student2, student3, student4, student5, student6)
+course1.enroll([student1, student2, student5, student6])
+course2.enroll([student2, student4, student6])
+course3.enroll([student1, student2, student3, student4, student5, student6])
 
 project1 = Project.find_or_initialize_by(id: 1)
 project1.update!(title: 'Sprint 1', due_date: Date.new(2024, 9, 29), course_id: course1.id)
@@ -118,11 +118,10 @@ project2 = Project.find_or_initialize_by(id: 2)
 project2.update!(title: 'Sprint 2', due_date: Date.new(2024, 10, 27), course_id: course1.id)
 
 team1 = Team.find_or_initialize_by(id: 1000)
-team1.update!(
-  name: 'Real Ratings',
-  description: 'Providing Real Ratings for Real People',
-  project_id: project1.id
-)
+team1.update!(name: 'Real Ratings', description: 'Providing Real Ratings for Real People', project_id: project1.id)
+
+team2 = Team.find_or_initialize_by(id: 1001)
+team2.update!(name: 'Fake Ratings', description: 'Providing Fake Ratings for Fake People', project_id: project1.id)
 
 Evaluation.create!(
   [
