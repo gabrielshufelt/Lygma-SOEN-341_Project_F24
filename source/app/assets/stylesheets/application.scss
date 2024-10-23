@@ -503,7 +503,7 @@ footer {
 	column-gap: 16px;
 }
 
-.upcoming-evaluation {
+.floating-box {
 	padding: 20px;
 	background-color: white;
 	border-radius: 25px;
@@ -515,15 +515,15 @@ footer {
 	justify-content: space-evenly;
 }
 
-.clock-icon {
-	margin-right: 12px;
-}
-
-.upcoming-info {
+.floating-box-content-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
 	align-items: center;
+}
+
+.floating-box-icon {
+	margin-right: 12px;
 }
 
 .student-chart {
