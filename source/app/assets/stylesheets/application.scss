@@ -586,3 +586,31 @@ footer {
 .center-content li {
 	margin: 5px 0;
 }
+
+.collapsible-box {
+	border: none;
+	margin-bottom: 1rem;
+	box-shadow: black 0px 0px 10px;
+}
+
+.collapsible-header {
+	background-color: #fff;
+	padding: 10px;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.collapsible-content {
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.collapsible-content.expanded {
+	max-height: 1000px;
+	opacity: 1;
+	overflow: hidden;
+}
