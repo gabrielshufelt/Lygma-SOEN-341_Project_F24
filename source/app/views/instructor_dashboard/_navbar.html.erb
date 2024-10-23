@@ -8,19 +8,19 @@
             <i class="fa-solid fa-arrow-left"></i> Select Course
         <% end %>
         
-        <%= link_to instructor_path , class: "nav-signedin-link #{'active' if current_page?(instructor_path)}" do %>
+        <%= link_to instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(instructor_dashboard_index_path)}" do %>
             <i class="fa-solid fa-bars"></i> Dashboard
         <% end %>
 
-        <%= link_to instructor_teams_path , class: "nav-signedin-link #{'active' if current_page?(instructor_teams_path)}" do %>
+        <%= link_to teams_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(teams_instructor_dashboard_index_path)}" do %>
             <i class="fa-solid fa-users"></i> Teams
         <% end %>
 
-        <%= link_to instructor_results_path , class: "nav-signedin-link #{'active' if current_page?(instructor_results_path)}" do %>
+        <%= link_to results_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(results_instructor_dashboard_index_path)}" do %>
             <i class="fa-solid fa-chart-simple"></i> Results
         <% end %>
         
-        <%= link_to instructor_settings_path , class: "nav-signedin-link #{'active' if current_page?(instructor_settings_path)}" do %>
+        <%= link_to settings_instructor_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(settings_instructor_dashboard_index_path)}" do %>
             <i class="fa-solid fa-gear"></i> Settings
         <% end %>
         

@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   # Force sign-out on certain public pages
   def sign_out_on_public_pages
-    public_pages = [about_pages_path, contact_pages_path, home_pages_path]
+    public_pages = [about_path, contact_path, home_path]
 
     if user_signed_in? && public_pages.include?(request.path)
       sign_out(current_user)

@@ -8,23 +8,23 @@
             <i class="fa-solid fa-arrow-left"></i> Select Course
         <% end %>
 
-        <%= link_to student_path , class: "nav-signedin-link #{'active' if current_page?(student_path)}" do %>
+        <%= link_to student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(student_dashboard_index_path)}" do %>
             <i class="fa-solid fa-bars"></i> Dashboard
         <% end %>
 
-        <%= link_to student_teams_path , class: "nav-signedin-link #{'active' if current_page?(student_teams_path)}" do %>
+        <%= link_to teams_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(teams_student_dashboard_index_path)}" do %>
             <i class="fa-solid fa-users"></i> Teams
         <% end %>
 
-        <%= link_to student_evaluations_path , class: "nav-signedin-link #{'active' if current_page?(student_evaluations_path)}" do %>
+        <%= link_to evaluations_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(evaluations_student_dashboard_index_path)}" do %>
             <i class="fa-solid fa-chart-simple"></i> Evaluations
         <% end %>
 
-        <%= link_to student_feedback_path , class: "nav-signedin-link #{'active' if current_page?(student_feedback_path)}" do %>
+        <%= link_to feedback_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(feedback_student_dashboard_index_path)}" do %>
             <i class="fa-solid fa-message"></i> Feedback
         <% end %>
         
-        <%= link_to student_settings_path , class: "nav-signedin-link #{'active' if current_page?(student_settings_path)}" do %>
+        <%= link_to settings_student_dashboard_index_path , class: "nav-signedin-link #{'active' if current_page?(settings_student_dashboard_index_path)}" do %>
             <i class="fa-solid fa-gear"></i> Settings
         <% end %>
         
