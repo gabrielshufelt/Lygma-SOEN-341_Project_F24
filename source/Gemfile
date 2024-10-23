@@ -100,4 +100,4 @@ gem "sassc-rails"
 gem "font-awesome-sass"
 
 # For course thumbnail
-gem 'unsplash'
+gem 'pexels'
