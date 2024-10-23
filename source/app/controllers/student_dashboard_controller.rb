@@ -27,8 +27,16 @@ class StudentDashboardController < ApplicationController
   end
 
   def upcoming_evaluations
-    evaluations = Evaluation.joins(:project).where(evaluator_id: @student.id, status: 'pending')
-    evaluations || [] # Return empty array if no evaluations found
+    # TODO: refactor to Project.where(course_id: current_course.id).includes(:evaluations)
+    upcoming_evaluations = Project.includes(:evaluations).select do |project|
+      project.evaluations.any? { |evaluation| evaluation.status == 'pending' }
+    end.map do |project|
+      {
+        project: project,
+        evaluations: project.evaluations.select { |evaluation| evaluation.status == 'pending' }
+      }
+    end
+    upcoming_evaluations.presence || {}
   end
 
   def avg_ratings
@@ -75,7 +83,7 @@ class StudentDashboardController < ApplicationController
 
   def student_evaluations_progression
     evaluations = Evaluation.where(status: 'completed')
-                            .where(evaluatee_id: 2)
+                            .where(evaluatee_id: current_user)
                             .group('DATE(date_completed)')
                             .select('DATE(date_completed) as date_completed,
                                     AVG(cooperation_rating) as avg_cooperation,

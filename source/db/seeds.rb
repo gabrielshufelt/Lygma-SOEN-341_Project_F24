@@ -112,11 +112,10 @@ course2.students << [student2, student4, student6]
 course3.students << [student1, student2, student3, student4, student5, student6]
 
 project1 = Project.find_or_initialize_by(id: 1)
-project1.update!(
-  title: 'Sprint 1',
-  due_date: Date.new(2024, 9, 29),
-  course_id: course1.id
-)
+project1.update!(title: 'Sprint 1', due_date: Date.new(2024, 9, 29), course_id: course1.id)
+
+project2 = Project.find_or_initialize_by(id: 2)
+project2.update!(title: 'Sprint 2', due_date: Date.new(2024, 10, 27), course_id: course1.id)
 
 team1 = Team.find_or_initialize_by(id: 1000)
 team1.update!(
@@ -127,6 +126,7 @@ team1.update!(
 
 Evaluation.create!(
   [
+    # Evaluations where Alice is the evaluatee
     { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'completed', date_completed: 3.months.ago + 1.day, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.5, conceptual_rating: 4.0, practical_rating: 4.7, work_ethic_rating: 4.9, comment: 'Excellent work!' },
     { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 3.months.ago + 3.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.5, practical_rating: 4.2, work_ethic_rating: 5.1, comment: 'Very good!' },
     { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.months.ago + 2.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.0, conceptual_rating: 3.5, practical_rating: 4.0, work_ethic_rating: 4.5, comment: 'Could improve!' },
@@ -136,7 +136,12 @@ Evaluation.create!(
     { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 15.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.7, conceptual_rating: 4.8, practical_rating: 4.9, work_ethic_rating: 5.0, comment: 'Solid work!' },
     { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 10.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.9, conceptual_rating: 4.0, practical_rating: 4.1, work_ethic_rating: 4.2, comment: 'Needs more focus!' },
     { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 7.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 6.5, conceptual_rating: 6.7, practical_rating: 6.8, work_ethic_rating: 7.0, comment: 'Outstanding!' },
-    { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.3, conceptual_rating: 5.5, practical_rating: 5.7, work_ethic_rating: 5.9, comment: 'Consistent and reliable!' }
+    { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.3, conceptual_rating: 5.5, practical_rating: 5.7, work_ethic_rating: 5.9, comment: 'Consistent and reliable!' },
+
+    # Evaluations where Alice is the evaluator
+    { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project1.id, team_id: team1.id },
+    { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project2.id, team_id: team1.id },
+    { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project2.id, team_id: team1.id }
   ]
 )
 

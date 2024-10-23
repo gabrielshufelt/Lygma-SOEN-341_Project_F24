@@ -498,6 +498,11 @@ footer {
 	}
 }
 
+.upcoming-evaluations-container {
+	display: flex;
+	column-gap: 16px;
+}
+
 .upcoming-evaluation {
 	padding: 20px;
 	background-color: white;
