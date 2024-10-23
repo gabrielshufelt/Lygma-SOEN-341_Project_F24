@@ -16,12 +16,7 @@
             <div class="upcoming-evaluations-container">
                 <% if @upcoming_evaluations.present? %>
                     <% @upcoming_evaluations.each do |upcoming_evaluation| %>
-                        <%= render 'partials/floating_box',
-                            title: upcoming_evaluation[:project].title,
-                            icon: "fa-solid fa-clock",
-                            content: "#{upcoming_evaluation[:evaluations].count} evaluations due for #{upcoming_evaluation[:project].due_date.strftime("%B %d")}",
-                            background_color: upcoming_evaluation[:project].due_date < Date.today ? "#ffd376" : nil
-                        %>
+                        <%= render partial: 'evaluation', locals: {upcoming_evaluation:} %>
                     <% end %>
                 <% else %>
                     <%= render 'partials/floating_box', 

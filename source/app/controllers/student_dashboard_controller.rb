@@ -108,19 +108,16 @@ class StudentDashboardController < ApplicationController
   end
 
   def received_evaluations
-    evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed')
-    evaluations || [] # Return empty array if no evaluations found
-  end
+    evaluations = Evaluation.joins(:project)
+              .where(evaluatee_id: @student.id, status: 'completed', projects: { course_id: @selected_course.id })
+              .where(evaluatee_id: current_user)
+              .group('DATE(date_completed)')
+              .select('DATE(date_completed) as date_completed,
+                      AVG(cooperation_rating) as avg_cooperation,
+                      AVG(conceptual_rating) as avg_conceptual,
+                      AVG(practical_rating) as avg_practical,
+                      AVG(work_ethic_rating) as avg_work_ethic')
 
-  def student_evaluations_progression
-    evaluations = Evaluation.where(status: 'completed')
-                            .where(evaluatee_id: current_user)
-                            .group('DATE(date_completed)')
-                            .select('DATE(date_completed) as date_completed,
-                                    AVG(cooperation_rating) as avg_cooperation,
-                                    AVG(conceptual_rating) as avg_conceptual,
-                                    AVG(practical_rating) as avg_practical,
-                                    AVG(work_ethic_rating) as avg_work_ethic')
     evaluations || []
   end
 end
