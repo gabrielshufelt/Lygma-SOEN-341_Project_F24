@@ -17,12 +17,13 @@
 
   <body>
     <div class="<%= user_signed_in? ? 'signed-in' : 'not-signed-in' %>">
-      <% if user_signed_in? %>
+      <% if user_signed_in? && session[:selected_course_id] %>
         <% if current_user.instructor? %>
           <%= render '/instructor_dashboard/navbar' %>
         <% elsif current_user.student? %>
           <%= render '/student_dashboard/navbar' %>
         <% end %>
+      <% elsif user_signed_in? && !session[:selected_course_id] %>
       <% else %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>

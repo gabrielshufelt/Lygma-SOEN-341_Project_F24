@@ -1,0 +1,4 @@
+<div class="course-box">
+  <%= course.title %> - <%= course.code %>
+  <%= button_to "Select", select_course_course_selection_index_path(course_id: course.id), method: :post %>
+</div>

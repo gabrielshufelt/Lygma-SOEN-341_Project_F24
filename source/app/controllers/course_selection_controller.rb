@@ -1,6 +1,5 @@
 # app/controllers/course_selection_controller.rb
 class CourseSelectionController < ApplicationController
-  layout false, only: :index
   before_action :authenticate_user!
 
   def index
