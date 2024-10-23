@@ -98,3 +98,6 @@ gem "sassc-rails"
 
 # Font Awesome for custom icons
 gem "font-awesome-sass"
+
+# For course thumbnail
+gem 'unsplash'

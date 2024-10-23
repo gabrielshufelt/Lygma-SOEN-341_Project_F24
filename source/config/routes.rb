@@ -52,10 +52,13 @@ Rails.application.routes.draw do
 
   resources :course_selection, only: [:index] do
     collection do
-      post :select_course
-      post :update_course_selection
+      post 'select_course'
+      post 'drop_course'
+      post 'update_course_selection'
     end
   end
+
+  resources :courses, only: [:create, :destroy]
 
   get "up" => "rails/health#show", as: :rails_health_check
   # TODO: Remove these routes as they are no longer used

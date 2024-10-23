@@ -16,15 +16,14 @@
   </head>
 
   <body>
-    <div class="<%= user_signed_in? ? 'signed-in' : 'not-signed-in' %>">    
-      <% if current_page?(controller: '/course_selection', action: 'index') %>
-      <% elsif user_signed_in? %>
+    <div class="<%= user_signed_in? ? 'signed-in' : 'not-signed-in' %>">
+      <% if user_signed_in? && session[:selected_course_id] && !current_page?(course_selection_index_path) %>
         <% if current_user.instructor? %>
           <%= render '/instructor_dashboard/navbar' %>
         <% elsif current_user.student? %>
           <%= render '/student_dashboard/navbar' %>
         <% end %>
-      <% else %>
+      <% elsif !user_signed_in? %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
       <div class="content">
