@@ -1,9 +1,18 @@
 <div class="containers hall-building">
 	<div class="gradient-filter">
-		<section class="section one">
+		<header class="section one">
+			<h1>Teams</h1>
+		</header>
+		<section class="section">
 			<div class=project-header>
-                <h2>Project #</h2>
-            </div>
+				<% @teams_by_project.each do |project_teams| %>
+					<%= render 'partials/collapsible_box',
+						title: project_teams[:project_title],
+						collapsed: true,
+						content: render('student_dashboard/teams', project_teams:)
+					%>
+				<% end %>
+			</div>
 		</section>
 	</div>
 </div>

@@ -8,7 +8,7 @@ class StudentDashboardController < ApplicationController
   end
 
   def teams
-    @student_teams = student_teams
+    @teams_by_project = teams_by_project
   end
 
   def evaluations
@@ -49,17 +49,20 @@ class StudentDashboardController < ApplicationController
     }
   end
 
-  def student_teams
-    projects = @student.courses.map(&:projects).flatten
+  def teams_by_project
+    projects = @student.courses.map(&:projects).flatten.uniq
     return [] if projects.empty? # Return empty array if no projects are found
 
-    projects.map do |project|
+    teams = projects.map do |project|
+      student_team = @student.teams.find_by(project_id: project.id)
       {
-        project_id: project.id,
-        student_team: @student.teams.where(project_id: project.id),
+        project_title: project.title,
+        student_team: student_team.present? ? student_team : nil,
+        student_team_members: (student_team.members_to_string if student_team.present?),
         all_teams: project.teams
       }
     end
+    teams || {}
   end
 
   def student_evaluations

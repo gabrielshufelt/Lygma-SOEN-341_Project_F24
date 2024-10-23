@@ -7,7 +7,7 @@ class Team < ApplicationRecord
 
   has_many :team_memberships, dependent: :destroy
   has_many :students, through: :team_memberships, source: :user
-  
+
   has_many :evaluations, through: :students, source: :evaluations_as_evaluatee, dependent: :destroy
 
   def add_student(student)
@@ -30,5 +30,15 @@ class Team < ApplicationRecord
 
   def has_space
     students.size < 6
+  end
+
+  def members_to_string
+    string = ''
+
+    students.each do |student|
+      string += "#{student.first_name} #{student.last_name}, "
+    end
+
+    string.chomp!(', ') if string.present?
   end
 end

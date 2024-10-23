@@ -1,0 +1,75 @@
+<section class="section">
+  <h5><strong>My Team Details</strong></h5>
+  <ul style="list-style-type: none">
+    <% if project_teams[:student_team].present? %>
+      <li><span style="font-weight: 600">Name: </span><%= project_teams[:student_team]&.name %></li>
+      <li><span style="font-weight: 600">Description: </span><%= project_teams[:student_team]&.description %></li>
+      <li><span style="font-weight: 600">Members: </span><%= project_teams[:student_team_members] %></li>
+      <li style="display: flex; column-gap: 8px">
+        <%= button_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
+        <%= button_to "Leave", new_team_path, class: "button secondary" %>
+      </li>
+    <% else %>
+      <li style="display: flex; column-gap: 8px; justify-content: space-between; align-items: center">
+        Create or join a team to view your team details.
+        <%= button_to new_team_path, class: "button primary", method: :get do %>
+          <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</section>
+<br/>
+<section class="section">
+  <h5><strong>All Teams</strong></h5>
+  <ul style="list-style-type: none">
+    <% if project_teams[:all_teams].present? %>
+      <li>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Team Name</th>
+              <th>Description</th>
+              <th>Members</th>
+              <th>Project</th>
+              <th>Capacity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% project_teams[:all_teams].each do |team| %>
+              <tr>
+                <td><%= team.name %></td>
+                <td><%= team.description %></td>
+                <td>
+                  <% if team.students.count > 0 %>
+                    <% team.students.each_with_index do |s, index| %>
+                      <%= s.first_name + ' ' + s.last_name %><%= ', ' unless index == team.students.size - 1 %>
+                    <% end %>
+                  <% else %>
+                    No members.
+                  <% end %>
+                </td>
+                <td><%= team.project.title %></td>
+                <td>
+                  <span style="<%= 'color: var(--red)' unless team.has_space %>">
+                    <%= team.students.count %>/6
+                  </span>
+                </td>
+                <td>
+                  <% if team.id == project_teams[:student_team]&.id %>
+                    <%= button_to "Leave", new_team_path, class: "button secondary", method: :get %>
+                  <% else %>
+                    <%= button_to "Join", new_team_path, class: "button primary", method: :get %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </li>
+    <% else %>
+      <li>No teams have been created yet.</li>
+    <% end %>
+  </ul>
+</section>
