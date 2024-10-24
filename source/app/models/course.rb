@@ -9,7 +9,7 @@ class Course < ApplicationRecord
 
   def enroll(new_students)
     new_students.each do |student|
-      course << student unless students.exists?(student.id)
+      students << student unless students.exists?(student.id)
     end
   end
 end
