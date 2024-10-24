@@ -1,0 +1,95 @@
+<div class="containers registrations">
+  <div class="gradient-filter">
+    <div class="title">
+      <h1>Create a new account.</h1>
+      <p>Already have an account? <%= link_to "Log in.", new_user_session_path %></p>
+    </div>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "simple-form" }) do |f| %>
+      
+      <div class="fields">
+        <div class="half">
+          <%= f.label :first_name, "First Name" %>
+          <%= f.text_field :first_name, placeholder: "John", class: "#{'input-error' if resource.errors[:first_name].any?}" %>
+          <% if resource.errors[:first_name].any? %>
+            <div class="error-message">
+              <%= "First name " + resource.errors[:first_name].first %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="half">
+          <%= f.label :last_name, "Last Name" %>
+          <%= f.text_field :last_name, placeholder: "Smith", class: "#{'input-error' if resource.errors[:last_name].any?}" %>
+          <% if resource.errors[:last_name].any? %>
+            <div class="error-message">
+              <%= "Last name " + resource.errors[:last_name].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="fields">
+        <div class="full">
+          <%= f.label :role %>
+          <%= f.select :role, [["Student", "student"], ["Instructor", "instructor"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:role].any?}" %>
+          <% if resource.errors[:role].any? %>
+            <div class="error-message">
+              <%= "Role " + resource.errors[:role].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    <div class="fields">
+        <div class="full">
+          <%= f.label :sex %>
+          <%= f.select :sex, [["Male", "male"], ["Female", "female"], ["Other", "other"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:sex].any?}" %>
+          <% if resource.errors[:sex].any? %>
+            <div class="error-message">
+              <%= "Sex " + resource.errors[:sex].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="fields">
+        <div class="full">
+          <%= f.label :email %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "johnsmith@example.com", class: "#{'input-error' if resource.errors[:email].any?}" %>
+          <% if resource.errors[:email].any? %>
+            <div class="error-message">
+              <%= "Email " + resource.errors[:email].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="fields">
+        <div class="half">
+          <%= f.label :password %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "#{'input-error' if resource.errors[:password].any?}" %>
+          <% if resource.errors[:password].any? %>
+            <div class="error-message">
+              <%= "Password " + resource.errors[:password].first %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="half">
+          <%= f.label :password_confirmation %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "#{'input-error' if resource.errors[:password_confirmation].any?}" %>
+          <% if resource.errors[:password_confirmation].any? %>
+            <div class="error-message">
+              <%= "Password confirmation " + resource.errors[:password_confirmation].first %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Sign up" %>
+      </div>
+      
+    <% end %>
+  </div>
+</div>

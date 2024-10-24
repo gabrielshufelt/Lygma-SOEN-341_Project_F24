@@ -1,0 +1,35 @@
+<!-- This is a sample header just to get a feel to the website, frontend dev pls make it look better :) -->
+<!-- For now it only loads if the user is not signed in (logic is in application.html.erb) -->
+<!-- when new dashboard made could implement here or somewhere else -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="<%= root_path %>">
+      <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if selected == 'home' %>" href="<%= root_path %>">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if selected == 'about' %>" href="<%= about_pages_path %>">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= 'active' if selected == 'contact' %>" href="<%= contact_pages_path %>">Contact</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav me-4" style="gap: 8px">
+        <li class="nav-item">
+          <%= link_to "Sign Up", new_user_registration_path, class: 'button primary' %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'Log In', new_user_session_path, class: 'button secondary' %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

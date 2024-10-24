@@ -1,0 +1,23 @@
+<div id="team-members">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Members</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% team_members.each do |student| %>
+        <tr>
+          <td><%= student.first_name + ' ' + student.last_name %></td>
+          <td>
+            <%= link_to remove_member_team_path(@team, user_id: student.id), method: :delete, data: { turbo_method: :delete } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

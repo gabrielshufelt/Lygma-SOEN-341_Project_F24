@@ -1,0 +1,37 @@
+<div class="containers hall-building">
+	<div class="gradient-filter">
+		<header class="title">
+				<h1>Hello <%= current_user.first_name %>!</h1>
+				<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
+		</header>
+		<section class="instructor-dashboard">
+			<div class="stats">
+				<div class="row top-stats">
+					<div class="total-teams">
+						<h2>
+							<i class="fa-solid fa-users fa-lg"></i><br/>
+							<%= @teams.count %><br/>
+							Teams
+						</h2>
+					</div>
+					<div class="evaluations-completed">
+						<h2>
+							<i class="fa-solid fa-check fa-lg"></i><br/>
+							<%= @completed_evaluations.count %><br/>
+							Evaluations Completed
+						</h2>
+					</div>
+					<div class="evaluations-pending">
+						<h2>
+							<i class="fa-solid fa-xmark fa-lg"></i><br/>
+							<%= @pending_evaluations.count %><br/>
+							Evaluations Pending
+						</h2>
+					</div>
+				</div>
+				<div class="row teams-progression-chart">
+				</div>
+			</div>
+		</section>
+	</div>
+</div>

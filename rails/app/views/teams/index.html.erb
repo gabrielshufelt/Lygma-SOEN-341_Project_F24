@@ -1,0 +1,19 @@
+<div class="containers registrations">
+  <div class="gradient-filter">
+    <div class="title">
+      <h1>Teams</h1>
+    </div>
+  </div>
+</div>
+
+
+<div id = "teams">
+  <% @teams.each do |team| %>
+    <%= render team %>
+    <p>
+      <%= link_to "Show this team", team %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New team", new_team_path %>
