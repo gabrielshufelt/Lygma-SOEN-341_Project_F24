@@ -1,0 +1,55 @@
+<div class="evaluation-section">
+  <!-- Completed  -->
+  <div class="completed-evaluations">
+    <h3>Completed</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Cooperation</th>
+          <th>Conceptual Contribution</th>
+          <th>Practical Contribution</th>
+          <th>Work Ethic</th>
+          <th>Comments</th>
+          <th>Date Completed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% project_evaluations[:completed].each do |completed_eval| %>
+          <tr>
+            <td><%= completed_eval[:member_name] %></td>
+            <td><%= completed_eval[:cooperation_rating] %></td>
+            <td><%= completed_eval[:conceptual_rating] %></td>
+            <td><%= completed_eval[:practical_rating] %></td>
+            <td><%= completed_eval[:work_ethic_rating] %></td>
+            <td><%= completed_eval[:comments] %></td>
+            <td><%= completed_eval[:date_completed].strftime('%d/%m/%Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pending  -->
+  <div class="pending-evaluations">
+    <h3>Pending</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Members</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% project_evaluations[:pending].each do |pending_eval| %>
+          <tr>
+            <td><%= pending_eval[:member_name] %></td>
+            <td>
+                Add new evaluation
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

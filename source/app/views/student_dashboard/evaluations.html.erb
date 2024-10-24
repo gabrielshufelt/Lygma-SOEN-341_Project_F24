@@ -1,7 +1,21 @@
 <div class="containers hall-building">
 	<div class="gradient-filter">
-		<section class="student-">
+		<header class="section one eval">
 			<h1>Evaluations</h1>
+			<div class="new-eval-box">
+				<i class="fa-solid fa-plus"></i><span>Create New Evaluation</span>
+			</div>
+		</header>
+		<section class="section">
+			<div class="evaluations-header">
+				<% @student_evaluations.each do |project_evaluations| %>
+					<%= render 'partials/collapsible_box',
+						title: "#{project_evaluations[:project_title]} (due #{project_evaluations[:due_date].strftime('%B %d')})",
+						collapsed: true,
+						content: render('student_dashboard/evaluations', project_evaluations: project_evaluations)
+					%>
+				<% end %>
+			</div>
 		</section>
 	</div>
 </div>

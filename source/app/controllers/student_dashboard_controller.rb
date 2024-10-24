@@ -72,9 +72,24 @@ class StudentDashboardController < ApplicationController
     projects.map do |project|
       {
         project_id: project.id,
+        project_title: project.title,
         due_date: project.due_date,
-        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed'),
-        pending: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
+        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed').map do |eval|
+          {
+            member_name: eval.evaluatee.first_name,
+            cooperation_rating: eval.cooperation_rating,
+            conceptual_rating: eval.conceptual_rating,
+            practical_rating: eval.practical_rating,
+            work_ethic_rating: eval.work_ethic_rating,
+            comments: eval.comment,
+            date_completed: eval.date_completed
+          }
+        end,
+        pending: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending').map do |eval|
+          {
+            member_name: eval.evaluatee.first_name,
+          }
+        end
       }
     end
   end
