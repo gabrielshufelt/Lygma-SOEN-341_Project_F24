@@ -1,10 +1,36 @@
-<p style="color: green"><%= notice %></p>
+<div class="containers hall-building">
+  <div class="gradient-filter">
+    <header class="title">
+      <h1>Project Details</h1>
+    </header>
+    <section class="instructor-dashboard-projects">
+      <div id="<%= dom_id @project %>">
+        <p>
+          <strong>Title:</strong>
+          <%= @project.title %>
+        </p>
 
-<%= render @project %>
+        <p>
+          <strong>Description:</strong>
+          <%= @project.description || 'No description provided.' %>
+        </p>
 
-<div>
-  <%= link_to "Edit this project", edit_project_path(@project) %> |
-  <%= link_to "Back to projects", projects_path %>
+        <p>
+          <strong>Due Date:</strong>
+          <%= @project.due_date.strftime('%B %d, %Y') %>
+        </p>
 
-  <%= button_to "Destroy this project", @project, method: :delete %>
+        <p>
+          <strong>Maximum Team Size:</strong>
+          <%= @project.maximum_team_size %>
+        </p>
+
+        <div class="actions">
+          <%= link_to 'Edit', edit_project_path(@project), class: "button secondary" %>
+          <%= link_to 'Back to Projects', projects_path, class: "button" %>
+          <%= link_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: "button danger" %>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
