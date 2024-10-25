@@ -1,7 +1,8 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: [:index, :teams, :results]  
+  before_action :set_instructor, only: [:index, :teams, :results, :settings]  
   before_action :authenticate_user!
   before_action :ensure_instructor_role
+  before_action :set_selected_course, only: [:index, :teams, :results, :settings]
 
   def index
     load_instructor_teams
@@ -9,7 +10,7 @@ class InstructorDashboardController < ApplicationController
     load_all_ratings
 
     respond_to do |format|
-      format.html { render :index} # This will render app/views/instructor_dashboard/index.html.erb
+      format.html { render :index } # This will render app/views/instructor_dashboard/index.html.erb
       format.json { render json: { teams: @teams, completed_evaluations: @completed_evaluations, pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
     end
   end
@@ -37,14 +38,36 @@ class InstructorDashboardController < ApplicationController
     end
   end
 
+  def settings
+    # Refactor to use settings view
+    # This is a placeholder for future settings functionality
+    respond_to do |format|
+      format.html { render :settings }
+      format.json { render json: { instructor: @instructor, selected_course: @selected_course } }
+    end
+  end
+
   private
 
+  def set_selected_course
+    if params[:course_id]
+      @selected_course = current_user.courses_taught.find_by(id: params[:course_id])
+    end
+  
+    @selected_course ||= current_user.courses_taught.first
+  
+    unless @selected_course
+      flash[:alert] = "No courses available for selection."
+      redirect_to root_path # Or another appropriate path
+    end
+  end
+
   def load_instructor_teams
-    @teams = Team.where(project_id: Project.where(course_id: current_user.courses_taught.pluck(:id)))
+    @teams = Team.where(project_id: Project.where(course_id: @selected_course.id))
   end
 
   def load_instructor_evaluations
-    instructor_projects = Project.where(course_id: current_user.courses_taught.pluck(:id))
+    instructor_projects = Project.where(course_id: @selected_course.id)
     instructor_evaluations = Evaluation.where(project_id: instructor_projects.pluck(:id))
 
     @completed_evaluations = instructor_evaluations.where(status: "completed")
@@ -74,12 +97,19 @@ class InstructorDashboardController < ApplicationController
   end
 
   def average_rating(category)
-    @instructor.teams.joins(students: :evaluations_as_evaluatee).average("evaluations.#{category}_rating")
+    # Restrict average ratings to the selected course
+    @instructor.teams.joins(:project)
+              .where(projects: { course_id: @selected_course.id })
+              .joins(students: :evaluations_as_evaluatee)
+              .average("evaluations.#{category}_rating")
   end
 
   def load_all_ratings
+    # Only get ratings for the selected course's teams
     teams_ratings = {}
     team_ratings = @instructor.teams
+                              .joins(:project)
+                              .where(projects: { course_id: @selected_course.id })
                               .joins(:evaluations)
                               .group('teams.id', 'teams.name')
                               .select(
