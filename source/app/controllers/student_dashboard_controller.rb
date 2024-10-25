@@ -7,7 +7,7 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
-    @student_evaluations_progression = student_evaluations_progression
+    @student_evaluations_progression = received_evaluations
   end
 
   def teams
@@ -61,7 +61,7 @@ class StudentDashboardController < ApplicationController
 
   def teams_by_project
     projects = @student.courses.map(&:projects).flatten.uniq
-    return [] if projects.empty? # Return empty array if no projects are found
+    return [] if projects.empty?
 
     teams = projects.map do |project|
       student_team = @student.teams.find_by(project_id: project.id)
