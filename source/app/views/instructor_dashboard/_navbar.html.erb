@@ -12,6 +12,10 @@
         <i class="fa-solid fa-bars"></i> Dashboard
       <% end %>
 
+      <%= link_to projects_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(projects_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-folder-open"></i> Projects
+      <% end %>
+
       <%= link_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(teams_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
         <i class="fa-solid fa-users"></i> Teams
       <% end %>
