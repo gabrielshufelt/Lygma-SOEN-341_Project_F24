@@ -1,7 +1,3 @@
-<% content_for :navbar do %>
-  <%= render 'navbar' %>
-<% end %>
-
 <h1>Student Dashboard</h1>
 
 <h2>Upcoming Evaluations</h2>
@@ -9,8 +5,8 @@
   <ul>
     <% @upcoming_evaluations.each do |evaluation| %>
       <li>
-        Project: <%= evaluation.project.name %>
-        Due Date: <%= evaluation.due_date %>
+        Project: <%= evaluation.project.title %>
+        Due Date: <%= evaluation.project.due_date %>
       </li>
     <% end %>
   </ul>
