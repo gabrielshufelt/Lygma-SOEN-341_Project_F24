@@ -377,7 +377,6 @@ footer {
 	color: white;
 	font-weight: 600;
 	cursor: pointer;
-	max-width: 250px;
 	text-decoration: none;
 }
 
@@ -629,6 +628,10 @@ footer {
 
 .center-content li {
 	margin: 5px 0;
+}
+
+.center-content p {
+	font-weight: 300;
 }
 
 .collapsible-box {

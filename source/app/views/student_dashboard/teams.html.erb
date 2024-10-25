@@ -4,7 +4,7 @@
 			<h1>Teams</h1>
 		</header>
 		<section class="section">
-			<div class="project-header">
+			<% unless @teams_by_project.empty? %>
 				<% @teams_by_project.each do |project_teams| %>
 					<%= render 'partials/collapsible_box',
 						title: project_teams[:project_title],
@@ -12,7 +12,14 @@
 						content: render('student_dashboard/teams', project_teams:)
 					%>
 				<% end %>
-			</div>
+			<% else %>
+				<div class="center-wrapper">
+					<section class="center-content">
+						<h3>No project or teams have been created yet.</h3>
+						<p>Teams and projects created by your instructor will appear here.</p>
+					</section>
+				</div>
+			<% end %>
 		</section>
 	</div>
 </div>

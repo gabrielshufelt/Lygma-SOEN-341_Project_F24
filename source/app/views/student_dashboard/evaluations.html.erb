@@ -2,12 +2,14 @@
 	<div class="gradient-filter">
 		<header class="section one eval">
 			<h1>Evaluations</h1>
-			<div class="new-eval-box">
-				<i class="fa-solid fa-plus"></i><span>Create New Evaluation</span>
-			</div>
+			<% unless @student_evaluations.empty? %>
+				<%= button_to new_evaluation_path, class: "button primary", method: :get do %>
+				<i class="fa-solid fa-plus"></i>&nbsp;Create a New Evaluation
+				<% end %>
+			<% end %>
 		</header>
 		<section class="section">
-			<div class="evaluations-header">
+			<% unless @student_evaluations.empty? %>
 				<% @student_evaluations.each do |project_evaluations| %>
 					<%= render 'partials/collapsible_box',
 						title: "#{project_evaluations[:project_title]} (due #{project_evaluations[:due_date].strftime('%B %d')})",
@@ -15,7 +17,14 @@
 						content: render('student_dashboard/evaluations', project_evaluations: project_evaluations)
 					%>
 				<% end %>
-			</div>
+			<% else %>
+				<div class="center-wrapper">
+					<section class="center-content">
+						<h3>No evaluations have been made available yet.</h3>
+						<p>Projects and evaluations will appear here when made available.</p>
+					</section>
+				</div>
+			<% end %>
 		</section>
 	</div>
 </div>

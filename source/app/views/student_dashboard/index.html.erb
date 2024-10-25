@@ -3,12 +3,14 @@
 		<header class="section one">
 			<h1>Hello <%= current_user.first_name %>!</h1>
 			<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
-            <div class="student-overview">
-                <div class="overview one">Cooperation: <%= @avg_ratings[:cooperation]%> </div>
-                <div class="overview two">Conceptual Contribution: <%= @avg_ratings[:conceptual]%></div>
-                <div class="overview three">Practical Contribution: <%= @avg_ratings[:practical]%></div>
-                <div class="overview four">Work Ethic: <%= @avg_ratings[:work_ethic]%></div>
-            </div>
+            <% unless @avg_ratings.empty? %>
+                <div class="student-overview">
+                    <div class="overview one">Cooperation: <%= @avg_ratings[:cooperation]%> </div>
+                    <div class="overview two">Conceptual Contribution: <%= @avg_ratings[:conceptual]%></div>
+                    <div class="overview three">Practical Contribution: <%= @avg_ratings[:practical]%></div>
+                    <div class="overview four">Work Ethic: <%= @avg_ratings[:work_ethic]%></div>
+                </div>
+            <% end %>
 		</header>
 
 		<section class="section">
@@ -42,9 +44,9 @@
                 min: 0,
                 max: 7,
                 xtitle: "Time",
-                ytitle: "Ratings" 
+                ytitle: "Ratings",
+                empty: "You do not have any ratings for this course yet." 
             %>
-
             </div>
         </section>
 	</div>

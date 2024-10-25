@@ -37,8 +37,7 @@ class StudentDashboardController < ApplicationController
   end
 
   def upcoming_evaluations
-    # TODO: refactor to Project.where(course_id: current_course.id).includes(:evaluations)
-    upcoming_evaluations = Project.includes(:evaluations).select do |project|
+    upcoming_evaluations = Project.where(course_id: @selected_course.id).includes(:evaluations).select do |project|
       project.evaluations.any? { |evaluation| evaluation.status == 'pending' }
     end.map do |project|
       {
@@ -50,17 +49,22 @@ class StudentDashboardController < ApplicationController
   end
 
   def avg_ratings
-    completed_evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed')
+    completed_evaluations = Evaluation.joins(:project)
+                                      .where(projects: { course_id: @selected_course.id }, 
+                                              evaluatee_id: @student.id, 
+                                              status: 'completed')
+    return [] if completed_evaluations.empty?
+
     {
-      conceptual: completed_evaluations.average(:conceptual_rating).round(2) || 0.0,
-      cooperation: completed_evaluations.average(:cooperation_rating).round(2) || 0.0,
-      practical: completed_evaluations.average(:practical_rating).round(2) || 0.0,
-      work_ethic: completed_evaluations.average(:work_ethic_rating).round(2) || 0.0
+      conceptual: completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
+      cooperation: completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
+      practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
+      work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
   end
 
   def teams_by_project
-    projects = @student.courses.map(&:projects).flatten.uniq
+    projects = Project.where(course_id: @selected_course.id)
     return [] if projects.empty?
 
     teams = projects.map do |project|
@@ -76,8 +80,8 @@ class StudentDashboardController < ApplicationController
   end
 
   def student_evaluations
-    projects = @student.courses.map(&:projects).flatten
-    return [] if projects.empty? # Return empty array if no projects are found
+    projects = Project.where(course_id: @selected_course.id)
+    return [] if projects.empty?
 
     projects.map do |project|
       {
