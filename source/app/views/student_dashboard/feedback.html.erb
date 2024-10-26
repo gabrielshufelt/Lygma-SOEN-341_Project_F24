@@ -13,8 +13,8 @@
   <ul>
     <% @received_evaluations.each do |evaluation| %>
       <li>
-        From: <%= evaluation.evaluator.name %>
-        Project: <%= evaluation.project.name %>
+        From: <%= evaluation.evaluator.first_name + evaluation.evaluator.last_name %>
+        Project: <%= evaluation.project.title %>
         Date: <%= evaluation.updated_at.to_date %>
       </li>
     <% end %>
