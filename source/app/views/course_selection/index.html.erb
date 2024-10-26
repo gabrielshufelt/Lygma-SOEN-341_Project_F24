@@ -1,0 +1,37 @@
+<div class="containers hall-building">
+  <div class="gradient-filter">
+    <header class="title">
+      <h1>Select a Course</h1>
+      <div class="logout-container">
+        <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "logout-button" do %>
+          <i class="fa-solid fa-right-from-bracket"></i> Log out
+        <% end %>
+      </div>
+    </header>
+    <section class="courses-container">
+      <% if current_user.instructor? %>
+        <% if @courses.present? %>
+          <div class="course-cards-grid">
+            <% @courses.each do |course| %>
+              <%= render 'course_box', course: course %>
+            <% end %>
+            <%= render 'create_course_box' %>
+          </div>
+        <% else %>
+          <p>You haven't created any courses yet.</p>
+          <%= render 'create_course_box' %>
+        <% end %>
+        
+      <% elsif current_user.student? %>
+        <div class="course-cards-grid">
+          <% if @student_courses.present? %>
+            <% @student_courses.each do |course| %>
+              <%= render 'course_box', course: course %>
+            <% end %>
+          <% end %>
+          <%= render 'add_course_box' if @available_courses.present? %>
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

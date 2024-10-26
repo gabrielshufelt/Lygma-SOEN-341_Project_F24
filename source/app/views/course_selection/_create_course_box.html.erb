@@ -1,0 +1,53 @@
+<div class="course-card create-course-card" id="create-course-card">
+  <div class="create-course-content" id="create-course-initial">
+    <i class="fas fa-plus-circle"></i>
+    <h4>Create New Course</h4>
+  </div>
+</div>
+
+<div class="create-course-popup" id="create-course-popup">
+  <div class="create-course-popup-content">
+    <h4>Create New Course</h4>
+    <%= form_with(model: Course.new, url: courses_path, local: true, class: "simple-form", data: { turbo: false }) do |form| %>
+      <div class="fields">
+        <%= form.text_field :code, placeholder: "Course Code (e.g., COEN 244)", required: true %>
+      </div>
+      <div class="fields">
+        <%= form.text_field :title, placeholder: "Course Title", required: true %>
+      </div>
+      <div class="form-actions">
+        <%= form.submit "Create", class: "button primary" %>
+        <button type="button" class="button secondary" id="cancel-create-course">Cancel</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('turbo:load', function() {
+  const createCourseCard = document.getElementById('create-course-card');
+  const createCoursePopup = document.getElementById('create-course-popup');
+  const cancelButton = document.getElementById('cancel-create-course');
+
+  if (createCourseCard) {
+    createCourseCard.addEventListener('click', function(event) {
+      createCoursePopup.style.display = 'flex';
+    });
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      createCoursePopup.style.display = 'none';
+    });
+  }
+
+  if (createCoursePopup) {
+    createCoursePopup.addEventListener('click', function(event) {
+      if (event.target === createCoursePopup) {
+        createCoursePopup.style.display = 'none';
+      }
+    });
+  }
+});
+</script>

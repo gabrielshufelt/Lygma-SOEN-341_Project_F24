@@ -1,0 +1,14 @@
+<div class="course-card add-course-card">
+  <h4>Select a Course to Add</h4>
+  <%= form_with(url: update_course_selection_course_selection_index_path, method: :post, local: true, class: "add-course-form") do |form| %>
+    <div class="fields">
+      <%= form.select :course_id, 
+                      options_for_select(@available_courses.map { |c| ["#{c.code} - #{c.title}", c.id] }),
+                      { prompt: "Select a course" },
+                      { required: true, class: "course-select" } %>
+    </div>
+    <div class="form-actions">
+      <%= form.submit "Add Course", class: "button primary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<h1>My Evaluations</h1>
+
+<% if @student_evaluations.any? %>
+  <% @student_evaluations.each do |project| %>
+    <h3>Project: <%= project[:project_id] %></h3>
+    <p>Due Date: <%= project[:due_date] %></p>
+    <h4>Completed Evaluations:</h4>
+    <ul>
+      <% project[:completed].each do |evaluation| %>
+        <li>Evaluation for: <%= evaluation.evaluatee.first_name + evaluation.evaluatee.last_name %></li>
+      <% end %>
+    </ul>
+    <h4>Pending Evaluations:</h4>
+    <ul>
+      <% project[:pending].each do |evaluation| %>
+        <li>Evaluation for: <%= evaluation.evaluatee.first_name + evaluation.evaluatee.last_name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% else %>
+  <p>No evaluations found.</p>
+<% end %>
