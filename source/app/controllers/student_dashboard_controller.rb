@@ -7,7 +7,8 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
-    @student_evaluations_progression = received_evaluations
+    @received_evaluations = received_evaluations
+    
   end
 
   def teams
@@ -112,16 +113,36 @@ class StudentDashboardController < ApplicationController
   end
 
   def received_evaluations
-    evaluations = Evaluation.joins(:project)
-              .where(evaluatee_id: @student.id, status: 'completed', projects: { course_id: @selected_course.id })
-              .where(evaluatee_id: current_user)
-              .group('DATE(date_completed)')
-              .select('DATE(date_completed) as date_completed,
-                      AVG(cooperation_rating) as avg_cooperation,
-                      AVG(conceptual_rating) as avg_conceptual,
-                      AVG(practical_rating) as avg_practical,
-                      AVG(work_ethic_rating) as avg_work_ethic')
+    @progression_data = []
 
-    evaluations || []
-  end
+    projects = Project.where(course_id: @selected_course.id).includes(:evaluations)
+    
+    evaluations_data = projects.each_with_object({}) do |project, hash|
+      individual_ratings = project.evaluations
+                          .where(evaluatee_id: @student.id, status: 'completed')
+                          .order(:date_completed)
+      
+      individual_ratings.each do |rating|
+        @progression_data << {
+          date_completed: rating.date_completed,
+          cooperation: rating.cooperation_rating,
+          conceptual: rating.conceptual_rating,
+          practical: rating.practical_rating,
+          work_ethic: rating.work_ethic_rating
+        }
+      end
+
+      hash[project.id] = {
+        project_title: project.title,
+        due_date: project.due_date,
+        individual_ratings: individual_ratings,
+        avg_cooperation: individual_ratings.average(:cooperation_rating)&.round(2),
+        avg_conceptual: individual_ratings.average(:conceptual_rating)&.round(2),
+        avg_practical: individual_ratings.average(:practical_rating)&.round(2),
+        avg_work_ethic: individual_ratings.average(:work_ethic_rating)&.round(2)
+      }
+    end
+  
+    evaluations_data || {}
+  end  
 end

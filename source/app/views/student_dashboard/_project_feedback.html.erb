@@ -1,0 +1,24 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>Cooperation</th>
+      <th>Conceptual Contribution</th>
+      <th>Practical Contribution</th>
+      <th>Work Ethic</th>
+      <th>Comments</th>
+      <th>Date completed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% project_data[:individual_ratings].each do |evaluation| %>
+      <tr>
+        <td><%= evaluation.cooperation_rating %></td>
+        <td><%= evaluation.conceptual_rating %></td>
+        <td><%= evaluation.practical_rating %></td>
+        <td><%= evaluation.work_ethic_rating %></td>
+        <td><%= evaluation.comment.present? ? evaluation.comment : 'No comment' %></td>
+        <td><%= evaluation.date_completed.strftime('%d/%m/%Y') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

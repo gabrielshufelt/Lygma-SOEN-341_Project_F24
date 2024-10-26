@@ -33,13 +33,12 @@
             <h2>Progression Chart</h2>
             <div class="student-chart">
                 <% # This will have to be refactored to use @student_evaluations once the 'select a course' page is implemented %>
-
-            <%= line_chart [
-                    { name: "Cooperation", data: @student_evaluations_progression.map { |eval| [eval.date_completed, eval.avg_cooperation.to_f] }.to_h },
-                    { name: "Conceptual Contribution", data: @student_evaluations_progression.map { |eval| [eval.date_completed, eval.avg_conceptual.to_f] }.to_h },
-                    { name: "Practical Contribution", data: @student_evaluations_progression.map { |eval| [eval.date_completed, eval.avg_practical.to_f] }.to_h },
-                    { name: "Work Ethic", data: @student_evaluations_progression.map { |eval| [eval.date_completed, eval.avg_work_ethic.to_f] }.to_h }
-                ],  
+                <%= line_chart [
+                    { name: "Cooperation", data: @progression_data.map { |d| [d[:date_completed], d[:cooperation].to_f] }.to_h },
+                    { name: "Conceptual Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:conceptual].to_f] }.to_h },
+                    { name: "Practical Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:practical].to_f] }.to_h },
+                    { name: "Work Ethic", data: @progression_data.map { |d| [d[:date_completed], d[:work_ethic].to_f] }.to_h }
+                ],
                 colors: ["#3bd23b", "#000", "#bd2611", "#0000ff"], 
                 min: 0,
                 max: 7,
