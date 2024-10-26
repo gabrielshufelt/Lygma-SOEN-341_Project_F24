@@ -3,7 +3,7 @@
     <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
   </div>
   <div class="nav-signedin-options">
-    <% if @selected_course && @selected_course.id %>
+    <% if @selected_course%>
       <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
         <i class="fa-solid fa-exchange-alt"></i> Change Course
       <% end %>

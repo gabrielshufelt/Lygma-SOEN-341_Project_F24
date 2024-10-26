@@ -101,3 +101,5 @@ gem "font-awesome-sass"
 
 # For course thumbnail
 gem 'pexels'
+
+gem 'dotenv-rails'

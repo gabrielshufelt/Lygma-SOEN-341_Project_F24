@@ -1,8 +1,8 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: %i[index teams results settings]
+  before_action :set_instructor, only: [:index, :teams, :results, :settings]  
   before_action :authenticate_user!
   before_action :ensure_instructor_role
-  before_action :set_selected_course, only: %i[index teams results settings]
+  before_action :set_selected_course, only: [:index, :teams, :results, :settings]
 
   def index
     load_instructor_teams
@@ -11,10 +11,7 @@ class InstructorDashboardController < ApplicationController
 
     respond_to do |format|
       format.html { render :index } # This will render app/views/instructor_dashboard/index.html.erb
-      format.json do
-        render json: { teams: @teams, completed_evaluations: @completed_evaluations,
-                       pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings }
-      end
+      format.json { render json: { teams: @teams, completed_evaluations: @completed_evaluations, pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
     end
   end
 
@@ -46,6 +43,7 @@ class InstructorDashboardController < ApplicationController
   end
 
   def settings
+    # Refactor to use settings view
     # This is a placeholder for future settings functionality
     respond_to do |format|
       format.html { render :settings }
@@ -56,14 +54,16 @@ class InstructorDashboardController < ApplicationController
   private
 
   def set_selected_course
-    @selected_course = current_user.courses_taught.find_by(id: params[:course_id]) if params[:course_id]
-
+    if params[:course_id]
+      @selected_course = current_user.courses_taught.find_by(id: params[:course_id])
+    end
+  
     @selected_course ||= current_user.courses_taught.first
-
-    return if @selected_course
-
-    flash[:alert] = 'No courses available for selection.'
-    redirect_to root_path # Or another appropriate path
+  
+    unless @selected_course
+      flash[:alert] = "No courses available for selection."
+      redirect_to root_path # Or another appropriate path
+    end
   end
 
   def load_instructor_teams
@@ -103,9 +103,9 @@ class InstructorDashboardController < ApplicationController
   def average_rating(category)
     # Restrict average ratings to the selected course
     @instructor.teams.joins(:project)
-               .where(projects: { course_id: @selected_course.id })
-               .joins(students: :evaluations_as_evaluatee)
-               .average("evaluations.#{category}_rating")
+              .where(projects: { course_id: @selected_course.id })
+              .joins(students: :evaluations_as_evaluatee)
+              .average("evaluations.#{category}_rating")
   end
 
   def load_all_ratings

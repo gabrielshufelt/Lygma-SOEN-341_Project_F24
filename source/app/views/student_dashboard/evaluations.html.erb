@@ -1,7 +1,3 @@
-<% content_for :navbar do %>
-  <%= render 'navbar' %>
-<% end %>
-
 <h1>My Evaluations</h1>
 
 <% if @student_evaluations.any? %>
@@ -11,13 +7,13 @@
     <h4>Completed Evaluations:</h4>
     <ul>
       <% project[:completed].each do |evaluation| %>
-        <li>Evaluation for: <%= evaluation.evaluatee.name %></li>
+        <li>Evaluation for: <%= evaluation.evaluatee.first_name + evaluation.evaluatee.last_name %></li>
       <% end %>
     </ul>
     <h4>Pending Evaluations:</h4>
     <ul>
       <% project[:pending].each do |evaluation| %>
-        <li>Evaluation for: <%= evaluation.evaluatee.name %></li>
+        <li>Evaluation for: <%= evaluation.evaluatee.first_name + evaluation.evaluatee.last_name %></li>
       <% end %>
     </ul>
   <% end %>

@@ -1,13 +1,4 @@
 Rails.application.routes.draw do
-  resources :projects
-  authenticated :user, ->(u) { u.instructor? } do
-    root to: 'instructor_dashboard#index', as: :instructor_root
-  end
-
-  authenticated :user, ->(u) { u.student? } do
-    # this will change to student_dashboard#index
-    root to: 'pages#home', as: :student_root
-  end
 
   unauthenticated do
     root 'pages#home'
@@ -59,9 +50,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :courses, only: %i[create destroy]
+  resources :courses, only: [:create, :destroy]
 
-  get 'up' => 'rails/health#show', as: :rails_health_check
+  get "up" => "rails/health#show", as: :rails_health_check
   # TODO: Remove these routes as they are no longer used
   # get 'instructor', to: 'instructor_dashboard#index'
   # get 'instructor/teams', to: 'instructor_dashboard#teams'
