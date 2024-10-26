@@ -22,7 +22,7 @@ services:
         RAILS_ENV: ${RAILS_ENV}
     command: ["./bin/rails", "server", "-b", "0.0.0.0"]
     environment:
-      - RAILS_ENV=${RAILS_ENV}
+      - RAILS_ENV=${RAILS_ENV:-production}  # Default to production if not set
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -35,8 +35,9 @@ services:
       - db
     ports:
       - "3000:3000"
-    env_file:
-      - .env
+    # Remove or keep env_file based on your local vs production setup
+    # env_file:
+    #   - .env
 
   adminer:
     image: adminer

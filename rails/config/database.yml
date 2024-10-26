@@ -25,6 +25,6 @@ production:
   database: RealRatings_production
   username: <%= ENV['POSTGRES_USER'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>
-  # double check ssl mode
-  sslmode: <%= ENV.fetch("PGSSLMODE", "prefer") %>
+  sslmode: require
+
 

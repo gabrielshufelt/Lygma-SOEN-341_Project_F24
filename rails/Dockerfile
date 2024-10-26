@@ -2,6 +2,7 @@
 
 # ARG to set the Ruby version, matching the Gemfile and .ruby-version
 ARG RUBY_VERSION=3.3.5
+ARG RAILS_ENV=production  # Set default RAILS_ENV as production
 FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
 # Install necessary packages
@@ -14,7 +15,6 @@ RUN apt-get update -qq && \
 WORKDIR /rails
 
 # Ensure we pass RAILS_ENV at runtime
-ARG RAILS_ENV
 ENV RAILS_ENV=${RAILS_ENV}
 
 # Set BUNDLE_PATH dynamically based on environment
