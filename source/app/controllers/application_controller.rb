@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  before_action :clear_stale_sessions
   before_action :sign_out_on_public_pages
   before_action :set_selected_course, unless: :skip_set_selected_course?
 
@@ -19,16 +18,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def clear_stale_sessions
-    return if @sessions_cleared
-    
-    if user_signed_in?
-      sign_out current_user
-      redirect_to root_path, alert: 'Previous session was cleared. Please sign in again.'
-    end
-    
-    @sessions_cleared = true
-  end
 
   # Force sign-out on certain public pages
   def sign_out_on_public_pages

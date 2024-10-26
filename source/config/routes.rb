@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  authenticated :user, ->(u) { u.instructor? } do
+    root to: 'course_selection#index', as: :instructor_root
+  end
+
+  authenticated :user, ->(u) { u.student? } do
+    root to: 'course_selection#index', as: :student_root
+  end
 
   unauthenticated do
     root 'pages#home'
