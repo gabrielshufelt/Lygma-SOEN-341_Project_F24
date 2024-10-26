@@ -11,6 +11,8 @@
 				<div class="overview three">Practical Contribution: <%= @avg_ratings[:practical]%></div>
 				<div class="overview four">Work Ethic: <%= @avg_ratings[:work_ethic]%></div>
 			</div>
+		<% else %>
+			<p>No ratings available yet.</p>
 		<% end %>
 		</header>
 
