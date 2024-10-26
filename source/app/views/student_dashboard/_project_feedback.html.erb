@@ -10,15 +10,23 @@
     </tr>
   </thead>
   <tbody>
-    <% project_data[:individual_ratings].each do |evaluation| %>
+    <% if project_data[:individual_ratings].empty? %>
       <tr>
-        <td><%= evaluation.cooperation_rating %></td>
-        <td><%= evaluation.conceptual_rating %></td>
-        <td><%= evaluation.practical_rating %></td>
-        <td><%= evaluation.work_ethic_rating %></td>
-        <td><%= evaluation.comment.present? ? evaluation.comment : 'No comment' %></td>
-        <td><%= evaluation.date_completed.strftime('%d/%m/%Y') %></td>
+        <td colspan="6" class="text-center" style="font-weight: 600;">
+          No feedback received yet for <%= project_data[:project_title] %>.
+        </td>
       </tr>
+    <% else %>
+      <% project_data[:individual_ratings].each do |evaluation| %>
+        <tr>
+          <td><%= evaluation.cooperation_rating %></td>
+          <td><%= evaluation.conceptual_rating %></td>
+          <td><%= evaluation.practical_rating %></td>
+          <td><%= evaluation.work_ethic_rating %></td>
+          <td><%= evaluation.comment.present? ? evaluation.comment : 'No comment' %></td>
+          <td><%= evaluation.date_completed.strftime('%d/%m/%Y') %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

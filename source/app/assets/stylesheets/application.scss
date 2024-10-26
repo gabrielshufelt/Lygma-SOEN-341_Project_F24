@@ -84,6 +84,7 @@ p {
 
 .section {
 	margin: 0px 30px;
+	max-width: 100%;
 
 	> h2 {
 		font-weight: bold;
@@ -642,6 +643,7 @@ footer {
 	border: none;
 	margin-bottom: 1rem;
 	box-shadow: black 0px 0px 10px;
+	max-width: 100%;
 }
 
 .collapsible-header {
