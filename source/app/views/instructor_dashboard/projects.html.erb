@@ -1,0 +1,12 @@
+<div class="containers hall-building">
+  <div class="gradient-filter">
+    <header class="section one eval">
+        <h1>Projects</h1>
+        <% unless @student_evaluations.empty? %>
+            <%= button_to new_evaluation_path, class: "button primary", method: :get do %>
+            <i class="fa-solid fa-plus"></i>&nbsp;Create a New Project
+            <% end %>
+        <% end %>
+    </header>
+  </div>
+</div>

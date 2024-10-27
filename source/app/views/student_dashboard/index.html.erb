@@ -1,23 +1,54 @@
-<h1>Student Dashboard</h1>
 
-<h2>Upcoming Evaluations</h2>
-<% if @upcoming_evaluations.any? %>
-  <ul>
-    <% @upcoming_evaluations.each do |evaluation| %>
-      <li>
-        Project: <%= evaluation.project.title %>
-        Due Date: <%= evaluation.project.due_date %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No upcoming evaluations.</p>
-<% end %>
+<div class="containers hall-building">
+	<div class="gradient-filter">
+		<header class="section one">
+			<h1>Hello <%= current_user.first_name %>!</h1>
+			<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
+            <% unless @avg_ratings.empty? %>
+                <div class="student-overview">
+                    <div class="overview one">Cooperation: <%= @avg_ratings[:cooperation]%> </div>
+                    <div class="overview two">Conceptual Contribution: <%= @avg_ratings[:conceptual]%></div>
+                    <div class="overview three">Practical Contribution: <%= @avg_ratings[:practical]%></div>
+                    <div class="overview four">Work Ethic: <%= @avg_ratings[:work_ethic]%></div>
+                </div>
+            <% end %>
+		</header>
 
-<h2>Average Ratings</h2>
-<ul>
-  <li>Conceptual: <%= @avg_ratings[:conceptual].round(2) %></li>
-  <li>Cooperation: <%= @avg_ratings[:cooperation].round(2) %></li>
-  <li>Practical: <%= @avg_ratings[:practical].round(2) %></li>
-  <li>Work Ethic: <%= @avg_ratings[:work_ethic].round(2) %></li>
-</ul>
+		<section class="section">
+			<h2>Upcoming Evaluations</h2>
+            <div class="upcoming-evaluations-container">
+                <% if @upcoming_evaluations.present? %>
+                    <% @upcoming_evaluations.each do |upcoming_evaluation| %>
+                        <%= render partial: 'evaluation', locals: {upcoming_evaluation:} %>
+                    <% end %>
+                <% else %>
+                    <%= render 'partials/floating_box', 
+                        icon: "fa-solid fa-clock",
+                        content: "No upcoming evaluations" 
+                    %>
+                <% end %>
+            </div>
+		</section>
+
+        <section class="section"> 
+            <h2>Progression Chart</h2>
+            <div class="student-chart">
+                <% # This will have to be refactored to use @student_evaluations once the 'select a course' page is implemented %>
+                <%= line_chart [
+                    { name: "Cooperation", data: @progression_data.map { |d| [d[:date_completed], d[:cooperation].to_f] }.to_h },
+                    { name: "Conceptual Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:conceptual].to_f] }.to_h },
+                    { name: "Practical Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:practical].to_f] }.to_h },
+                    { name: "Work Ethic", data: @progression_data.map { |d| [d[:date_completed], d[:work_ethic].to_f] }.to_h }
+                ],
+                colors: ["#3bd23b", "#000", "#bd2611", "#0000ff"], 
+                min: 0,
+                max: 7,
+                xtitle: "Time",
+                ytitle: "Ratings",
+                empty: "You do not have any ratings for this course yet." 
+            %>
+            </div>
+        </section>
+	</div>
+</div>
+

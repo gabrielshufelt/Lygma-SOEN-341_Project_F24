@@ -32,7 +32,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to instructor_teams_path, notice: "Team was successfully created." }
+        format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), notice: "Team was successfully created." }
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -48,7 +48,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to instructor_teams_path, notice: "Team was successfully updated." }
+        format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), notice: "Team was successfully updated." }
         format.json { render :show, status: :ok, location: @team }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,7 +62,7 @@ class TeamsController < ApplicationController
     @team.destroy!
 
     respond_to do |format|
-      format.html { redirect_to instructor_teams_path, status: :see_other, notice: "Team was successfully destroyed." }
+      format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), status: :see_other, notice: "Team was successfully destroyed." }
       format.json { head :no_content }
     end
   end

@@ -59,12 +59,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_012932) do
     t.integer "user_id", null: false
     t.index ["team_id"], name: "index_team_memberships_on_team_id"
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
+    t.integer "course_id"
+  end
+
+  create_table "team_memberships", id: false, force: :cascade do |t|
+    t.integer "team_id", null: false
+    t.integer "user_id", null: false
+    t.index ["team_id"], name: "index_team_memberships_on_team_id"
+    t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.integer "project_id"
     t.text "description"
     t.integer "project_id"
   end

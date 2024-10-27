@@ -1,0 +1,71 @@
+<div class="evaluation-section">
+  <!-- Completed  -->
+  <div class="completed-evaluations">
+    <h3>Completed</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Cooperation</th>
+          <th>Conceptual Contribution</th>
+          <th>Practical Contribution</th>
+          <th>Work Ethic</th>
+          <th>Comments</th>
+          <th>Date Completed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if project_evaluations[:completed].any? %>
+            <% project_evaluations[:completed].each do |completed_eval| %>
+            <tr>
+                <td><%= completed_eval[:member_name] %></td>
+                <td><%= completed_eval[:cooperation_rating] %></td>
+                <td><%= completed_eval[:conceptual_rating] %></td>
+                <td><%= completed_eval[:practical_rating] %></td>
+                <td><%= completed_eval[:work_ethic_rating] %></td>
+                <td><%= completed_eval[:comments] %></td>
+                <td><%= completed_eval[:date_completed].strftime('%d/%m/%Y') %></td>
+            </tr>
+            <% end %>
+        <% else %>
+            <tr>
+                <td colspan="7" class="text-center" style="font-weight: 600;">
+                    You have not completed any evaluations yet.
+                </td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pending  -->
+  <div class="pending-evaluations">
+    <h3>Pending</h3>
+    <table class="table pending-table" style="align-items: center;">
+      <thead>
+        <tr>
+          <th class="centered-cell">Members</th>
+          <th class="centered-cell">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if project_evaluations[:pending].any? %>
+            <% project_evaluations[:pending].each do |pending_eval| %>
+            <tr>
+                <td class="centered-cell"><%= pending_eval[:member_name] %></td>
+                <td class="centered-cell">
+                    <%= link_to 'Add new evaluation', new_evaluation_path(evaluatee_id: pending_eval[:member_id], project_id: project_evaluations[:project_id]), class: 'button add-eval' %>
+                </td>
+            </tr>
+            <% end %>
+        <% else %>
+            <tr>
+                <td colspan="2" class="text-center" style="font-weight: 600;">
+                    All evaluations have been completed for this project.
+                </td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -11,15 +11,10 @@ Rails.application.routes.draw do
     root 'pages#home'
   end
 
-  resources :pages, only: [:about, :contact, :home] do
-    collection do
-      get :about
-      get :contact
-      get :home
-    end
-  end
+  get 'about', to: 'pages#about'
+  get 'contact', to: 'pages#contact'
+  get 'home', to: 'pages#home'
 
-  # updated resources here
   resources :teams do
     member do
       patch 'add_member'
@@ -27,7 +22,6 @@ Rails.application.routes.draw do
       get 'search_members'
     end
   end
-
 
   devise_for :users, controllers: { registrations: "users/registrations" }
 
@@ -46,6 +40,7 @@ Rails.application.routes.draw do
       get 'teams/:course_id', to: 'student_dashboard#teams', as: 'teams'
       get 'evaluations/:course_id', to: 'student_dashboard#evaluations', as: 'evaluations'
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
+
     end
   end
 
@@ -58,7 +53,21 @@ Rails.application.routes.draw do
   end
 
   resources :courses, only: [:create, :destroy]
+  resources :evaluations
 
   get "up" => "rails/health#show", as: :rails_health_check
+  # TODO: Remove these routes as they are no longer used
+  # get 'instructor', to: 'instructor_dashboard#index'
+  # get 'instructor/teams', to: 'instructor_dashboard#teams'
+  # get 'instructor/results', to: 'instructor_dashboard#results'
+  # get 'instructor/settings', to: 'instructor_dashboard#settings'
+
+  # student dashboard routes
+  get 'student', to: 'student_dashboard#index'
+  get 'student/teams', to: 'student_dashboard#teams'
+  get 'student/evaluations', to: 'student_dashboard#evaluations'
+  get 'student/feedback', to: 'student_dashboard#feedback'
+  get 'student/settings', to: 'student_dashboard#settings'
+
 
 end

@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   # Force sign-out on certain public pages
   def sign_out_on_public_pages
-    public_pages = [about_pages_path, contact_pages_path, home_pages_path]
+    public_pages = [about_path, contact_path, home_path]
 
     if user_signed_in? && public_pages.include?(request.path)
       sign_out(current_user)
@@ -55,4 +55,9 @@ class ApplicationController < ActionController::Base
     (controller_name == 'courses' && action_name == 'create') ||
     (controller_name == 'course_selection' && ['update_course_selection', 'create'].include?(action_name))
   end
+
+  def current_page?(path)
+    request.path == path
+  end
 end
+

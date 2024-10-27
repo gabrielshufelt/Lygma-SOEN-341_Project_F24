@@ -3,13 +3,19 @@
     <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
   </div>
   <div class="nav-signedin-options">
-    <% if @selected_course%>
+    <% if @selected_course && @selected_course.id %>
       <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
         <i class="fa-solid fa-exchange-alt"></i> Change Course
       <% end %>
 
       <%= link_to course_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(course_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
         <i class="fa-solid fa-bars"></i> Dashboard
+      <% end %>
+
+
+      <%# Need to add projects to the routes with /instructor_dashboard_projects.html.erb%>
+      <%= link_to course_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(course_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
+        <i class="fa-solid fa-diagram-project"></i> Projects
       <% end %>
 
       <%= link_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(teams_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>

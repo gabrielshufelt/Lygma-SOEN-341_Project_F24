@@ -13,13 +13,13 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if selected == 'home' %>" href="<%= root_path %>">Home</a>
+          <a class="nav-link <%= 'active' if selected == 'home' %>" href="<%= home_path %>">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if selected == 'about' %>" href="<%= about_pages_path %>">About</a>
+          <a class="nav-link <%= 'active' if selected == 'about' %>" href="<%= about_path %>">About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= 'active' if selected == 'contact' %>" href="<%= contact_pages_path %>">Contact</a>
+          <a class="nav-link <%= 'active' if selected == 'contact' %>" href="<%= contact_path %>">Contact</a>
         </li>
       </ul>
       <ul class="navbar-nav me-4" style="gap: 8px">

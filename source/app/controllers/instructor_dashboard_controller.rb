@@ -39,7 +39,9 @@ class InstructorDashboardController < ApplicationController
   end
 
   def settings
+
     # Refactor to use settings view
+
     # This is a placeholder for future settings functionality
     respond_to do |format|
       format.html { render :settings }
