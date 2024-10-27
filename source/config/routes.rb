@@ -40,7 +40,8 @@ Rails.application.routes.draw do
       get 'teams/:course_id', to: 'student_dashboard#teams', as: 'teams'
       get 'evaluations/:course_id', to: 'student_dashboard#evaluations', as: 'evaluations'
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
-
+      get 'new_evaluation/:course_id', to: 'student_dashboard#new_evaluation', as: 'new_evaluation'
+      patch 'submit_evaluation', to: 'student_dashboard#submit_evaluation'
     end
   end
 

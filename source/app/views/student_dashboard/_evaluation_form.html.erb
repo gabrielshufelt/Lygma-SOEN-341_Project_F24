@@ -1,0 +1,53 @@
+<%= form_with(model: evaluatee[:evaluation], 
+              url: submit_evaluation_student_dashboard_index_path(course_id: @course.id), 
+              method: :patch, 
+              local: true, 
+              class: 'evaluation-form', 
+              data: { turbo: false }) do |form| %>
+  <%= form.hidden_field :id %>
+  <%= form.hidden_field :evaluator_id %>
+  <%= form.hidden_field :evaluatee_id %>
+  <%= form.hidden_field :project_id %>
+
+  <div class="slider-grid">
+    <% ['cooperation', 'conceptual', 'practical', 'work_ethic'].each do |criterion| %>
+      <div class="slider-group">
+        <%= form.label "#{criterion}_rating", criterion.titleize, class: "slider-label" %>
+        <div class="slider-container">
+          <%= form.range_field "#{criterion}_rating", in: 0..7, step: 1, class: 'custom-slider' %>
+          <div class="slider-numbers">
+            <% (0..7).each do |num| %>
+              <span><%= num %></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="comment-box">
+    <%= form.label :comment, "Additional Comments" %>
+    <%= form.text_area :comment, class: 'form-control', placeholder: 'Enter your comments here...' %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit 'Submit Evaluation', class: 'button primary' %>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener('turbo:load', function() {
+  const sliders = document.querySelectorAll('.custom-slider');
+  sliders.forEach(slider => {
+    slider.addEventListener('input', function() {
+      const value = this.value;
+      const min = this.min ? this.min : 0;
+      const max = this.max ? this.max : 100;
+      const newVal = Number(((value - min) * 100) / (max - min));
+      this.style.background = `linear-gradient(to right, var(--dark-red) 0%, var(--dark-red) ${newVal}%, #e0e0e0 ${newVal}%, #e0e0e0 100%)`;
+    });
+    // Trigger the input event to set initial background
+    slider.dispatchEvent(new Event('input'));
+  });
+});
+</script>

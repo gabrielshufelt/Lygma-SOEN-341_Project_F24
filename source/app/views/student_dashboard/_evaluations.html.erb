@@ -54,7 +54,7 @@
             <tr>
                 <td class="centered-cell"><%= pending_eval[:member_name] %></td>
                 <td class="centered-cell">
-                    <%= link_to 'Add new evaluation', new_evaluation_path(evaluatee_id: pending_eval[:member_id], project_id: project_evaluations[:project_id]), class: 'button add-eval' %>
+                    <%= link_to 'Add new evaluation', new_evaluation_student_dashboard_index_path(course_id: @selected_course.id), class: 'button add-eval' %>
                 </td>
             </tr>
             <% end %>
