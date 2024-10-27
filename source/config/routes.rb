@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   authenticated :user, ->(u) { u.instructor? } do
-    root to: 'instructor_dashboard#index', as: :instructor_root
+    root to: 'course_selection#index', as: :instructor_root
   end
 
   authenticated :user, ->(u) { u.student? } do
-    root to: 'student_dashboard#index', as: :student_root
+    root to: 'course_selection#index', as: :student_root
   end
 
   unauthenticated do
@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       get 'teams/:course_id', to: 'student_dashboard#teams', as: 'teams'
       get 'evaluations/:course_id', to: 'student_dashboard#evaluations', as: 'evaluations'
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
+
     end
   end
 
@@ -67,5 +68,6 @@ Rails.application.routes.draw do
   get 'student/evaluations', to: 'student_dashboard#evaluations'
   get 'student/feedback', to: 'student_dashboard#feedback'
   get 'student/settings', to: 'student_dashboard#settings'
+
 
 end

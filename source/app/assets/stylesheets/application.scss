@@ -31,6 +31,7 @@ html {
 	flex-direction: column;
 }
 
+
 body {
 	display: flex;
 	flex-direction: column;
@@ -123,6 +124,7 @@ p {
 	top: 20px;
 	right: 20px;
 }
+
 
 .logout-button {
 	padding: 10px 20px;
@@ -406,6 +408,7 @@ footer {
 
 .button.secondary:hover {
 	color: var(--darker-red);
+
 }
 
 .table {

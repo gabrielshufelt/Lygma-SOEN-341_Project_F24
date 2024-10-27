@@ -1,7 +1,7 @@
 require 'pexels'
 
-PexelsClient = Pexels::Client.new('69kRe1bxCkAleKHlNmfA2bBkId7CTHadUE79PZ9tHrXCuOoDUNOz4aTG')
 
+PexelsClient = Pexels::Client.new(ENV['PEXELS_API_KEY'])
 
 class CourseSelectionController < ApplicationController
   before_action :authenticate_user!
@@ -14,9 +14,10 @@ class CourseSelectionController < ApplicationController
       @available_courses = Course.where.not(id: @student_courses.pluck(:id))
     end
 
-    # Fetch Unsplash image URLs for each course
+    # Fetch Pexels image URLs for each course if it doesn't already exist
     (@courses || @student_courses || []).each do |course|
-      course.image_url = fetch_image_url(course.title)
+      course.image_url ||= fetch_image_url(course.title)
+
     end
 
     # Ensure @available_courses is always set for students
@@ -71,6 +72,7 @@ class CourseSelectionController < ApplicationController
   end
 
   # Add this new action to handle course creation
+
   def create
     @course = current_user.courses_taught.build(course_params)
     

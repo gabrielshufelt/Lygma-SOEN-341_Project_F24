@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
 
   private
 
+
   # Force sign-out on certain public pages
   def sign_out_on_public_pages
     public_pages = [about_path, contact_path, home_path]
@@ -59,3 +60,4 @@ class ApplicationController < ActionController::Base
     request.path == path
   end
 end
+

@@ -12,6 +12,7 @@
         <i class="fa-solid fa-bars"></i> Dashboard
       <% end %>
 
+
       <%# Need to add projects to the routes with /instructor_dashboard_projects.html.erb%>
       <%= link_to course_instructor_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(course_instructor_dashboard_index_path(course_id: @selected_course.id))}" do %>
         <i class="fa-solid fa-diagram-project"></i> Projects

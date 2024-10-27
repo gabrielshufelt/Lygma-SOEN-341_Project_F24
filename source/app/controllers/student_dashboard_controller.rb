@@ -7,21 +7,25 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
+
     @received_evaluations = received_evaluations
     
   end
 
   def teams
     @teams_by_project = teams_by_project
+
   end
 
   def evaluations
     @student_evaluations = student_evaluations
+
   end
 
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
+
   end
 
   private
@@ -47,6 +51,7 @@ class StudentDashboardController < ApplicationController
       }
     end
     upcoming_evaluations.presence || {}
+
   end
 
   def avg_ratings

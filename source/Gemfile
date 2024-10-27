@@ -97,6 +97,7 @@ gem 'devise', '~> 4.9', '>= 4.9.4'
 gem 'sassc-rails'
 
 # Font Awesome for custom icons
+
 gem 'font-awesome-sass'
 
 # ChartKick for beautiful charts
@@ -104,3 +105,6 @@ gem 'chartkick'
 
 # For course thumbnail
 gem 'pexels'
+
+gem 'dotenv-rails'
+
