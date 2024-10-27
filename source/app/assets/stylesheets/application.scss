@@ -1204,12 +1204,12 @@ footer {
 .comment-box {
   grid-column: span 2;
   width: 100%;
-  max-width: 600px; // Limit the maximum width
-  margin: 20px auto; // Center the box and add vertical margin
-  padding: 20px; // Add padding around the content
-  background-color: #f9f9f9; // Light background color
-  border-radius: 10px; // Rounded corners
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Subtle shadow
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .comment-box label {
@@ -1228,7 +1228,7 @@ footer {
   border: 1px solid #ccc;
   resize: vertical;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.75); // Slightly translucent white background
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .comment-box .form-control:focus {
@@ -1240,5 +1240,5 @@ footer {
 .form-actions {
   margin-top: 20px;
   text-align: center;
-  padding: 0 20px 20px; // Add padding to the bottom and sides
+  padding: 0 20px 20px;
 }
