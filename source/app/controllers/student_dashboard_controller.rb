@@ -28,6 +28,25 @@ class StudentDashboardController < ApplicationController
 
   end
 
+  def new_evaluation
+    @course = Course.find(params[:course_id])
+    @projects = @course.projects
+    @evaluatees = get_evaluatees_for_new_evaluation
+  end
+
+  def submit_evaluation
+
+    @evaluation = Evaluation.find(params[:evaluation][:id])
+    
+    if @evaluation.update(evaluation_params)
+      flash[:notice] = "Evaluation submitted successfully."
+      redirect_to evaluations_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+    else
+      flash[:alert] = "Failed to submit evaluation. Please try again."
+      redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+    end
+  end
+
   private
 
   def ensure_student_role
@@ -150,4 +169,35 @@ class StudentDashboardController < ApplicationController
   
     evaluations_data || {}
   end  
+
+  def set_selected_course
+    @selected_course = Course.find(params[:course_id])
+  end
+
+  def get_evaluatees_for_new_evaluation
+    projects = Project.where(course_id: @course.id)
+    return [] if projects.empty?
+
+    evaluatees = []
+
+    projects.each do |project|
+      pending_evaluations = Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
+      
+      pending_evaluations.each do |eval|
+        evaluatees << {
+          id: eval.evaluatee_id,
+          name: eval.evaluatee.first_name,
+          project_id: project.id,
+          project_title: project.title,
+          evaluation: eval
+        }
+      end
+    end
+
+    evaluatees.uniq { |e| [e[:id], e[:project_id]] }
+  end
+
+  def evaluation_params
+    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+  end
 end
