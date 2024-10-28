@@ -1,8 +1,8 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: [:index, :teams, :results, :settings]  
+  before_action :set_instructor, only: %i[index projects teams results settings]
   before_action :authenticate_user!
   before_action :ensure_instructor_role
-  before_action :set_selected_course, only: [:index, :teams, :results, :settings]
+  before_action :set_selected_course, only: %i[index projects teams results settings]
 
   def index
     load_instructor_teams

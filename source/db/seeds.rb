@@ -8,6 +8,15 @@ instructor1.update!(
   sex: 'male'
 )
 
+instructor2 = User.find_or_initialize_by(email: 'steve@example.com')
+instructor2.update!(
+  password: 'g00dpa$$w0rd',
+  first_name: 'Steve',
+  last_name: 'Brown',
+  role: 'instructor',
+  sex: 'male'
+)
+
 # Create Example Students
 student1 = User.find_or_initialize_by(email: "alice@example.com")
 student1.update!(
@@ -115,7 +124,8 @@ project1 = Project.find_or_initialize_by(id: 1)
 project1.update!(
   title: "Sprint 1",
   due_date: Date.new(2024, 9, 29),
-  course_id: course1.id
+  course_id: course1.id,
+  maximum_team_size: 6
 )
 
 team1 = Team.find_or_initialize_by(id: 1000)

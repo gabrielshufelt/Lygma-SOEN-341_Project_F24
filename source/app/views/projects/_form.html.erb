@@ -1,4 +1,4 @@
-<%= form_with(model: project) do |form| %>
+<%= form_with(model: project, html: { class: 'simple-form'}) do |form| %>
   <% if project.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
@@ -11,27 +11,35 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="fields">
+    <div class="full">
+      <%= form.label :title, style: "display: block" %>
+      <%= form.text_field :title %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_area :description %>
+  <div class="fields">
+    <div class="full">
+      <%= form.label :description, style: "display: block" %>
+      <%= form.text_area :description %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :due_date, style: "display: block" %>
-    <%= form.date_field :due_date %>
+  <div class="fields">
+    <div class="full">
+      <%= form.label :due_date, style: "display: block" %>
+      <%= form.date_field :due_date %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :maximum_team_size, style: "display: block" %>
-    <%= form.number_field :maximum_team_size %>
+  <div class="fields">
+    <div class="full">
+      <%= form.label :maximum_team_size, style: "display: block" %>
+      <%= form.number_field :maximum_team_size %>
+    </div>
   </div>
 
-  <div>
+  <div class="actions">
     <%= form.submit %>
   </div>
 <% end %>

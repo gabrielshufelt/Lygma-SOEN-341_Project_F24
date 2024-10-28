@@ -327,6 +327,7 @@ footer {
 }
 
 .button {
+    margin: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -427,6 +428,14 @@ footer {
 }
 
 .instructor-dashboard {
+    &.teams {
+        padding: 40px;
+    }
+
+    &.projects {
+        padding: 40px;
+    }
+
     .stats {
         padding: 40px;
         display: flex;
@@ -472,10 +481,6 @@ footer {
         color: white;
         height: 450px;
     }
-}
-
-.instructor-dashboard-teams {
-    padding: 40px;
 }
 
 .center-wrapper {

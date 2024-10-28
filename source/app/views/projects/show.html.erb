@@ -3,7 +3,7 @@
     <header class="title">
       <h1>Project Details</h1>
     </header>
-    <section class="instructor-dashboard-projects">
+    <section class="instructor-dashboard projects">
       <div id="<%= dom_id @project %>">
         <p>
           <strong>Title:</strong>
@@ -27,7 +27,7 @@
 
         <div class="actions">
           <%= link_to 'Edit', edit_project_path(@project), class: "button secondary" %>
-          <%= link_to 'Back to Projects', projects_path, class: "button" %>
+          <%= link_to 'Back to Projects', projects_instructor_dashboard_index_path(course_id: @selected_course.id), class: "button" %>
           <%= link_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: "button danger" %>
         </div>
       </div>

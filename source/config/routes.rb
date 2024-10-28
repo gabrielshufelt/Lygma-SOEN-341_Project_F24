@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   unauthenticated do
     root 'pages#home'
   end
@@ -51,6 +50,7 @@ Rails.application.routes.draw do
   end
 
   resources :courses, only: [:create, :destroy]
+  resources :projects
 
   get "up" => "rails/health#show", as: :rails_health_check
   # TODO: Remove these routes as they are no longer used
