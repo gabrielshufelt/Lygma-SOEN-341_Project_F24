@@ -1,21 +1,27 @@
-<h1>My Teams</h1>
 
-<% if @student_teams.any? %>
-  <% @student_teams.each do |project| %>
-    <h3>Project: <%= project[:project_id] %></h3>
-    <h4>Your Team:</h4>
-    <ul>
-      <% project[:student_team].each do |team| %>
-        <li><%= team.name %></li>
-      <% end %>
-    </ul>
-    <h4>All Teams:</h4>
-    <ul>
-      <% project[:all_teams].each do |team| %>
-        <li><%= team.name %></li>
-      <% end %>
-    </ul>
-  <% end %>
-<% else %>
-  <p>You are not part of any teams yet.</p>
-<% end %>
+<div class="containers hall-building">
+	<div class="gradient-filter">
+		<header class="section one">
+			<h1>Teams</h1>
+		</header>
+		<section class="section">
+			<% unless @teams_by_project.empty? %>
+				<% @teams_by_project.each do |project_teams| %>
+					<%= render 'partials/collapsible_box',
+						title: "Project Name: #{project_teams[:project_title]}",
+						collapsed: true,
+						content: render('student_dashboard/teams', project_teams:)
+					%>
+				<% end %>
+			<% else %>
+				<div class="center-wrapper">
+					<section class="center-content">
+						<h3>No project or teams have been created yet.</h3>
+						<p>Teams and projects created by your instructor will appear here.</p>
+					</section>
+				</div>
+			<% end %>
+		</section>
+	</div>
+</div>
+

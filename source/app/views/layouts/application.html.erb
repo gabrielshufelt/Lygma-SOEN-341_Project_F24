@@ -26,9 +26,11 @@
       <% elsif !user_signed_in? %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
+      
       <div class="content">
         <%= yield %>
       </div>
+
       <% unless user_signed_in? %>
         <%= render 'layouts/footer' %>
       <% end %>

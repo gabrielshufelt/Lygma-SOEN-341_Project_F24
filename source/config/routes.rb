@@ -1,18 +1,12 @@
 Rails.application.routes.draw do
-
   unauthenticated do
     root 'pages#home'
   end
 
-  resources :pages, only: [:about, :contact, :home] do
-    collection do
-      get :about
-      get :contact
-      get :home
-    end
-  end
+  get 'about', to: 'pages#about'
+  get 'contact', to: 'pages#contact'
+  get 'home', to: 'pages#home'
 
-  # updated resources here
   resources :teams do
     member do
       patch 'add_member'
@@ -21,8 +15,7 @@ Rails.application.routes.draw do
     end
   end
 
-
-  devise_for :users, controllers: { registrations: "users/registrations" }
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 
   resources :instructor_dashboard, only: [:index] do
     collection do
@@ -30,6 +23,7 @@ Rails.application.routes.draw do
       get 'teams/:course_id', to: 'instructor_dashboard#teams', as: 'teams'
       get 'results/:course_id', to: 'instructor_dashboard#results', as: 'results'
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
+      get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
     end
   end
 
@@ -39,6 +33,8 @@ Rails.application.routes.draw do
       get 'teams/:course_id', to: 'student_dashboard#teams', as: 'teams'
       get 'evaluations/:course_id', to: 'student_dashboard#evaluations', as: 'evaluations'
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
+      get 'new_evaluation/:course_id', to: 'student_dashboard#new_evaluation', as: 'new_evaluation'
+      patch 'submit_evaluation', to: 'student_dashboard#submit_evaluation'
     end
   end
 
@@ -51,7 +47,8 @@ Rails.application.routes.draw do
   end
 
   resources :courses, only: [:create, :destroy]
+  resources :projects
+  resources :evaluations
 
   get "up" => "rails/health#show", as: :rails_health_check
-
 end

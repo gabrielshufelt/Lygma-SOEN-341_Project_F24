@@ -1,0 +1,14 @@
+<div class="floating-box", style="background-color: <%= background_color if local_assigns[:background_color].present? %>">
+	<% if local_assigns[:title].present? %>
+		<h3><%= title %></h3>
+	<% end %>
+	<div class="floating-box-content-container">
+		<% if local_assigns[:icon].present? %>
+			<div class="floating-box-icon"><i class="<%= icon %>"></i></div>
+		<% end %>
+
+		<% if local_assigns[:content].present? %>
+			<div class="floating-box-content"><%= content %></div>
+		<% end %>
+	</div>
+</div>
