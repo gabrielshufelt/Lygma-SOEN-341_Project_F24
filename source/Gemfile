@@ -107,4 +107,3 @@ gem 'chartkick'
 gem 'pexels'
 
 gem 'dotenv-rails'
-
