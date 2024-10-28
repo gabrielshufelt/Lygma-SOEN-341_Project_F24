@@ -16,7 +16,7 @@ class InstructorDashboardController < ApplicationController
   end
 
   def projects
-    @projects = current_user.courses_taught.first.projects
+    @projects = Project.where(course_id: @selected_course)
   end
 
   def teams

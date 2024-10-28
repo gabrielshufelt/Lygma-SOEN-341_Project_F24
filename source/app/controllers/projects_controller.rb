@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+  before_action :authorize_instructor!, except: %i[index show]
   before_action :set_project, only: %i[show edit update destroy]
 
   # GET /projects or /projects.json
@@ -59,6 +60,10 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def authorize_instructor!
+    redirect_to projects_path, alert: 'You are not authorized to perform this action.' unless current_user&.instructor?
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
