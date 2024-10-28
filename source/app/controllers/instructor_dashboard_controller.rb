@@ -1,8 +1,8 @@
 class InstructorDashboardController < ApplicationController
-  before_action :set_instructor, only: [:index, :teams, :results, :settings]  
+  before_action :set_instructor, only: %i[index projects teams results settings]
   before_action :authenticate_user!
   before_action :ensure_instructor_role
-  before_action :set_selected_course, only: [:index, :teams, :results, :settings]
+  before_action :set_selected_course, only: %i[index projects teams results settings]
 
   def index
     load_instructor_teams
@@ -15,16 +15,20 @@ class InstructorDashboardController < ApplicationController
     end
   end
 
+  def projects
+    @projects = Project.where(course_id: @selected_course)
+  end
+
   def teams
     load_instructor_teams
     @available_students = User
-      .left_outer_joins(:teams)
-      .where(role: "student")
-      .group('users.id')
-      .having('COUNT(teams.id) = 0')
+                          .left_outer_joins(:teams)
+                          .where(role: 'student')
+                          .group('users.id')
+                          .having('COUNT(teams.id) = 0')
 
     respond_to do |format|
-      format.html {render :teams} # Render teams view
+      format.html { render :teams } # Render teams view
       format.json { render json: { teams: @teams, available_students: @available_students } }
     end
   end
@@ -33,7 +37,7 @@ class InstructorDashboardController < ApplicationController
     @results = Evaluation.joins(student: { team: :instructor }).where(status: 'completed')
 
     respond_to do |format|
-      format.html {render :results} # Render results view
+      format.html { render :results } # Render results view
       format.json { render json: @results }
     end
   end
@@ -72,8 +76,8 @@ class InstructorDashboardController < ApplicationController
     instructor_projects = Project.where(course_id: @selected_course.id)
     instructor_evaluations = Evaluation.where(project_id: instructor_projects.pluck(:id))
 
-    @completed_evaluations = instructor_evaluations.where(status: "completed")
-    @pending_evaluations = instructor_evaluations.where(status: "pending")
+    @completed_evaluations = instructor_evaluations.where(status: 'completed')
+    @pending_evaluations = instructor_evaluations.where(status: 'pending')
   end
 
   def load_all_instructor_ratings
@@ -88,10 +92,10 @@ class InstructorDashboardController < ApplicationController
   end
 
   def ensure_instructor_role
-    unless current_user.instructor?
-      flash[:alert] = "Access denied. Instructors only."
-      redirect_to root_path # Or another appropriate path
-    end
+    return if current_user.instructor?
+
+    flash[:alert] = 'Access denied. Instructors only.'
+    redirect_to root_path # Or another appropriate path
   end
 
   def set_instructor
@@ -133,5 +137,5 @@ class InstructorDashboardController < ApplicationController
       }
     end
     teams_ratings
-  end  
+  end
 end

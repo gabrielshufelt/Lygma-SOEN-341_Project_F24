@@ -55,9 +55,4 @@ class ApplicationController < ActionController::Base
     (controller_name == 'courses' && action_name == 'create') ||
     (controller_name == 'course_selection' && ['update_course_selection', 'create'].include?(action_name))
   end
-
-  def current_page?(path)
-    request.path == path
-  end
 end
-

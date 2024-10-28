@@ -88,7 +88,7 @@ p {
 	margin: 0px 30px;
 	max-width: 100%;
 
-	> h2 {
+	>h2 {
 		font-weight: bold;
 		font-size: 2rem;
 		margin: 1em 0;
@@ -97,6 +97,7 @@ p {
 	&.one {
 		padding-top: 70px;
 	}
+
 	&.eval {
 		display: flex;
 		justify-content: space-between;
@@ -107,12 +108,10 @@ p {
 .gradient-filter {
 	height: 100%;
 	width: 100%;
-	background-image: linear-gradient(
-		90deg,
-		rgba(255, 255, 255, 1) 0%,
-		rgba(255, 255, 255, 0.85) 50%,
-		rgba(255, 255, 255, 0.5) 100%
-	);
+	background-image: linear-gradient(90deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.85) 50%,
+			rgba(255, 255, 255, 0.5) 100%);
 }
 
 .title {
@@ -150,12 +149,10 @@ p {
 	height: 100%;
 	width: 100%;
 	height: 100vh;
-	background-image: linear-gradient(
-		90deg,
-		rgba(255, 255, 255, 1) 0%,
-		rgba(255, 255, 255, 0.85) 50%,
-		rgba(255, 255, 255, 0.5) 100%
-	);
+	background-image: linear-gradient(90deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.85) 50%,
+			rgba(255, 255, 255, 0.5) 100%);
 }
 
 .simple-form {
@@ -375,6 +372,7 @@ footer {
 }
 
 .button {
+	margin: 8px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -385,7 +383,9 @@ footer {
 	color: white;
 	font-weight: 600;
 	cursor: pointer;
+	max-width: 250px;
 	text-decoration: none;
+	text-align: center;
 }
 
 .button.primary {
@@ -468,6 +468,14 @@ footer {
 }
 
 .instructor-dashboard {
+	&.teams {
+		padding: 40px;
+	}
+
+	&.projects {
+		padding: 40px;
+	}
+
 	.stats {
 		padding: 40px;
 		display: flex;
@@ -480,7 +488,7 @@ footer {
 		justify-content: space-between;
 		align-items: center;
 
-		> div {
+		>div {
 			flex: 1;
 			text-align: center;
 			margin-right: 10px;
@@ -489,7 +497,7 @@ footer {
 			border-radius: 25px;
 		}
 
-		> div:last-child {
+		>div:last-child {
 			margin-right: 0;
 		}
 
@@ -684,6 +692,7 @@ footer {
 	display: flex;
 	align-items: center;
 	cursor: pointer;
+
 	i {
 		margin-right: 4px;
 	}
@@ -706,8 +715,10 @@ footer {
 }
 
 .course-cards-grid {
-	display: flex; /* Ensure Flexbox is used */
-	flex-wrap: wrap; /* Allow wrapping to the next line if needed */
+	display: flex;
+	/* Ensure Flexbox is used */
+	flex-wrap: wrap;
+	/* Allow wrapping to the next line if needed */
 	justify-content: flex-start;
 	gap: 40px;
 }
@@ -733,15 +744,18 @@ footer {
 
 .course-image {
 	width: 100%;
-	height: 220px; /* Make images taller for a better proportion */
+	height: 220px;
+	/* Make images taller for a better proportion */
 	object-fit: cover;
-	flex-grow: 3; /* Image should take up 3/4 of the card */
+	flex-grow: 3;
+	/* Image should take up 3/4 of the card */
 }
 
 .course-details {
 	padding: 15px;
 	text-align: center;
-	flex-grow: 1; /* Text should take up 1/4 of the card */
+	flex-grow: 1;
+	/* Text should take up 1/4 of the card */
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -938,15 +952,19 @@ footer {
 	padding: 15px 12px;
 	border-radius: 17px;
 	white-space: nowrap;
+
 	&.one {
 		background-color: #3bd23b;
 	}
+
 	&.two {
 		background-color: black;
 	}
+
 	&.three {
 		background-color: var(--red);
 	}
+
 	&.four {
 		background-color: #0000ff;
 	}
@@ -1084,6 +1102,7 @@ footer {
 	display: inline-block;
 	margin: auto;
 }
+
 .button.add-eval:hover {
 	background-color: #333;
 }
@@ -1103,8 +1122,10 @@ footer {
 
 .pending-table td.button-cell {
 	display: flex;
-	justify-content: center; /* Horizontally center the button */
-	align-items: center; /* Vertically center the button */
+	justify-content: center;
+	/* Horizontally center the button */
+	align-items: center;
+	/* Vertically center the button */
 }
 
 .settings-form {
@@ -1118,10 +1139,12 @@ footer {
 .input-group {
 	display: flex;
 	flex-direction: column;
+
 	label {
 		font-weight: 600;
 		margin-bottom: 7px;
 	}
+
 	input {
 		padding: 0.8rem;
 		font-size: 1rem;
@@ -1133,113 +1156,113 @@ footer {
 }
 
 .slider-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-bottom: 30px;
-  padding: 0 20px; // Add padding to the left and right
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 30px;
+	margin-bottom: 30px;
+	padding: 0 20px; // Add padding to the left and right
 }
 
 .slider-group {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .slider-label {
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 10px;
+	font-size: 16px;
 }
 
 .slider-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 }
 
 .custom-slider {
-  width: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-  height: 6px;
-  background: #e0e0e0;
-  border-radius: 3px;
-  outline: none;
-  margin: 10px 0;
+	width: 100%;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 6px;
+	background: #e0e0e0;
+	border-radius: 3px;
+	outline: none;
+	margin: 10px 0;
 }
 
 .custom-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background-color: var(--dark-red);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background-color: var(--dark-red);
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .custom-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background-color: var(--dark-red);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+	width: 20px;
+	height: 20px;
+	background-color: var(--dark-red);
+	border-radius: 50%;
+	cursor: pointer;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .slider-numbers {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 5px;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-top: 5px;
 }
 
 .slider-numbers span {
-  font-size: 12px;
-  color: #666;
+	font-size: 12px;
+	color: #666;
 }
 
 .comment-box {
-  grid-column: span 2;
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	grid-column: span 2;
+	width: 100%;
+	max-width: 600px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .comment-box label {
-  font-weight: bold;
-  margin-bottom: 10px;
-  display: block;
-  color: var(--dark-gray);
+	font-weight: bold;
+	margin-bottom: 10px;
+	display: block;
+	color: var(--dark-gray);
 }
 
 .comment-box .form-control {
-  width: 100%;
-  height: 100px; // Reduced height
-  padding: 12px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  resize: vertical;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.75);
+	width: 100%;
+	height: 100px; // Reduced height
+	padding: 12px;
+	font-size: 14px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	resize: vertical;
+	transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	background-color: rgba(255, 255, 255, 0.75);
 }
 
 .comment-box .form-control:focus {
-  outline: none;
-  border-color: var(--dark-red);
-  box-shadow: 0 0 5px rgba(189, 38, 17, 0.2);
+	outline: none;
+	border-color: var(--dark-red);
+	box-shadow: 0 0 5px rgba(189, 38, 17, 0.2);
 }
 
 .form-actions {
-  margin-top: 20px;
-  text-align: center;
-  padding: 0 20px 20px;
+	margin-top: 20px;
+	text-align: center;
+	padding: 0 20px 20px;
 }
