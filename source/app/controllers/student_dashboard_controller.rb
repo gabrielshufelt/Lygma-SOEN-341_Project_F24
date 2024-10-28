@@ -7,38 +7,43 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
+
+    @received_evaluations = received_evaluations
     
-    respond_to do |format|
-      format.html
-      format.json { render json: { upcoming_evaluations: @upcoming_evaluations, avg_ratings: @avg_ratings } }
-    end
   end
 
   def teams
-    @student_teams = student_teams
-    
-    respond_to do |format|
-      format.html
-      format.json { render json: @student_teams }
-    end
+    @teams_by_project = teams_by_project
+
   end
 
   def evaluations
     @student_evaluations = student_evaluations
-    
-    respond_to do |format|
-      format.html
-      format.json { render json: @student_evaluations }
-    end
+
   end
 
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
+
+  end
+
+  def new_evaluation
+    @course = Course.find(params[:course_id])
+    @projects = @course.projects
+    @evaluatees = get_evaluatees_for_new_evaluation
+  end
+
+  def submit_evaluation
+
+    @evaluation = Evaluation.find(params[:evaluation][:id])
     
-    respond_to do |format|
-      format.html
-      format.json { render json: { avg_ratings: @avg_ratings, received_evaluations: @received_evaluations } }
+    if @evaluation.update(evaluation_params)
+      flash[:notice] = "Evaluation submitted successfully."
+      redirect_to evaluations_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+    else
+      flash[:alert] = "Failed to submit evaluation. Please try again."
+      redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
     end
   end
 
@@ -55,63 +60,75 @@ class StudentDashboardController < ApplicationController
     @student = current_user if current_user.role == 'student'
   end
 
-  def set_selected_course
-    if params[:course_id]
-      @selected_course = @student.courses.find_by(id: params[:course_id])
-    end
-  
-    @selected_course ||= @student.courses.first
-  
-    unless @selected_course
-      flash[:alert] = "No courses available for selection."
-      redirect_to root_path # Or another appropriate path
-    end
-  end
-
   def upcoming_evaluations
-    Evaluation.joins(:project)
-              .where(evaluator_id: @student.id, status: 'pending', projects: { course_id: @selected_course.id })
-  rescue => e
-    Rails.logger.error "Error fetching upcoming evaluations: #{e.message}"
-    []
+    upcoming_evaluations = Project.where(course_id: @selected_course.id).includes(:evaluations).select do |project|
+      project.evaluations.any? { |evaluation| evaluation.status == 'pending' }
+    end.map do |project|
+      {
+        project: project,
+        evaluations: project.evaluations.select { |evaluation| evaluation.status == 'pending' }
+      }
+    end
+    upcoming_evaluations.presence || {}
+
   end
 
   def avg_ratings
     completed_evaluations = Evaluation.joins(:project)
-                                      .where(evaluatee_id: @student.id, status: 'completed', projects: { course_id: @selected_course.id })
+                                      .where(projects: { course_id: @selected_course.id }, 
+                                              evaluatee_id: @student.id, 
+                                              status: 'completed')
+    return [] if completed_evaluations.empty?
+
     {
-      conceptual: completed_evaluations.average(:conceptual_rating) || 0.0,
-      cooperation: completed_evaluations.average(:cooperation_rating) || 0.0,
-      practical: completed_evaluations.average(:practical_rating) || 0.0,
-      work_ethic: completed_evaluations.average(:work_ethic_rating) || 0.0
+      conceptual: completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
+      cooperation: completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
+      practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
+      work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
-  rescue => e
-    Rails.logger.error "Error calculating average ratings: #{e.message}"
-    { conceptual: 0.0, cooperation: 0.0, practical: 0.0, work_ethic: 0.0 }
   end
 
-  def student_teams
-    projects = @selected_course.projects
-    projects.map do |project|
+  def teams_by_project
+    projects = Project.where(course_id: @selected_course.id)
+    return [] if projects.empty?
+
+    teams = projects.map do |project|
+      student_team = @student.teams.find_by(project_id: project.id)
       {
-        project_id: project.id,
-        student_team: @student.teams.where(project_id: project.id),
+        project_title: project.title,
+        student_team: student_team.present? ? student_team : nil,
+        student_team_members: (student_team.members_to_string if student_team.present?),
         all_teams: project.teams
       }
     end
-  rescue => e
-    Rails.logger.error "Error fetching student teams: #{e.message}"
-    []
+    teams || {}
   end
 
   def student_evaluations
-    projects = @selected_course.projects
+    projects = Project.where(course_id: @selected_course.id)
+    return [] if projects.empty?
+
     projects.map do |project|
       {
         project_id: project.id,
+        project_title: project.title,
         due_date: project.due_date,
-        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed'),
-        pending: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
+        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed').map do |eval|
+          {
+            member_name: eval.evaluatee.first_name,
+            cooperation_rating: eval.cooperation_rating,
+            conceptual_rating: eval.conceptual_rating,
+            practical_rating: eval.practical_rating,
+            work_ethic_rating: eval.work_ethic_rating,
+            comments: eval.comment,
+            date_completed: eval.date_completed
+          }
+        end,
+        pending: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending').map do |eval|
+          {
+            member_name: eval.evaluatee.first_name,
+          }
+        end
       }
     end
   rescue => e
@@ -120,10 +137,67 @@ class StudentDashboardController < ApplicationController
   end
 
   def received_evaluations
-    Evaluation.joins(:project)
-              .where(evaluatee_id: @student.id, status: 'completed', projects: { course_id: @selected_course.id })
-  rescue => e
-    Rails.logger.error "Error fetching received evaluations: #{e.message}"
-    []
+    @progression_data = []
+
+    projects = Project.where(course_id: @selected_course.id).includes(:evaluations)
+    
+    evaluations_data = projects.each_with_object({}) do |project, hash|
+      individual_ratings = project.evaluations
+                          .where(evaluatee_id: @student.id, status: 'completed')
+                          .order(:date_completed)
+      
+      individual_ratings.each do |rating|
+        @progression_data << {
+          date_completed: rating.date_completed,
+          cooperation: rating.cooperation_rating,
+          conceptual: rating.conceptual_rating,
+          practical: rating.practical_rating,
+          work_ethic: rating.work_ethic_rating
+        }
+      end
+
+      hash[project.id] = {
+        project_title: project.title,
+        due_date: project.due_date,
+        individual_ratings: individual_ratings,
+        avg_cooperation: individual_ratings.average(:cooperation_rating)&.round(2),
+        avg_conceptual: individual_ratings.average(:conceptual_rating)&.round(2),
+        avg_practical: individual_ratings.average(:practical_rating)&.round(2),
+        avg_work_ethic: individual_ratings.average(:work_ethic_rating)&.round(2)
+      }
+    end
+  
+    evaluations_data || {}
+  end  
+
+  def set_selected_course
+    @selected_course = Course.find(params[:course_id])
+  end
+
+  def get_evaluatees_for_new_evaluation
+    projects = Project.where(course_id: @course.id)
+    return [] if projects.empty?
+
+    evaluatees = []
+
+    projects.each do |project|
+      pending_evaluations = Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
+      
+      pending_evaluations.each do |eval|
+        evaluatees << {
+          id: eval.evaluatee_id,
+          name: eval.evaluatee.first_name,
+          project_id: project.id,
+          project_title: project.title,
+          evaluation: eval
+        }
+      end
+    end
+
+    evaluatees.uniq { |e| [e[:id], e[:project_id]] }
+  end
+
+  def evaluation_params
+    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
   end
 end
