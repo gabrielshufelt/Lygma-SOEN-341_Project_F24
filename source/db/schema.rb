@@ -11,9 +11,12 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_10_23_012932) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "course_registrations", id: false, force: :cascade do |t|
-    t.integer "course_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "course_id", null: false
+    t.bigint "user_id", null: false
     t.index ["course_id"], name: "index_course_registrations_on_course_id"
     t.index ["user_id"], name: "index_course_registrations_on_user_id"
   end
@@ -39,8 +42,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_012932) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "evaluator_id", null: false
-    t.integer "team_id", null: false
+    t.bigint "evaluator_id", null: false
+    t.bigint "team_id", null: false
     t.index ["evaluator_id"], name: "index_evaluations_on_evaluator_id"
     t.index ["team_id"], name: "index_evaluations_on_team_id"
   end
@@ -55,8 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_012932) do
   end
 
   create_table "team_memberships", id: false, force: :cascade do |t|
-    t.integer "team_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "team_id", null: false
+    t.bigint "user_id", null: false
     t.index ["team_id"], name: "index_team_memberships_on_team_id"
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
