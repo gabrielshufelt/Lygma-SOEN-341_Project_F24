@@ -1,5 +1,7 @@
 # Real-Ratings-SOEN-341_Project_F24
 
+You can visit our application at: [Real Ratings](https://real-ratings-4284932aefb1.herokuapp.com/)
+
 ## Description
 
 Real Ratings' Peer Assessment System is a simple and user-friendly app for students working on team projects. It lets students anonymously rate their teammates based on crtierias like cooperation, contributions, and work ethic, giving everyone a chance to provide honest feedback.
