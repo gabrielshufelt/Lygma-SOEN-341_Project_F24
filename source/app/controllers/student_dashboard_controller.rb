@@ -13,7 +13,7 @@ class StudentDashboardController < ApplicationController
   end
 
   def teams
-    @teams_by_project = teams_by_project
+    @teams_by_project = teams_by_project(@selected_course.id, @student)
 
   end
 
@@ -45,6 +45,22 @@ class StudentDashboardController < ApplicationController
       flash[:alert] = "Failed to submit evaluation. Please try again."
       redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
     end
+  end
+
+  def teams_by_project(course_id, student)
+    projects = Project.where(course_id:)
+    return [] if projects.empty?
+
+    teams = projects.map do |project|
+      student_team = student.teams.find_by(project_id: project.id)
+      {
+        project_title: project.title,
+        student_team: student_team.present? ? student_team : nil,
+        student_team_members: (student_team.members_to_string if student_team.present?),
+        all_teams: project.teams
+      }
+    end
+    teams || {}
   end
 
   private
@@ -86,22 +102,6 @@ class StudentDashboardController < ApplicationController
       practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
       work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
-  end
-
-  def teams_by_project
-    projects = Project.where(course_id: @selected_course.id)
-    return [] if projects.empty?
-
-    teams = projects.map do |project|
-      student_team = @student.teams.find_by(project_id: project.id)
-      {
-        project_title: project.title,
-        student_team: student_team.present? ? student_team : nil,
-        student_team_members: (student_team.members_to_string if student_team.present?),
-        all_teams: project.teams
-      }
-    end
-    teams || {}
   end
 
   def student_evaluations

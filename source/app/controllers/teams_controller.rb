@@ -91,11 +91,15 @@ class TeamsController < ApplicationController
   
     if @team.add_student(@user)
       @team_members = @team.students
+      @teams_by_project = StudentDashboardController.new.teams_by_project(@selected_course.id, current_user)
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
+            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students }),
+            turbo_stream.replace("student-teams", template: "student_dashboard/teams", locals: {teams_by_project: @teams_by_project}),
+            turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
           ]
         end
         format.html { redirect_to edit_team_path(@team), notice: 'Team member added successfully.' }
@@ -117,13 +121,16 @@ class TeamsController < ApplicationController
   
     if @team.remove_student(@user)
       @team_members = @team.students
+      @teams_by_project = StudentDashboardController.new.teams_by_project(@selected_course.id, current_user)
       available_students
   
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
+            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students }),
+            turbo_stream.replace("student-teams", template: "student_dashboard/teams", locals: {teams_by_project: @teams_by_project}),
+            turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
           ]
         end
         format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
