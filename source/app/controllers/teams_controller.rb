@@ -91,7 +91,7 @@ class TeamsController < ApplicationController
   
     if @team.add_student(@user)
       @team_members = @team.students
-      @teams_by_project = StudentDashboardController.new.teams_by_project(@selected_course.id, current_user)
+      @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
 
       respond_to do |format|
         format.turbo_stream do
@@ -121,7 +121,7 @@ class TeamsController < ApplicationController
   
     if @team.remove_student(@user)
       @team_members = @team.students
-      @teams_by_project = StudentDashboardController.new.teams_by_project(@selected_course.id, current_user)
+      @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
       available_students
   
       respond_to do |format|
