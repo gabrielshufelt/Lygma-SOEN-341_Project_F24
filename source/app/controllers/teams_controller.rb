@@ -89,8 +89,7 @@ class TeamsController < ApplicationController
     @user = User.find(params[:user_id])
     available_students
   
-    if @team.has_space
-      @team.add_student(@user)
+    if @team.add_student(@user)
       @team_members = @team.students
       respond_to do |format|
         format.turbo_stream do
@@ -105,33 +104,39 @@ class TeamsController < ApplicationController
     else
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: user.errors, status: :unprocessable_entity }
+        format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end
-  end
+  end  
   
 
   # DELETE /teams/:id/remove_member
   def remove_member
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
-    
-    @team.remove_student(@user)
-
-    @team_members = @team.students
-    available_students
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
-          turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
-        ]
+  
+    if @team.remove_student(@user)
+      @team_members = @team.students
+      available_students
+  
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
+            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students })
+          ]
+        end
+        format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
+        format.json { render json: @team.students, status: :ok }
       end
-      format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
-      format.json { render json: @team.students, status: :ok }
+    else
+      respond_to do |format|
+        format.html { redirect_to edit_team_path(@team), alert: 'Failed to remove team member.' }
+        format.json { render json: @team.errors, status: :unprocessable_entity }
+      end
     end
   end
+  
 
   private
 
