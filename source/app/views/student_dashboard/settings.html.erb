@@ -1,7 +1,61 @@
 <div class="containers hall-building">
-	<div class="gradient-filter">
-		<section class="section one">
-			<h1>Settings</h1>
-		</section>
-	</div>
+  <div class="gradient-filter">
+    <header class="section one">
+      <h1>Settings</h1>
+      <h2>Edit personal information</h2>
+    </header>
+    <section class="section">
+    <div class="settings-form">
+      <form action="<%= settings_student_dashboard_index_path(course_id: @selected_course.id) %>" method="post" enctype="multipart/form-data">
+        <%= hidden_field_tag :_method, 'patch' %>
+        <%= csrf_meta_tags %>
+        <div class="input-group">
+          <label>First Name</label>
+          <input type="text" placeholder="John" name="user[first_name]", value="<%= current_user.first_name %>">
+        </div>
+        
+        <div class="input-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Smith" name="user[last_name]", value="<%= current_user.last_name %>">
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="johnsmith@gmail.com" name="user[email]", value="<%= current_user.email %>">
+        </div>
+
+        <div class="input-group">
+          <label for="birth_date">Birth Date</label>
+          <input type="date" name="user[birth_date]" value="<%= current_user.birth_date || Date.today %>">
+        </div>
+
+        <div class="input-group">
+          <label for="profile_picture">Profile Picture</label>
+          <% if current_user.profile_picture.attached? %>
+            <img src="<%= url_for(current_user.profile_picture) %>" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
+            <div>
+              <label><input type="checkbox" name="user[remove_profile_picture]"> Remove profile picture</label>
+            </div>
+          <% else %>
+            <img src="<%= asset_path('default_pfp.png') %>" alt="Default Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
+          <% end %>
+          <input type="file" name="user[profile_picture]">
+        </div>
+        
+        <div class="input-group">
+          <label>Current Password</label>
+          <input type="password" placeholder="********" name="user[current_password]">
+        </div>
+        
+        <div class="input-group">
+          <label>New Password</label>
+          <input type="password" placeholder="********" name="user[password]">
+        </div>
+        
+        <button type="submit" class="button primary">Apply</button>
+      </form>
+    </div>
+    </section>
+  </div>
 </div>
+

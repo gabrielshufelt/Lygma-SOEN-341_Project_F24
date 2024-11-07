@@ -1318,3 +1318,15 @@ footer {
 	text-align: center;
 	padding: 0 20px 20px;
 }
+
+.profile-picture {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.profile-picture-img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}

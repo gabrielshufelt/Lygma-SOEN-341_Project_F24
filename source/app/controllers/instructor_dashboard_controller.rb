@@ -53,6 +53,42 @@ class InstructorDashboardController < ApplicationController
     end
   end
 
+  
+  def update_settings
+    # Separate logic for password update to prevent logout before all settings are updated
+    if user_params[:password].present?
+      if current_user.update_with_password(user_params)
+        flash[:notice] = "Password updated successfully. Please log in again."
+        redirect_to new_user_session_path and return
+      else
+        flash[:alert] = "Failed to update password: #{current_user.errors.full_messages.join(', ')}"
+        redirect_to action: :settings, course_id: params[:course_id] and return
+      end
+    end
+  
+    # Check if the profile picture should be removed
+    if params[:user][:remove_profile_picture] == 'on'
+      current_user.profile_picture.purge
+    elsif params[:user][:profile_picture].present?
+      current_user.profile_picture.attach(params[:user][:profile_picture])
+    end
+  
+    # Filter out blank fields before updating
+    filtered_params = user_params.to_h.reject { |_, v| v.blank? }
+  
+    # Remove current_password and password from filtered_params (password is handled separately)
+    filtered_params.except!(:current_password, :password)
+  
+    # Update other settings
+    if current_user.update(filtered_params)
+      flash[:notice] = "Settings updated successfully."
+    else
+      flash[:alert] = "Failed to update settings: #{current_user.errors.full_messages.join(', ')}"
+    end
+  
+    redirect_to action: :settings, course_id: params[:course_id]
+  end
+
   private
 
   def set_selected_course
@@ -137,5 +173,17 @@ class InstructorDashboardController < ApplicationController
       }
     end
     teams_ratings
+  end
+  
+  def user_params
+    params.require(:user).permit(
+      :first_name, 
+      :last_name, 
+      :email, 
+      :birth_date, 
+      :profile_picture,
+      :current_password, 
+      :password
+    )
   end
 end

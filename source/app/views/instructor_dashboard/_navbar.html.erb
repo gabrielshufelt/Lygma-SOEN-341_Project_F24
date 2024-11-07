@@ -2,6 +2,15 @@
   <div class="nav-signedin-logo">
     <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
   </div>
+
+  <div class="profile-picture">
+    <% if current_user.profile_picture.attached? %>
+      <%= image_tag current_user.profile_picture, alt: "#{current_user.first_name} #{current_user.last_name}", class: 'profile-picture-img', size: '80x80' %>
+    <% else %>
+      <%= image_tag 'default_pfp.png', alt: 'Default Profile Picture', class: 'profile-picture-img', size: '80x80' %>
+    <% end %>
+  </div>
+  
   <div class="nav-signedin-options">
     <% if @selected_course && @selected_course.id %>
       <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
