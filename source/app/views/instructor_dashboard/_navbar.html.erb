@@ -4,10 +4,12 @@
   </div>
 
   <div class="profile-picture">
-    <% if current_user.profile_picture.attached? %>
-      <%= image_tag current_user.profile_picture, alt: "#{current_user.first_name} #{current_user.last_name}", class: 'profile-picture-img', size: '80x80' %>
-    <% else %>
-      <%= image_tag 'default_pfp.png', alt: 'Default Profile Picture', class: 'profile-picture-img', size: '80x80' %>
+    <%= link_to settings_student_dashboard_index_path(course_id: @selected_course.id) do %>
+      <% if current_user.profile_picture.attached? %>
+        <%= image_tag current_user.profile_picture, alt: "#{current_user.first_name} #{current_user.last_name}", class: 'profile-picture-img', size: '80x80' %>
+      <% else %>
+        <%= image_tag 'default_pfp.png', alt: 'Default Profile Picture', class: 'profile-picture-img', size: '80x80' %>
+      <% end %>
     <% end %>
   </div>
   
