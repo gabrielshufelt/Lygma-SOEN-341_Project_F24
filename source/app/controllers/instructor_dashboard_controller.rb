@@ -53,6 +53,13 @@ class InstructorDashboardController < ApplicationController
     end
   end
 
+  
+  def update_settings
+    @settings_params = user_params
+    result = SettingsUpdateService.update(current_user, @settings_params)
+    handle_service_response(result)
+  end
+
   private
 
   def set_selected_course
@@ -137,5 +144,18 @@ class InstructorDashboardController < ApplicationController
       }
     end
     teams_ratings
+  end
+  
+  def user_params
+    params.require(:user).permit(
+      :first_name, 
+      :last_name, 
+      :email, 
+      :birth_date, 
+      :profile_picture,
+      :remove_profile_picture,
+      :current_password, 
+      :password
+    )
   end
 end

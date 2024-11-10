@@ -113,3 +113,5 @@ gem 'chartkick'
 gem 'pexels'
 
 gem 'dotenv-rails'
+
+gem 'active_storage_validations'

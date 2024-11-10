@@ -44,6 +44,13 @@ class StudentDashboardController < ApplicationController
     end
   end
 
+  def update_settings
+    @settings_params = user_params
+    result = SettingsUpdateService.update(current_user, @settings_params)
+    handle_service_response(result)
+  end
+  
+
   private
 
   def ensure_student_role
@@ -180,5 +187,18 @@ class StudentDashboardController < ApplicationController
 
   def evaluation_params
     params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+  end
+
+  def user_params
+    params.require(:user).permit(
+      :first_name, 
+      :last_name, 
+      :email, 
+      :birth_date, 
+      :profile_picture,
+      :remove_profile_picture,
+      :current_password, 
+      :password
+    )
   end
 end
