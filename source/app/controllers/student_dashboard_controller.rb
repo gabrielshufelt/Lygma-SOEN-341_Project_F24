@@ -7,14 +7,11 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
-
     @received_evaluations = received_evaluations
-    
   end
 
   def teams
-    @teams_by_project = teams_by_project
-
+    @teams_by_project = TeamsService.new(@selected_course.id, @student).teams_by_project
   end
 
   def evaluations
@@ -46,6 +43,13 @@ class StudentDashboardController < ApplicationController
       redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
     end
   end
+
+  def update_settings
+    @settings_params = user_params
+    result = SettingsUpdateService.update(current_user, @settings_params)
+    handle_service_response(result)
+  end
+  
 
   private
 
@@ -86,22 +90,6 @@ class StudentDashboardController < ApplicationController
       practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
       work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
-  end
-
-  def teams_by_project
-    projects = Project.where(course_id: @selected_course.id)
-    return [] if projects.empty?
-
-    teams = projects.map do |project|
-      student_team = @student.teams.find_by(project_id: project.id)
-      {
-        project_title: project.title,
-        student_team: student_team.present? ? student_team : nil,
-        student_team_members: (student_team.members_to_string if student_team.present?),
-        all_teams: project.teams
-      }
-    end
-    teams || {}
   end
 
   def student_evaluations
@@ -199,5 +187,18 @@ class StudentDashboardController < ApplicationController
 
   def evaluation_params
     params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+  end
+
+  def user_params
+    params.require(:user).permit(
+      :first_name, 
+      :last_name, 
+      :email, 
+      :birth_date, 
+      :profile_picture,
+      :remove_profile_picture,
+      :current_password, 
+      :password
+    )
   end
 end

@@ -96,6 +96,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'rails-controller-testing'
 end
 
 # Devise for User Authentication
@@ -121,3 +122,5 @@ gem 'whenever', require: false
 
 # Automatically inline SCSS/CSS into mailers
 gem 'premailer-rails'
+
+gem 'active_storage_validations'
