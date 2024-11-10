@@ -7,14 +7,11 @@ class StudentDashboardController < ApplicationController
   def index
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
-
     @received_evaluations = received_evaluations
-    
   end
 
   def teams
-    @teams_by_project = teams_by_project
-
+    @teams_by_project = TeamsService.new(@selected_course.id, @student).teams_by_project
   end
 
   def evaluations
@@ -93,22 +90,6 @@ class StudentDashboardController < ApplicationController
       practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
       work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
-  end
-
-  def teams_by_project
-    projects = Project.where(course_id: @selected_course.id)
-    return [] if projects.empty?
-
-    teams = projects.map do |project|
-      student_team = @student.teams.find_by(project_id: project.id)
-      {
-        project_title: project.title,
-        student_team: student_team.present? ? student_team : nil,
-        student_team_members: (student_team.members_to_string if student_team.present?),
-        all_teams: project.teams
-      }
-    end
-    teams || {}
   end
 
   def student_evaluations
