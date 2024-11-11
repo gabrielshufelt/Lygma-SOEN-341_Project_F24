@@ -31,7 +31,7 @@ student1.update!(
   practical_rating: 6.9,
   work_ethic_rating: 4.7,
   sex: 'female',
-  birth_date: Date.new(2000, 3, 10)
+  birth_date: Date.new(2000, 3, 10),
   student_id: '40247001'
 )
 
@@ -46,7 +46,7 @@ student2.update!(
   practical_rating: 0.0,
   work_ethic_rating: 0.0,
   sex: 'male',
-  birth_date: Date.new(1999, 7, 25)
+  birth_date: Date.new(1999, 7, 25),
   student_id: '40247002'
 )
 
@@ -61,7 +61,7 @@ student3.update!(
   practical_rating: 5.1,
   work_ethic_rating: 4.0,
   sex: 'female',
-  birth_date: Date.new(2001, 11, 5)
+  birth_date: Date.new(2001, 11, 5),
   student_id: '40247003'
 )
 
@@ -76,7 +76,7 @@ student4.update!(
   practical_rating: 6.3,
   work_ethic_rating: 4.8,
   sex: 'male',
-  birth_date: Date.new(2000, 2, 20)
+  birth_date: Date.new(2000, 2, 20),
   student_id: '40247004'
 )
 
@@ -91,7 +91,7 @@ student5.update!(
   practical_rating: 6.0,
   work_ethic_rating: 7.0,
   sex: 'female',
-  birth_date: Date.new(2001, 6, 15)
+  birth_date: Date.new(2001, 6, 15),
   student_id: '40247005'
 )
 
@@ -106,7 +106,7 @@ student6.update!(
   practical_rating: 2.5,
   work_ethic_rating: 6.6,
   sex: 'male',
-  birth_date: Date.new(1998, 12, 30)
+  birth_date: Date.new(1998, 12, 30),
   student_id: '40247006'
 )
 
