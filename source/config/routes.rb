@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get 'course/:course_id', to: 'instructor_dashboard#index', as: 'course'
       get 'teams/:course_id', to: 'instructor_dashboard#teams', as: 'teams'
       get 'results/:course_id', to: 'instructor_dashboard#results', as: 'results'
+      get 'results/:course_id/student/:student_id', to: 'instructor_dashboard#detailed_results', as: 'detailed_results'
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
       get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
       patch 'settings/:course_id', to: 'instructor_dashboard#update_settings'

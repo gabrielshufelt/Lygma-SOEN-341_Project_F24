@@ -31,7 +31,6 @@ html {
 	flex-direction: column;
 }
 
-
 body {
 	display: flex;
 	flex-direction: column;
@@ -88,7 +87,7 @@ p {
 	margin: 0px 30px;
 	max-width: 100%;
 
-	>h2 {
+	> h2 {
 		font-weight: bold;
 		font-size: 2rem;
 		margin: 1em 0;
@@ -108,10 +107,12 @@ p {
 .gradient-filter {
 	height: 100%;
 	width: 100%;
-	background-image: linear-gradient(90deg,
-			rgba(255, 255, 255, 1) 0%,
-			rgba(255, 255, 255, 0.85) 50%,
-			rgba(255, 255, 255, 0.5) 100%);
+	background-image: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 1) 0%,
+		rgba(255, 255, 255, 0.85) 50%,
+		rgba(255, 255, 255, 0.5) 100%
+	);
 }
 
 .title {
@@ -124,7 +125,6 @@ p {
 	top: 20px;
 	right: 20px;
 }
-
 
 .logout-button {
 	padding: 10px 20px;
@@ -149,10 +149,12 @@ p {
 	height: 100%;
 	width: 100%;
 	height: 100vh;
-	background-image: linear-gradient(90deg,
-			rgba(255, 255, 255, 1) 0%,
-			rgba(255, 255, 255, 0.85) 50%,
-			rgba(255, 255, 255, 0.5) 100%);
+	background-image: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 1) 0%,
+		rgba(255, 255, 255, 0.85) 50%,
+		rgba(255, 255, 255, 0.5) 100%
+	);
 }
 
 .simple-form {
@@ -409,12 +411,11 @@ footer {
 
 .button.secondary:hover {
 	color: var(--darker-red);
-
 }
 
 .table {
 	border-collapse: collapse;
-	margin: 0;
+	margin: 20;
 	font-size: 0.9em;
 	min-width: 400px;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
@@ -488,7 +489,7 @@ footer {
 		justify-content: space-between;
 		align-items: center;
 
-		>div {
+		> div {
 			flex: 1;
 			text-align: center;
 			margin-right: 10px;
@@ -497,7 +498,7 @@ footer {
 			border-radius: 25px;
 		}
 
-		>div:last-child {
+		> div:last-child {
 			margin-right: 0;
 		}
 
@@ -883,7 +884,6 @@ footer {
 	width: 100%; // Ensure the form takes full width of the popup
 }
 
-
 .delete-course-button {
 	position: absolute;
 	top: 10px;
@@ -982,7 +982,7 @@ footer {
 	padding: 15px 12px;
 	border-radius: 17px;
 	white-space: nowrap;
-    font-weight: bold;
+	font-weight: bold;
 }
 
 .upcoming-evaluations-container {
@@ -1260,13 +1260,13 @@ footer {
 }
 
 .profile-picture {
-  margin-top: 10px;
-  text-align: center;
+	margin-top: 10px;
+	text-align: center;
 }
 
 .profile-picture-img {
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+	border-radius: 50%;
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
 }
