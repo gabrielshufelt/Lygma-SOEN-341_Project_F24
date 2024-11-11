@@ -30,6 +30,18 @@
     <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
+  
+  <% if resource.student? %>
+    <div class="field">
+      <%= f.label :student_id %><br />
+      <%= f.number_field :student_id, class: "#{'input-error' if resource.errors[:student_id].any?}" %>
+      <% if resource.errors[:student_id].any? %>
+        <div class="error-message">
+          <%= "Student ID " + resource.errors[:student_id].first %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= f.submit "Update" %>
