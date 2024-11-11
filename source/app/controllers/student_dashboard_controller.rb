@@ -11,6 +11,10 @@ class StudentDashboardController < ApplicationController
 
     # New variable to store average ratings by project
     @average_ratings_by_project = calculate_average_ratings_by_project
+
+    # New variable to store project data
+    @project_data = project_data
+
   end
 
   def project_data
@@ -29,7 +33,9 @@ class StudentDashboardController < ApplicationController
            end
 
     # Convert data into format for Chartkick and respond as JSON
-    render json: data.map { |attribute, avg_rating| [attribute.to_s.humanize, avg_rating] }
+    # render json: data.map { |attribute, avg_rating| [attribute.to_s.humanize, avg_rating] }
+    # return a map of the data
+    data
   end
 
   def teams
