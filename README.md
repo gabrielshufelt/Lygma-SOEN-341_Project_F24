@@ -87,4 +87,41 @@ rails db:migrate
 rails db:seed
 ```
 
+## Database setup with docker-compose
+- Ensure you have Docker and Docker Compose installed on your pc.
+- Assure your environment variables are properly set (refer to database.yml)
+
+### Steps:
+
+1. Start the PostgresSQL container:
+```
+docker-compose up -d
+```
+
+2. Double check it's running:
+```
+docker ps -a 
+```
+or 
+```
+docker-compose ps -a
+```
+This gives a list of all your services currently running. It should say under status that it's 'up'
+
+3. Run db migrations
+```
+rails db:migrate
+```
+
+4. Seed the db
+```
+rails db:seed
+```
+
+*To stop the PostgreSQL container*
+```
+docker-compose down
+```
+It's good practice to do the last command whenever you are done with working on the project so the container doesn't run in the background always.
+
 - With all of these steps complete, you should be able to start your server by running `rails server` (from your `source` folder).
