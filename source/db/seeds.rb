@@ -5,7 +5,8 @@ instructor1.update!(
   first_name: 'John',
   last_name: 'Daquavious',
   role: 'instructor',
-  sex: 'male'
+  sex: 'male',
+  birth_date: Date.new(1980, 5, 15)
 )
 
 instructor2 = User.find_or_initialize_by(email: 'steve@example.com')
@@ -14,7 +15,8 @@ instructor2.update!(
   first_name: 'Steve',
   last_name: 'Brown',
   role: 'instructor',
-  sex: 'male'
+  sex: 'male',
+  birth_date: Date.new(1975, 8, 22)
 )
 
 # Create Example Students
@@ -28,7 +30,8 @@ student1.update!(
   conceptual_rating: 4.2,
   practical_rating: 6.9,
   work_ethic_rating: 4.7,
-  sex: 'female'
+  sex: 'female',
+  birth_date: Date.new(2000, 3, 10)
 )
 
 student2 = User.find_or_initialize_by(email: 'bob@example.com')
@@ -41,7 +44,8 @@ student2.update!(
   conceptual_rating: 0.0,
   practical_rating: 0.0,
   work_ethic_rating: 0.0,
-  sex: 'male'
+  sex: 'male',
+  birth_date: Date.new(1999, 7, 25)
 )
 
 student3 = User.find_or_initialize_by(email: 'carol@example.com')
@@ -54,7 +58,8 @@ student3.update!(
   conceptual_rating: 6.5,
   practical_rating: 5.1,
   work_ethic_rating: 4.0,
-  sex: 'female'
+  sex: 'female',
+  birth_date: Date.new(2001, 11, 5)
 )
 
 student4 = User.find_or_initialize_by(email: 'dave@example.com')
@@ -67,7 +72,8 @@ student4.update!(
   conceptual_rating: 5.7,
   practical_rating: 6.3,
   work_ethic_rating: 4.8,
-  sex: 'male'
+  sex: 'male',
+  birth_date: Date.new(2000, 2, 20)
 )
 
 student5 = User.find_or_initialize_by(email: 'eve@example.com')
@@ -80,9 +86,9 @@ student5.update!(
   conceptual_rating: 7.0,
   practical_rating: 6.0,
   work_ethic_rating: 7.0,
-  sex: 'female'
+  sex: 'female',
+  birth_date: Date.new(2001, 6, 15)
 )
-
 
 student6 = User.find_or_initialize_by(email: 'frank@example.com')
 student6.update!(
@@ -94,7 +100,8 @@ student6.update!(
   conceptual_rating: 6.8,
   practical_rating: 2.5,
   work_ethic_rating: 6.6,
-  sex: 'male'
+  sex: 'male',
+  birth_date: Date.new(1998, 12, 30)
 )
 
 course1 = Course.find_or_initialize_by(code: 'SOEN 341')
@@ -124,7 +131,7 @@ project1 = Project.find_or_initialize_by(id: 1)
 project1.update!(title: 'Sprint 1', due_date: Date.new(2024, 9, 29), course_id: course1.id, maximum_team_size: 6)
 
 project2 = Project.find_or_initialize_by(id: 2)
-project2.update!(title: 'Sprint 2', due_date: Date.new(2024, 10, 27), course_id: course1.id, maximum_team_size: 6)
+project2.update!(title: 'Sprint 2', due_date: Date.tomorrow, course_id: course1.id, maximum_team_size: 6)
 
 team1 = Team.find_or_initialize_by(id: 1000)
 team1.update!(name: 'Real Ratings', description: 'Providing Real Ratings for Real People', project_id: project1.id)
@@ -149,10 +156,11 @@ Evaluation.create!(
     # Evaluations where Alice is the evaluator
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project1.id, team_id: team1.id },
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project2.id, team_id: team1.id },
-    { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project2.id, team_id: team1.id }
+    { evaluator_id: student1.id, evaluatee_id: student3.id, status: 'pending', project_id: project2.id, team_id: team1.id },
+    { evaluator_id: student1.id, evaluatee_id: student4.id, status: 'pending', project_id: project2.id, team_id: team1.id },
+    { evaluator_id: student1.id, evaluatee_id: student5.id, status: 'pending', project_id: project2.id, team_id: team1.id }
   ]
 )
-
 
 team1.add_student(student1)
 team1.add_student(student2)

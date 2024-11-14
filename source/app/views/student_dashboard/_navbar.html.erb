@@ -2,6 +2,16 @@
   <div class="nav-signedin-logo">
     <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
   </div>
+          
+  <div class="profile-picture">
+    <%= link_to settings_student_dashboard_index_path(course_id: @selected_course.id) do %>
+      <% if current_user.profile_picture.attached? %>
+        <%= image_tag current_user.profile_picture, alt: "#{current_user.first_name} #{current_user.last_name}", class: 'profile-picture-img', size: '80x80' %>
+      <% else %>
+        <%= image_tag 'default_pfp.png', alt: 'Default Profile Picture', class: 'profile-picture-img', size: '80x80' %>
+      <% end %>
+    <% end %>
+  </div>
   <div class="nav-signedin-options">
     <%= link_to course_selection_index_path, class: "nav-signedin-link" do %>
       <i class="fa-solid fa-exchange-alt"></i> Change Course
@@ -21,6 +31,10 @@
 
     <%= link_to feedback_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(feedback_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
       <i class="fa-solid fa-comment"></i> Feedback
+    <% end %>
+    
+    <%= link_to settings_student_dashboard_index_path(course_id: @selected_course.id), class: "nav-signedin-link #{'active' if current_page?(settings_student_dashboard_index_path(course_id: @selected_course.id))}" do %>
+      <i class="fa-solid fa-gear"></i> Settings
     <% end %>
 
     <%= link_to destroy_user_session_path, method: :delete, data: { turbo_method: :delete }, class: "nav-signedin-link" do %>

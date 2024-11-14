@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       get 'results/:course_id', to: 'instructor_dashboard#results', as: 'results'
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
       get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
+      patch 'settings/:course_id', to: 'instructor_dashboard#update_settings'
     end
   end
 
@@ -38,6 +39,8 @@ Rails.application.routes.draw do
 
       # Add project_data route to fetch average ratings data
       get 'project_data', to: 'student_dashboard#project_data', as: 'project_data'
+      get 'settings/:course_id', to: 'student_dashboard#settings', as: 'settings'
+      patch 'settings/:course_id', to: 'student_dashboard#update_settings'
     end
   end
 
@@ -53,5 +56,6 @@ Rails.application.routes.draw do
   resources :projects
   resources :evaluations
 
-  get 'up' => 'rails/health#show', as: :rails_health_check
+  get "up" => "rails/health#show", as: :rails_health_check
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

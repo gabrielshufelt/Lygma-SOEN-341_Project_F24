@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body class="email-body">
+  <div class="email-container">
+    <div class="email-header">
+      <div class="nav-signedin-logo">
+        <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
+      </div>
+    </div>
+    <div class="email-content">
+      <p>Hello <%= @student.first_name %>,</p>
+
+      <p>We wanted to remind you that you have <%= @pending_evaluations.count %> evaluation(s) due tomorrow for:</p>
+      <ul>
+        <% @pending_evaluations.each do |evaluation| %>
+          <li><%= User.find(evaluation.evaluatee_id).first_name %> | <strong>Project:</strong> <%= evaluation.project.title %></li>
+        <% end %>
+      </ul>
+
+      <p>Please make sure to complete your evaluations by the deadline to stay on track.</p>
+
+      <%= link_to 'Complete Your Evaluations Now', new_user_session_url, class: 'email-button' %>
+
+      <p>Thank you for your prompt attention to this matter!</p>
+      <p>Best regards,<br>The Real Ratings Team</p>
+    </div>
+    <div class="email-footer">
+      &copy; <%= Time.now.year %> Real Ratings. All rights reserved.
+      <div class="social-icons">
+        <%= link_to image_tag('facebook_icon.png', alt: 'Facebook'), 'https://www.facebook.com', target: '_blank' %>
+        <%= link_to image_tag('x_icon.png', alt: 'Twitter'), 'https://www.x.com', target: '_blank' %>
+        <%= link_to image_tag('linkedin_icon.png', alt: 'LinkedIn'), 'https://www.linkedin.com', target: '_blank' %>
+        <%= link_to image_tag('instagram_icon.png', alt: 'Instagram'), 'https://www.instagram.com', target: '_blank' %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

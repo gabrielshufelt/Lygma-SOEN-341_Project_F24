@@ -10,14 +10,19 @@
 </div>
 
 <script>
-document.addEventListener('turbo:load', function() {
+document.addEventListener('turbo:render', initializeCollapsible);
+document.addEventListener('turbo:load', initializeCollapsible);
+
+function initializeCollapsible() {
   const headers = document.querySelectorAll('.collapsible-header');
 
   headers.forEach(header => {
-    header.removeEventListener('click', collapseHandler);
-    header.addEventListener('click', collapseHandler);
+    if (!header.classList.contains('initialized')) {
+      header.addEventListener('click', collapseHandler);
+      header.classList.add('initialized');
+    }
   });
-});
+}
 
 function collapseHandler(event) {
   const content = this.nextElementSibling;

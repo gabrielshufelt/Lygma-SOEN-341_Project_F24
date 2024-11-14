@@ -10,6 +10,7 @@
  */
 
 @import "bootstrap";
+@import "email";
 
 :root {
 	--red: #bd2611;
@@ -607,28 +608,6 @@ footer {
 	gap: 20px;
 }
 
-.button {
-	padding: 10px 20px;
-	text-align: center;
-	background-color: #bd2611;
-	color: white;
-	border: none;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-.button.primary {
-	background-color: #bd2611;
-}
-
-.button.danger {
-	background-color: #bd2611;
-}
-
-.button:hover {
-	opacity: 0.8;
-}
-
 .center-wrapper {
 	display: flex;
 	justify-content: center;
@@ -1004,22 +983,7 @@ footer {
 	padding: 15px 12px;
 	border-radius: 17px;
 	white-space: nowrap;
-
-	&.one {
-		background-color: #3bd23b;
-	}
-
-	&.two {
-		background-color: black;
-	}
-
-	&.three {
-		background-color: var(--red);
-	}
-
-	&.four {
-		background-color: #0000ff;
-	}
+    font-weight: bold;
 }
 
 .upcoming-evaluations-container {
@@ -1057,29 +1021,6 @@ footer {
 	border-radius: 25px;
 	box-shadow: black 0px 0px 10px;
 	color: white;
-}
-
-.button-container {
-	position: fixed;
-	bottom: 200px;
-	width: 83%;
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-}
-
-.button {
-	padding: 10px 20px;
-	text-align: center;
-	background-color: #bd2611;
-	color: white;
-	border: none;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-.button.primary {
-	background-color: #bd2611;
 }
 
 .button.danger {
@@ -1318,3 +1259,16 @@ footer {
 	text-align: center;
 	padding: 0 20px 20px;
 }
+
+.profile-picture {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.profile-picture-img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
