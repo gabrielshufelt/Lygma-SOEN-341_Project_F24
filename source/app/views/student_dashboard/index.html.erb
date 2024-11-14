@@ -1,59 +1,52 @@
 <div class="containers hall-building">
-	<div class="gradient-filter">
-		<header class="section one">
-			<h1>Hello <%= current_user.first_name %>!</h1>
-			<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
-			<h2>Overall Scores</h2>
-			<% max_score = 7.0 %>
-			<% unless @avg_ratings.empty? %>
-				<div class="student-overview">
-					<% [:cooperation, :conceptual, :practical, :work_ethic].each do |category| %>
-						<% score = @avg_ratings[category].clamp(0, max_score) %>
-						<% start_color = { r: 189, g: 38, b: 17 } %>   
-						<% end_color = { r: 2, g: 143, b: 0 } %>        
-						<% factor = score.to_f / max_score %>           
-						<% r = (start_color[:r] + factor * (end_color[:r] - start_color[:r])).to_i %>
-						<% g = (start_color[:g] + factor * (end_color[:g] - start_color[:g])).to_i %>
-						<% b = (start_color[:b] + factor * (end_color[:b] - start_color[:b])).to_i %>
+  <div class="gradient-filter">
+    <header class="section one">
+      <h1>Hello <%= current_user.first_name %>!</h1>
+      <p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
 
-						<% background_color = "##{r.to_s(16).rjust(2, '0')}#{g.to_s(16).rjust(2, '0')}#{b.to_s(16).rjust(2, '0')}" %>
+      <% unless @avg_ratings.empty? %>
+      <h2>Overall Scores</h2>
+      <% colors = [] %>
+      <div class="student-overview">
+        <% [:'Cooperation', :'Conceptual', :'Practical', :'Work Ethic'].each do |category| %>
+        <% score = @project_data[category].clamp(0, 7) %>
+        <% background_color = background_color_for_score(score) %>
+        <% colors << background_color %>
 
-						<div class="overview" style="background-color: <%= background_color %>;">
-							<%= category.to_s.split('_').map(&:capitalize).join(' ') %>: 
-							<strong><%= score.round(2) %>/7.00</strong>
-						</div>
-					<% end %>
-				</div>
-			<% end %>
-		</header>
-		<section class="section">
-			<h2>Upcoming Evaluations</h2>
-            <div class="upcoming-evaluations-container">
-                <% if @upcoming_evaluations.present? %>
-                    <% @upcoming_evaluations.each do |upcoming_evaluation| %>
-                        <%= render partial: 'evaluation', locals: { upcoming_evaluation: upcoming_evaluation } %>
-                    <% end %>
-                <% else %>
-                    <%= render 'partials/floating_box', 
+        <div class="overview" style="background-color: <%= background_color %>;">
+          <%= category.to_s.split('_').map(&:capitalize).join(' ') %>:
+          <strong><%= score.round(2) %>/7.00</strong>
+        </div>
+        <% end %>
+      </div>
+      <% end %>
+    </header>
+    <section class="section">
+      <h2>Upcoming Evaluations</h2>
+      <div class="upcoming-evaluations-container">
+        <% if @upcoming_evaluations.present? %>
+        <% @upcoming_evaluations.each do |upcoming_evaluation| %>
+        <%= render partial: 'evaluation', locals: { upcoming_evaluation: upcoming_evaluation } %>
+        <% end %>
+        <% else %>
+        <%= render 'partials/floating_box', 
                         icon: "fa-solid fa-clock",
                         content: "No upcoming evaluations" 
                     %>
-                <% end %>
-            </div>
-		</section>
+        <% end %>
+      </div>
+    </section>
 
-        <section class="section">
-            <h2>Average Ratings by Project</h2>
+    <section class="section">
+      <h2>Average Ratings by Project</h2>
 
-            <!-- Dropdown for Project Selection -->
-            <div class="project-filter">
-                <%= select_tag "project_filter", options_for_select(['Overall'] + @average_ratings_by_project.keys), id: "project_selector", onchange: "this.form.submit()" %>
-            </div>
+      <%= form_with url: course_student_dashboard_index_path, method: :get, local: true do %>
+      <%= select_tag :project, options_for_select(@average_ratings_by_project.keys.unshift('Overall'), params[:project] || 'Overall'), onchange: "this.form.submit();" %>
+      <% end %>
 
-            <!-- Column Chart for Average Ratings -->
-            <div class="student-chart">
-               <%= column_chart @project_data, id: "ratings_chart", height: "300px", library: { title: { text: "Average Ratings" } } %>
-            </div>
-        </section>
-	</div>
+      <div class="student-chart">
+        <%= column_chart @project_data, id: "ratings_chart", height: "300px", colors: colors, library: { title: { text: "Average Ratings" } } %>
+      </div>
+    </section>
+  </div>
 </div>

@@ -8,38 +8,21 @@ class StudentDashboardController < ApplicationController
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
-
-    # New variable to store average ratings by project
     @average_ratings_by_project = calculate_average_ratings_by_project
-
-    # New variable to store project data
     @project_data = project_data
-
   end
 
   def project_data
-    project = params[:project] || 'Overall' # Default to 'Overall' if no project is selected
-
-    data = if project == 'Overall'
-             # Aggregate average ratings across all projects
-             @average_ratings_by_project.values.each_with_object({}) do |ratings, acc|
-               ratings.each do |attribute, value|
-                 acc[attribute] = (acc[attribute] || 0) + value
-               end
-             end.transform_values { |sum| (sum / @average_ratings_by_project.size).round(2) }
-           else
-             # Use the selected project's average ratings
-             @average_ratings_by_project[project] || {}
-           end
-
-    # Convert data into format for Chartkick and respond as JSON
-    # render json: data.map { |attribute, avg_rating| [attribute.to_s.humanize, avg_rating] }
-    # return a map of the data
-    data
+    project = params[:project] || 'Overall'
+    if project == 'Overall'
+      @avg_ratings
+    else
+      @average_ratings_by_project[project] || {}
+    end
   end
 
   def teams
-    @teams_by_project = teams_by_project
+    @teams_by_project = TeamsService.new(@selected_course.id, @student).teams_by_project
   end
 
   def evaluations
@@ -74,7 +57,6 @@ class StudentDashboardController < ApplicationController
     result = SettingsUpdateService.update(current_user, @settings_params)
     handle_service_response(result)
   end
-  
 
   private
 
@@ -88,10 +70,10 @@ class StudentDashboardController < ApplicationController
 
     completed_evaluations.each_with_object({}) do |(project, evaluations), result|
       result[project.title] = {
-        conceptual: evaluations.map(&:conceptual_rating).compact.sum / evaluations.size.to_f,
-        cooperation: evaluations.map(&:cooperation_rating).compact.sum / evaluations.size.to_f,
-        practical: evaluations.map(&:practical_rating).compact.sum / evaluations.size.to_f,
-        work_ethic: evaluations.map(&:work_ethic_rating).compact.sum / evaluations.size.to_f
+        'Conceptual': evaluations.map(&:conceptual_rating).compact.sum / evaluations.size.to_f,
+        'Cooperation': evaluations.map(&:cooperation_rating).compact.sum / evaluations.size.to_f,
+        'Practical': evaluations.map(&:practical_rating).compact.sum / evaluations.size.to_f,
+        'Work Ethic': evaluations.map(&:work_ethic_rating).compact.sum / evaluations.size.to_f
       }
     end
   end
@@ -127,10 +109,10 @@ class StudentDashboardController < ApplicationController
     return [] if completed_evaluations.empty?
 
     {
-      conceptual: completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
-      cooperation: completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
-      practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
-      work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
+      'Cooperation': completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
+      'Conceptual': completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
+      'Practical': completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
+      'Work Ethic': completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
     }
   end
 
@@ -143,8 +125,7 @@ class StudentDashboardController < ApplicationController
         project_id: project.id,
         project_title: project.title,
         due_date: project.due_date,
-        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id,
-                                    status: 'completed').map do |eval|
+        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed').map do |eval|
           {
             member_name: eval.evaluatee.first_name,
             cooperation_rating: eval.cooperation_rating,
@@ -229,8 +210,7 @@ class StudentDashboardController < ApplicationController
   end
 
   def evaluation_params
-    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating,
-                                       :work_ethic_rating, :comment)
+    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
   end
 
   def user_params

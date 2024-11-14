@@ -36,8 +36,6 @@ Rails.application.routes.draw do
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
       get 'new_evaluation/:course_id', to: 'student_dashboard#new_evaluation', as: 'new_evaluation'
       patch 'submit_evaluation', to: 'student_dashboard#submit_evaluation'
-
-      # Add project_data route to fetch average ratings data
       get 'project_data', to: 'student_dashboard#project_data', as: 'project_data'
       get 'settings/:course_id', to: 'student_dashboard#settings', as: 'settings'
       patch 'settings/:course_id', to: 'student_dashboard#update_settings'
