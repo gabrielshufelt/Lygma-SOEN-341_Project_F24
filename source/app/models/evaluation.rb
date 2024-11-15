@@ -41,6 +41,10 @@ class Evaluation < ApplicationRecord
     end
 
     def send_email_on_completed
-        NotificationMailer.new_evaluation_for_student(evaluatee, self).deliver_later
+        begin
+            NotificationMailerJob.perform_later('new_evaluation_for_student', evaluatee, self)
+          rescue StandardError => e
+            Rails.logger.error("Failed to send evaluation email: #{e.message}")
+          end
     end
 end
