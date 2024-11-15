@@ -17,14 +17,7 @@ class LearningInsightsService
   def build_prompt
     prompt = <<~PROMPT
       As an experienced academic advisor, your task is to analyze a student's performance based on peer evaluations. You will be provided with evaluation data for the student across different projects. Your analysis should:
-  
-      - Identify patterns and trends in the student's performance over time.
-      - Highlight consistent strengths.
-      - Pinpoint specific areas for improvement.
-      - Offer concrete, actionable suggestions to help the student enhance their skills.
-  
-      **Do not include the prompt or the evaluation data in your response. Provide only the analysis and suggestions.**
-  
+    
       **Please structure your response with the following headings:**
   
       1. **Overview**
@@ -64,7 +57,7 @@ class LearningInsightsService
     request = Net::HTTP::Post.new(uri)
     request["Authorization"] = "Bearer #{ENV['HUGGING_FACE_API_TOKEN']}"
     request["Content-Type"] = "application/json"
-    request.body = { inputs: prompt, parameters: { max_new_tokens: 200 } }.to_json
+    request.body = { inputs: prompt, parameters: { max_new_tokens: 500 } }.to_json
   
     response = http.request(request)
   
