@@ -31,5 +31,20 @@
 			<p>No projects with evaluations available yet.</p>
 		<% end %>
 		</section>
+
+		<section class="section">
+			<div class="insights-box">
+				<h2>Personalized Learning Insights</h2>
+				<% if @received_evaluations.present? %>
+					<% if @learning_insights.present? %>
+						<%= sanitize(@learning_insights, tags: %w[strong p br ul li], attributes: []) %>
+					<% else %>
+						<p>Insights are not available at this time.</p>
+					<% end %>
+				<% else %>
+					<p>You need at least one completed evaluation to generate insights.</p>
+				<% end %>
+			</div>
+		</section>
 	</div>
 </div>

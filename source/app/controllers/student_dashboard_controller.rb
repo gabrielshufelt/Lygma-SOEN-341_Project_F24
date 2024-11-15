@@ -33,6 +33,7 @@ class StudentDashboardController < ApplicationController
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
+    @learning_insights = fetch_learning_insights
   end
 
   def new_evaluation
@@ -235,5 +236,78 @@ class StudentDashboardController < ApplicationController
       :student_id
     )
   end
+
+  def collected_evaluations
+    @evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed').order(:date_completed)
+  end
+
+
+  def aggregate_evaluation_data
+    @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
+      project = Project.find(project_id)
+      
+      # Extract ratings and remove nil values
+      cooperation_ratings = evaluations.map(&:cooperation_rating).compact
+      conceptual_ratings = evaluations.map(&:conceptual_rating).compact
+      practical_ratings = evaluations.map(&:practical_rating).compact
+      work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
+  
+      # Calculate averages
+      avg_cooperation = calculate_average(cooperation_ratings).round(2)
+      avg_conceptual = calculate_average(conceptual_ratings).round(2)
+      avg_practical = calculate_average(practical_ratings).round(2)
+      avg_work_ethic = calculate_average(work_ethic_ratings).round(2)
+  
+      {
+        project_title: project.title,
+        date_completed: evaluations.map(&:date_completed).compact.max,
+        avg_cooperation: avg_cooperation,
+        avg_conceptual: avg_conceptual,
+        avg_practical: avg_practical,
+        avg_work_ethic: avg_work_ethic,
+        comments: evaluations.map(&:comment).compact
+      }
+    end
+  end
+  
+  def calculate_average(ratings)
+    return 0.0 if ratings.empty?
+    ratings.sum.to_f / ratings.size
+  end
+
+
+  def fetch_learning_insights
+    # Check if insights exist and are up-to-date
+    if @student.learning_insights.present? && insights_up_to_date?
+      Rails.logger.info "Using cached learning insights."
+      return @student.learning_insights
+    else
+      Rails.logger.info "Generating new learning insights."
+      
+      collected_evaluations  # Ensure @evaluations is set
+      aggregated_data = aggregate_evaluation_data
+  
+      if aggregated_data.present?
+        insights_service = LearningInsightsService.new(aggregated_data)
+        insights = insights_service.generate_insights
+  
+        # Save insights to student's record
+        @student.update(
+          learning_insights: insights,
+          insights_updated_at: Time.current
+        )
+  
+        return insights
+      else
+        return nil
+      end
+    end
+  end
+
+  def insights_up_to_date?
+    latest_evaluation_date = Evaluation.where(evaluatee_id: @student.id, status: 'completed').maximum(:updated_at)
+    return false if latest_evaluation_date.nil? || @student.insights_updated_at.nil?
+  
+    @student.insights_updated_at >= latest_evaluation_date
+  end
 end
-# rubocop:enable Metrics/ClassLength
