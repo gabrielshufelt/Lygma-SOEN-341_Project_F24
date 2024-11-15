@@ -15,6 +15,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :evaluations do
+    collection do
+      post 'generate_feedback'
+    end
+  end
+
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
   resources :instructor_dashboard, only: [:index] do
