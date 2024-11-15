@@ -1,6 +1,7 @@
 class NotificationMailer < ApplicationMailer
   include Rails.application.routes.url_helpers
   default from: 'gabshu2014@gmail.com'
+  layout 'notification_mailer'
 
   def evaluation_reminder(student, pending_evaluations)
     @student = student
