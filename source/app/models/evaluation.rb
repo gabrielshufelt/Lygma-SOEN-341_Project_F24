@@ -11,6 +11,7 @@ class Evaluation < ApplicationRecord
     belongs_to :team
 
     # Callbacks
+    after_update :send_email_on_completed, if: -> { status == 'completed' }
     before_save :set_status_and_date
 
     # Custom validation for date_completed
@@ -37,5 +38,9 @@ class Evaluation < ApplicationRecord
             self.status = 'pending'
             self.date_completed = nil
         end
+    end
+
+    def send_email_on_completed
+        NotificationMailer.new_evaluation_for_student(evaluatee, self).deliver_later
     end
 end
