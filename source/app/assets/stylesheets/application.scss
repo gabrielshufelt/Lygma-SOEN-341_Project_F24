@@ -1271,3 +1271,98 @@ footer {
   object-fit: cover;
 }
 
+.feedback-display {
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  transition: all 0.3s ease;
+
+  h4 {
+    color: var(--dark-red);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &::before {
+      content: '🤖';
+      font-size: 1.4em;
+    }
+  }
+
+  #ai-feedback {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--dark-red);
+    white-space: pre-line;
+    min-height: 100px;
+
+    &.loading {
+      position: relative;
+      opacity: 0.7;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid var(--dark-red);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+// Add this if you want a nice hover effect
+.feedback-display:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feedback-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.copy-button {
+	background: var(--dark-red);
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 20px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+	background: var(--darker-red);
+	transform: translateY(-1px);
+}
+
+.copy-button i {
+	font-size: 16px;
+}
