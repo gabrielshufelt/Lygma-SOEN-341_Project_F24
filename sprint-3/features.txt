@@ -1,0 +1,4 @@
+For Sprint 3, the features we developed were:
+  - Notifications (see issue #109)
+  - Student Progression Chart (see issue #99)
+  - AI Feedback Coach for Students (see issue #119)

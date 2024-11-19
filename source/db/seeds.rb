@@ -1,3 +1,6 @@
+# Erase all data
+Evaluation.delete_all
+
 # Create Example Instructor
 instructor1 = User.find_or_initialize_by(email: 'john@example.com')
 instructor1.update!(
@@ -163,6 +166,7 @@ Evaluation.create!(
     { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 10.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.9, conceptual_rating: 4.0, practical_rating: 4.1, work_ethic_rating: 4.2, comment: 'Needs more focus!' },
     { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 7.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 6.5, conceptual_rating: 6.7, practical_rating: 6.8, work_ethic_rating: 7.0, comment: 'Outstanding!' },
     { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.3, conceptual_rating: 5.5, practical_rating: 5.7, work_ethic_rating: 5.9, comment: 'Consistent and reliable!' },
+    { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'pending', project_id: project2.id, team_id: team1.id },
 
     # Evaluations where Alice is the evaluator
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project1.id, team_id: team1.id },
