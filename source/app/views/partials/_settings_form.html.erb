@@ -45,6 +45,13 @@
       <input type="password" placeholder="********" name="user[password]">
     </div>
 
+    <% if local_assigns[:source] == 'student' %>
+      <div class="input-group">
+        <label>Student ID</label>
+        <input type="number" placeholder="40001234", name="user[student_id]", value=<%= current_user.student_id %>>
+      </div>
+    <% end %>
+
     <button type="submit" class="button primary">Apply</button>
   </form>
 </div>

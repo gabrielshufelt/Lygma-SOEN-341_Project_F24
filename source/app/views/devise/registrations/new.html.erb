@@ -31,7 +31,7 @@
       <div class="fields">
         <div class="full">
           <%= f.label :role %>
-          <%= f.select :role, [["Student", "student"], ["Instructor", "instructor"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:role].any?}" %>
+          <%= f.select :role, [["Student", "student"], ["Instructor", "instructor"]], { prompt: "Please select" }, class: "#{'input-error' if resource.errors[:role].any?}", id: 'role-select' %>
           <% if resource.errors[:role].any? %>
             <div class="error-message">
               <%= "Role " + resource.errors[:role].first %>
@@ -40,11 +40,10 @@
         </div>
       </div>
     
-    <% if resource.student? %>
-      <div class="fields">
+      <div class="fields" id='student-id-fields' style='display: none'>
         <div class="full">
-          <%= f.label :student_id %><br />
-          <%= f.number_field :student_id, class: "#{'input-error' if resource.errors[:student_id].any?}" %>
+          <%= f.label :student_id, "Student ID" %>
+          <%= f.number_field :student_id, placeholder: "40001234", class: "#{'input-error' if resource.errors[:student_id].any?}" %>
           <% if resource.errors[:student_id].any? %>
             <div class="error-message">
               <%= "Student ID " + resource.errors[:student_id].first %>
@@ -52,9 +51,8 @@
           <% end %>
         </div>
       </div>
-    <% end %>
 
-    <div class="fields">
+      <div class="fields">
         <div class="full">
           <%= f.label :sex %>
           <%= f.select :sex, [["Male", "male"], ["Female", "female"], ["Other", "other"]], prompt: "Please select", class: "#{'input-error' if resource.errors[:sex].any?}" %>
@@ -107,3 +105,18 @@
     <% end %>
   </div>
 </div>
+
+<script>
+document.addEventListener('turbo:load', function() {
+  const roleSelect = document.getElementById('role-select');
+  const studentIdFields = document.getElementById('student-id-fields');
+
+  roleSelect.addEventListener('change', function() {
+    if (roleSelect.value === 'student') {
+      studentIdFields.style.display = 'block';
+    } else {
+      studentIdFields.style.display = 'none';
+    }
+  });
+});
+</script>
