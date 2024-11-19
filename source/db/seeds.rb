@@ -34,7 +34,8 @@ student1.update!(
   practical_rating: 6.9,
   work_ethic_rating: 4.7,
   sex: 'female',
-  birth_date: Date.new(2000, 3, 10)
+  birth_date: Date.new(2000, 3, 10),
+  student_id: '40247001'
 )
 
 student2 = User.find_or_initialize_by(email: 'bob@example.com')
@@ -48,7 +49,8 @@ student2.update!(
   practical_rating: 0.0,
   work_ethic_rating: 0.0,
   sex: 'male',
-  birth_date: Date.new(1999, 7, 25)
+  birth_date: Date.new(1999, 7, 25),
+  student_id: '40247002'
 )
 
 student3 = User.find_or_initialize_by(email: 'carol@example.com')
@@ -62,7 +64,8 @@ student3.update!(
   practical_rating: 5.1,
   work_ethic_rating: 4.0,
   sex: 'female',
-  birth_date: Date.new(2001, 11, 5)
+  birth_date: Date.new(2001, 11, 5),
+  student_id: '40247003'
 )
 
 student4 = User.find_or_initialize_by(email: 'dave@example.com')
@@ -76,7 +79,8 @@ student4.update!(
   practical_rating: 6.3,
   work_ethic_rating: 4.8,
   sex: 'male',
-  birth_date: Date.new(2000, 2, 20)
+  birth_date: Date.new(2000, 2, 20),
+  student_id: '40247004'
 )
 
 student5 = User.find_or_initialize_by(email: 'eve@example.com')
@@ -90,7 +94,8 @@ student5.update!(
   practical_rating: 6.0,
   work_ethic_rating: 7.0,
   sex: 'female',
-  birth_date: Date.new(2001, 6, 15)
+  birth_date: Date.new(2001, 6, 15),
+  student_id: '40247005'
 )
 
 student6 = User.find_or_initialize_by(email: 'frank@example.com')
@@ -104,8 +109,14 @@ student6.update!(
   practical_rating: 2.5,
   work_ethic_rating: 6.6,
   sex: 'male',
-  birth_date: Date.new(1998, 12, 30)
+  birth_date: Date.new(1998, 12, 30),
+  student_id: '40247006'
 )
+
+# Assign unique student_id to existing student users without one
+User.where(role: 'student').each do |student|
+  student.update(student_id: "40#{rand(1000000..9999999)}") unless student.student_id.present?
+end
 
 course1 = Course.find_or_initialize_by(code: 'SOEN 341')
 course1.update!(

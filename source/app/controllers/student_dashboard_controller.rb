@@ -222,7 +222,8 @@ class StudentDashboardController < ApplicationController
       :profile_picture,
       :remove_profile_picture,
       :current_password, 
-      :password
+      :password,
+      :student_id
     )
   end
 end

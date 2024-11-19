@@ -39,7 +39,7 @@ class SettingsUpdateService
 
   def update_basic_info
     filtered_params = @settings_params.except(:password, :current_password, :remove_profile_picture).to_h.reject { |_, v| v.blank? }
-    
+
     if @user.update(filtered_params)
       { notice: "Settings updated successfully." }
     else
