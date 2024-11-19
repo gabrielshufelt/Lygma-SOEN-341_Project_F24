@@ -38,7 +38,8 @@ class InstructorDashboardController < ApplicationController
              .joins(evaluations_as_evaluatee: { project: :course })
              .where(evaluations: { project_id: Project.where(course_id: @selected_course.id), status: 'completed' })
              .select(
-               'users.id as student_id',
+               'users.id',
+               'users.student_id as student_id',
                'users.last_name',
                'users.first_name',
                'AVG(evaluations.cooperation_rating) as cooperation',
@@ -51,6 +52,7 @@ class InstructorDashboardController < ApplicationController
              .group('users.id', 'users.last_name', 'users.first_name')
              .map do |student|
                {
+                id: student.id,
                  student_id: student.student_id,
                  last_name: student.last_name,
                  first_name: student.first_name,
@@ -71,7 +73,7 @@ class InstructorDashboardController < ApplicationController
 
   def detailed_results
     @selected_course = Course.find(params[:course_id]) # Ensure @selected_course is set
-    @student = User.find(params[:student_id])
+    @student = User.find(params[:id])
     @projects = Project.includes(:teams, teams: :students).where(course_id: @selected_course.id)
     @evaluations = Evaluation.includes(:evaluator, :project)
                              .where(evaluatee_id: @student.id, project_id: @projects.pluck(:id), status: 'completed')

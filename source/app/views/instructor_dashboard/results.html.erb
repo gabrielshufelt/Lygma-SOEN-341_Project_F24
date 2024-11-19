@@ -10,7 +10,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Student ID</th>
               <th>Last Name</th>
               <th>First Name</th>
               <th>Cooperation</th>
@@ -35,7 +35,7 @@
                 <td><%= student[:overall_average].round(2) rescue 'N/A' %></td>
                 <td><%= student[:num_of_evaluations_received] %></td>
                 <td>
-                  <%= link_to 'See detailed view', detailed_results_instructor_dashboard_index_path(course_id: @selected_course.id, student_id: student[:student_id]), class: 'button add-eval' %>
+                  <%= link_to 'See detailed view', detailed_results_instructor_dashboard_index_path(course_id: @selected_course.id, id: student[:id]), class: 'button primary' %>
                 </td>
 
               </tr>
