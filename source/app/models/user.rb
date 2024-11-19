@@ -28,6 +28,10 @@ class User < ApplicationRecord
                               size: { less_than: 2.megabytes, message: 'is too large. Please select an image under 2 MB.' }
   validate :birth_date_cannot_be_in_the_future  # Add custom validation for birth date
 
+  # Validations for student_id
+  validates :student_id, uniqueness: true, if: :student?
+  validate :valid_student_id, if: :student?
+
   def honorifics
     case sex
     when 'male'
@@ -81,6 +85,14 @@ class User < ApplicationRecord
     unless profile_picture.attached?
       self.profile_picture.attach(io: File.open(Rails.root.join('app/assets/images/default_pfp.png')),
                                   filename: 'default_pfp.png', content_type: 'image/png')
+    end
+  end
+
+
+  # validation method for student_id
+  def valid_student_id
+    unless student_id.to_s.match?(/\A40\d{6}\z/)
+      errors.add(:student_id, 'must be 8 digits long and start with 40')
     end
   end
 end

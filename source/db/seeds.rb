@@ -1,3 +1,6 @@
+# Erase all data
+Evaluation.delete_all
+
 # Create Example Instructor
 instructor1 = User.find_or_initialize_by(email: 'john@example.com')
 instructor1.update!(
@@ -31,7 +34,8 @@ student1.update!(
   practical_rating: 6.9,
   work_ethic_rating: 4.7,
   sex: 'female',
-  birth_date: Date.new(2000, 3, 10)
+  birth_date: Date.new(2000, 3, 10),
+  student_id: '40247001'
 )
 
 student2 = User.find_or_initialize_by(email: 'bob@example.com')
@@ -45,7 +49,8 @@ student2.update!(
   practical_rating: 0.0,
   work_ethic_rating: 0.0,
   sex: 'male',
-  birth_date: Date.new(1999, 7, 25)
+  birth_date: Date.new(1999, 7, 25),
+  student_id: '40247002'
 )
 
 student3 = User.find_or_initialize_by(email: 'carol@example.com')
@@ -59,7 +64,8 @@ student3.update!(
   practical_rating: 5.1,
   work_ethic_rating: 4.0,
   sex: 'female',
-  birth_date: Date.new(2001, 11, 5)
+  birth_date: Date.new(2001, 11, 5),
+  student_id: '40247003'
 )
 
 student4 = User.find_or_initialize_by(email: 'dave@example.com')
@@ -73,7 +79,8 @@ student4.update!(
   practical_rating: 6.3,
   work_ethic_rating: 4.8,
   sex: 'male',
-  birth_date: Date.new(2000, 2, 20)
+  birth_date: Date.new(2000, 2, 20),
+  student_id: '40247004'
 )
 
 student5 = User.find_or_initialize_by(email: 'eve@example.com')
@@ -87,7 +94,8 @@ student5.update!(
   practical_rating: 6.0,
   work_ethic_rating: 7.0,
   sex: 'female',
-  birth_date: Date.new(2001, 6, 15)
+  birth_date: Date.new(2001, 6, 15),
+  student_id: '40247005'
 )
 
 student6 = User.find_or_initialize_by(email: 'frank@example.com')
@@ -101,8 +109,14 @@ student6.update!(
   practical_rating: 2.5,
   work_ethic_rating: 6.6,
   sex: 'male',
-  birth_date: Date.new(1998, 12, 30)
+  birth_date: Date.new(1998, 12, 30),
+  student_id: '40247006'
 )
+
+# Assign unique student_id to existing student users without one
+User.where(role: 'student').each do |student|
+  student.update(student_id: "40#{rand(1000000..9999999)}") unless student.student_id.present?
+end
 
 course1 = Course.find_or_initialize_by(code: 'SOEN 341')
 course1.update!(
@@ -147,7 +161,14 @@ Evaluation.create!(
     { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 3.months.ago + 3.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.5, practical_rating: 4.2, work_ethic_rating: 5.1, comment: 'Very good!' },
     { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.months.ago + 2.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.0, conceptual_rating: 3.5, practical_rating: 4.0, work_ethic_rating: 4.5, comment: 'Could improve!' },
     { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.months.ago + 4.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 6.0, conceptual_rating: 6.2, practical_rating: 6.5, work_ethic_rating: 6.7, comment: 'Great team player!' },
-    
+    { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 1.month.ago + 1.day, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.8, conceptual_rating: 4.6, practical_rating: 4.7, work_ethic_rating: 4.9, comment: 'Nice contribution!' },
+    { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'completed', date_completed: 1.month.ago + 2.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.5, practical_rating: 5.0, work_ethic_rating: 5.2, comment: 'Good effort!' },
+    { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 15.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.7, conceptual_rating: 4.8, practical_rating: 4.9, work_ethic_rating: 5.0, comment: 'Solid work!' },
+    { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 10.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.9, conceptual_rating: 4.0, practical_rating: 4.1, work_ethic_rating: 4.2, comment: 'Needs more focus!' },
+    { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 7.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 6.5, conceptual_rating: 6.7, practical_rating: 6.8, work_ethic_rating: 7.0, comment: 'Outstanding!' },
+    { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.3, conceptual_rating: 5.5, practical_rating: 5.7, work_ethic_rating: 5.9, comment: 'Consistent and reliable!' },
+    { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'pending', project_id: project2.id, team_id: team1.id },
+
     # Evaluations where Alice is the evaluator
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'completed', date_completed: 3.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 2.3, conceptual_rating: 5.1, practical_rating: 5.1, work_ethic_rating: 6.9, comment: 'Alice evaluated 1' },
     { evaluator_id: student1.id, evaluatee_id: student4.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.3, conceptual_rating: 5.0, practical_rating: 5.9, work_ethic_rating: 5.2, comment: 'Alice evaluated 2' },

@@ -31,7 +31,7 @@ class SettingsUpdateService
   def handle_profile_picture
     # Check if the profile picture should be removed
     if @settings_params[:remove_profile_picture] == '1'
-      @user.profile_picture.purge
+      @user.profile_picture.purge if @user.profile_picture.attached?
     elsif @settings_params[:profile_picture].present?
       @user.profile_picture.attach(@settings_params[:profile_picture])
     end
@@ -39,7 +39,7 @@ class SettingsUpdateService
 
   def update_basic_info
     filtered_params = @settings_params.except(:password, :current_password, :remove_profile_picture).to_h.reject { |_, v| v.blank? }
-    
+
     if @user.update(filtered_params)
       { notice: "Settings updated successfully." }
     else

@@ -7,7 +7,8 @@ class SendEvaluationReminderJob < ApplicationJob
 
     pending_evaluations.group_by(&:evaluator_id).each do |id, evaluations|
       begin
-        NotificationMailer.evaluation_reminder(User.find(id), evaluations.to_a).deliver_later
+        user = User.find(id)
+        NotificationMailerJob.perform_later('evaluation_reminder', user, evaluations.to_a) if user.student?
       rescue => e
         Rails.logger.error "Failed to send reminder email to User #{id}: #{e.message}"
       end

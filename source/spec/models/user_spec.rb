@@ -3,7 +3,7 @@ require 'faker'
 
 RSpec.describe User, type: :model do
   let(:instructor) { User.create!(role: "instructor", first_name: "John", last_name: "Doe", email: "instructor@example.com", password: "password", sex: "female") }
-  let(:student) { User.new(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password", sex: "male") }
+  let(:student) { User.new(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password", sex: "male", student_id: "40247001") }
 
   # Test for presence validation
   it 'is invalid without all necessary fields' do
@@ -42,6 +42,23 @@ RSpec.describe User, type: :model do
       student.courses << [course1, course2, course3]
       student.save!
       expect(student.courses.count).to eq(3)
+    end
+
+    # Add tests for student_id validations
+    it 'is invalid without a unique student_id' do
+      student1 = User.create!(role: 'student', student_id: 40247001, first_name: "Alice", last_name: "Smith", email: "alice@example.com", password: "password", sex: "female")
+      student2 = User.new(role: 'student', student_id: 40247001, first_name: "Bob", last_name: "Jones", email: "bob@example.com", password: "password", sex: "male")
+      expect(student2).not_to be_valid
+    end
+
+    it 'is invalid if student_id is not 8 digits or does not start with 40' do
+      invalid_student = User.new(role: 'student', student_id: 4123330, first_name: "Charlie", last_name: "Brown", email: "charlie@example.com", password: "password", sex: "male")
+      expect(invalid_student).not_to be_valid
+    end
+
+    it 'is valid with a correct student_id' do
+      valid_student = User.new(role: 'student', student_id: 40247001, first_name: "David", last_name: "White", email: "david@example.com", password: "password", sex: "male")
+      expect(valid_student).to be_valid
     end
   end
 end
