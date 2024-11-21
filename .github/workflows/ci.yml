@@ -69,7 +69,7 @@ jobs:
 
       - name: Run tests
         run: |
-          bundle exec rspec
+          bundle exec rspec .
 
   deploy:
     needs: test
