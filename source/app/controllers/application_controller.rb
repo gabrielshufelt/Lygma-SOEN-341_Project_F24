@@ -4,16 +4,16 @@ class ApplicationController < ActionController::Base
   before_action :check_student_id, if: :user_signed_in? # added this (ahmad)
 
   # Redirect instructors and students to the course selection menu after sign in
-  def after_sign_in_path_for(resource)
-    course_selection_index_path  
+  def after_sign_in_path_for(_resource)
+    course_selection_index_path
   end
 
   # Use the same logic for sign up
-  def after_sign_up_path_for(resource)
-    course_selection_index_path 
+  def after_sign_up_path_for(_resource)
+    course_selection_index_path
   end
 
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     root_path # or any other path you want to redirect to after logout
   end
 
@@ -24,10 +24,10 @@ class ApplicationController < ActionController::Base
   def sign_out_on_public_pages
     public_pages = [about_path, contact_path, home_path]
 
-    if user_signed_in? && public_pages.include?(request.path)
-      sign_out(current_user)
-      redirect_to root_path, alert: 'You have been signed out.'
-    end
+    return unless user_signed_in? && public_pages.include?(request.path)
+
+    sign_out(current_user)
+    redirect_to root_path, alert: 'You have been signed out.'
   end
 
   # Ensure @selected_course is set based on session or the first available course
@@ -40,21 +40,21 @@ class ApplicationController < ActionController::Base
       @selected_course = Course.find_by(id: session[:selected_course_id]) || current_user.enrolled_courses.first
     end
 
-    if @selected_course.nil? && !current_page?(course_selection_index_path)
-      flash[:alert] = "No courses available for selection."
-      redirect_to course_selection_index_path
-    end
+    return unless @selected_course.nil? && !current_page?(course_selection_index_path)
+
+    flash[:alert] = 'No courses available for selection.'
+    redirect_to course_selection_index_path
   end
 
   def skip_set_selected_course?
     devise_controller? ||
-    (controller_name == 'course_selection' && action_name == 'index') ||
-    creating_or_adding_course?
+      (controller_name == 'course_selection' && action_name == 'index') ||
+      creating_or_adding_course?
   end
 
   def creating_or_adding_course?
     (controller_name == 'courses' && action_name == 'create') ||
-    (controller_name == 'course_selection' && ['update_course_selection', 'create'].include?(action_name))
+      (controller_name == 'course_selection' && %w[update_course_selection create].include?(action_name))
   end
 
   def handle_service_response(result)
@@ -79,8 +79,8 @@ class ApplicationController < ActionController::Base
 
   # Redirect students without a student_id to their settings page
   def check_student_id
-    if current_user.student? && current_user.student_id.blank?
-      redirect_to edit_user_registration_path, alert: 'Please enter your student ID.'
-    end
+    return unless current_user.student? && current_user.student_id.blank?
+
+    redirect_to edit_user_registration_path, alert: 'Please enter your student ID.'
   end
 end

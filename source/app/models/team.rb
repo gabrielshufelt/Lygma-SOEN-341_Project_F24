@@ -23,7 +23,7 @@ class Team < ApplicationRecord
     if students.exists?(student.id)
       students.delete(student)
     else
-      errors.add(:team, "student is not part of this team")
+      errors.add(:team, 'student is not part of this team')
       false
     end
   end

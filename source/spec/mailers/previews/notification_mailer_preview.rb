@@ -7,4 +7,3 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.evaluation_reminder(student, pending_evaluations)
   end
 end
-

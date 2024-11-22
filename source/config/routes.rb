@@ -61,6 +61,6 @@ Rails.application.routes.draw do
   resources :projects
   resources :evaluations
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

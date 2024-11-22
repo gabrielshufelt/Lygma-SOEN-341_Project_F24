@@ -11,7 +11,10 @@ class InstructorDashboardController < ApplicationController
 
     respond_to do |format|
       format.html { render :index } # This will render app/views/instructor_dashboard/index.html.erb
-      format.json { render json: { teams: @teams, completed_evaluations: @completed_evaluations, pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
+      format.json do
+        render json: { teams: @teams, completed_evaluations: @completed_evaluations,
+                       pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings }
+      end
     end
   end
 
@@ -81,7 +84,6 @@ class InstructorDashboardController < ApplicationController
    
 
   def settings
-
     # Refactor to use settings view
 
     # This is a placeholder for future settings functionality
@@ -91,7 +93,6 @@ class InstructorDashboardController < ApplicationController
     end
   end
 
-  
   def update_settings
     @settings_params = user_params
     result = SettingsUpdateService.update(current_user, @settings_params)
@@ -101,16 +102,14 @@ class InstructorDashboardController < ApplicationController
   private
 
   def set_selected_course
-    if params[:course_id]
-      @selected_course = current_user.courses_taught.find_by(id: params[:course_id])
-    end
-  
+    @selected_course = current_user.courses_taught.find_by(id: params[:course_id]) if params[:course_id]
+
     @selected_course ||= current_user.courses_taught.first
-  
-    unless @selected_course
-      flash[:alert] = "No courses available for selection."
-      redirect_to root_path # Or another appropriate path
-    end
+
+    return if @selected_course
+
+    flash[:alert] = 'No courses available for selection.'
+    redirect_to root_path # Or another appropriate path
   end
 
   def load_instructor_teams
@@ -150,9 +149,9 @@ class InstructorDashboardController < ApplicationController
   def average_rating(category)
     # Restrict average ratings to the selected course
     @instructor.teams.joins(:project)
-              .where(projects: { course_id: @selected_course.id })
-              .joins(students: :evaluations_as_evaluatee)
-              .average("evaluations.#{category}_rating")
+               .where(projects: { course_id: @selected_course.id })
+               .joins(students: :evaluations_as_evaluatee)
+               .average("evaluations.#{category}_rating")
   end
 
   def load_all_ratings
@@ -183,16 +182,16 @@ class InstructorDashboardController < ApplicationController
     end
     teams_ratings
   end
-  
+
   def user_params
     params.require(:user).permit(
-      :first_name, 
-      :last_name, 
-      :email, 
-      :birth_date, 
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
       :profile_picture,
       :remove_profile_picture,
-      :current_password, 
+      :current_password,
       :password
     )
   end

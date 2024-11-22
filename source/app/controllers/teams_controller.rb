@@ -8,8 +8,7 @@ class TeamsController < ApplicationController
   end
 
   # GET /teams/1 or /teams/1.json
-  def show
-  end
+  def show; end
 
   # GET /teams/new
   def new
@@ -32,7 +31,10 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), notice: "Team was successfully created." }
+        format.html do
+          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
+                      notice: 'Team was successfully created.'
+        end
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -43,12 +45,15 @@ class TeamsController < ApplicationController
 
   # PATCH/PUT /teams/1 or /teams/1.json
   def update
-    available_students    
+    available_students
     load_projects_for_instructors
 
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), notice: "Team was successfully updated." }
+        format.html do
+          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
+                      notice: 'Team was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @team }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -62,25 +67,28 @@ class TeamsController < ApplicationController
     @team.destroy!
 
     respond_to do |format|
-      format.html { redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), status: :see_other, notice: "Team was successfully destroyed." }
+      format.html do
+        redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), status: :see_other,
+                                                                                           notice: 'Team was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   def load_projects_for_instructors
-    if current_user.role == 'instructor'
-      @projects = Project.where(course_id: current_user.courses_taught.pluck(:id))
-    else
-      @projects = []
-    end
+    @projects = if current_user.role == 'instructor'
+                  Project.where(course_id: current_user.courses_taught.pluck(:id))
+                else
+                  []
+                end
   end
 
   def available_students
     @available_students = User
-      .left_outer_joins(:teams)
-      .where(role: "student")
-      .group('users.id')
-      .having('COUNT(teams.id) = 0')
+                          .left_outer_joins(:teams)
+                          .where(role: 'student')
+                          .group('users.id')
+                          .having('COUNT(teams.id) = 0')
   end
 
   # PATCH /teams/:id/add_member
@@ -88,7 +96,7 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
     available_students
-  
+
     if @team.add_student(@user)
       @team_members = @team.students
       @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
@@ -96,10 +104,13 @@ class TeamsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students }),
-            turbo_stream.replace("student-teams", template: "student_dashboard/teams", locals: {teams_by_project: @teams_by_project}),
-            turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
+            turbo_stream.replace('team-members', partial: 'teams/team_members',
+                                                 locals: { team: @team, team_members: @team_members }),
+            turbo_stream.replace('available-students', partial: 'teams/available_students',
+                                                       locals: { available_students: @available_students }),
+            turbo_stream.replace('student-teams', template: 'student_dashboard/teams',
+                                                  locals: { teams_by_project: @teams_by_project }),
+            turbo_stream.append('student-teams', '<script>initializeCollapsible();</script>') # re-trigger collapsible box initialization
           ]
         end
         format.html { redirect_to edit_team_path(@team), notice: 'Team member added successfully.' }
@@ -111,26 +122,28 @@ class TeamsController < ApplicationController
         format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end
-  end  
-  
+  end
 
   # DELETE /teams/:id/remove_member
   def remove_member
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
-  
+
     if @team.remove_student(@user)
       @team_members = @team.students
       @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
       available_students
-  
+
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.replace("team-members", partial: "teams/team_members", locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace("available-students", partial: "teams/available_students", locals: { available_students: @available_students }),
-            turbo_stream.replace("student-teams", template: "student_dashboard/teams", locals: {teams_by_project: @teams_by_project}),
-            turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
+            turbo_stream.replace('team-members', partial: 'teams/team_members',
+                                                 locals: { team: @team, team_members: @team_members }),
+            turbo_stream.replace('available-students', partial: 'teams/available_students',
+                                                       locals: { available_students: @available_students }),
+            turbo_stream.replace('student-teams', template: 'student_dashboard/teams',
+                                                  locals: { teams_by_project: @teams_by_project }),
+            turbo_stream.append('student-teams', '<script>initializeCollapsible();</script>') # re-trigger collapsible box initialization
           ]
         end
         format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
@@ -143,7 +156,7 @@ class TeamsController < ApplicationController
       end
     end
   end
-  
+
 
   private
 

@@ -6,7 +6,7 @@ ruby '3.3.5'
 gem 'rails', '~> 7.1.4'
 
 # Use PostgreSQL as the database
-gem "pg", "~> 1.2"
+gem 'pg', '~> 1.2'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -36,7 +36,7 @@ gem 'jbuilder'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %i[ windows jruby ]
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
@@ -53,7 +53,7 @@ gem 'bootstrap', '~> 5.3.3'
 group :development, :test do
   gem 'faker'
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[ mri windows ]
+  gem 'debug', platforms: %i[mri windows]
   # See https://rspec.info/documentation/7.0/rspec-rails/
   gem 'rspec-rails', '~> 7.0.0'
 
@@ -93,8 +93,8 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
-  gem 'selenium-webdriver'
   gem 'rails-controller-testing'
+  gem 'selenium-webdriver'
 end
 
 # Devise for User Authentication

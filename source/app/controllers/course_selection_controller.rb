@@ -17,23 +17,21 @@ class CourseSelectionController < ApplicationController
     # Fetch Pexels image URLs for each course if it doesn't already exist
     (@courses || @student_courses || []).each do |course|
       course.image_url ||= fetch_image_url(course.title)
-
     end
 
     # Ensure @available_courses is always set for students
-    if current_user.student?
-      @available_courses ||= Course.all
-    end
+    @available_courses ||= Course.all if current_user.student?
 
     # Add a flash message if there are no courses
     if (@courses.blank? && current_user.instructor?) || (@student_courses.blank? && @available_courses.blank? && current_user.student?)
-      flash.now[:alert] = "No courses available. #{current_user.instructor? ? 'Create a new course to get started.' : 'Please contact your instructor.'}"
+      flash.now[:alert] =
+        "No courses available. #{current_user.instructor? ? 'Create a new course to get started.' : 'Please contact your instructor.'}"
     end
   end
 
   def select_course
     course = Course.find(params[:course_id])
-    
+
     # Store selected course ID in session
     session[:selected_course_id] = course.id
 
@@ -47,7 +45,7 @@ class CourseSelectionController < ApplicationController
 
   def update_course_selection
     course = Course.find(params[:course_id])
-    
+
     if current_user.enrolled_courses.count < 6 && !current_user.enrolled_courses.include?(course)
       current_user.enrolled_courses << course
       flash[:notice] = "You have successfully enrolled in #{course.code}."
@@ -60,12 +58,12 @@ class CourseSelectionController < ApplicationController
 
   def drop_course
     course = Course.find(params[:course_id])
-    
+
     if current_user.enrolled_courses.include?(course)
       current_user.enrolled_courses.delete(course)
       flash[:notice] = "You have successfully dropped #{course.code}."
     else
-      flash[:alert] = "You are not enrolled in this course."
+      flash[:alert] = 'You are not enrolled in this course.'
     end
 
     redirect_to course_selection_index_path
@@ -75,14 +73,13 @@ class CourseSelectionController < ApplicationController
 
   def create
     @course = current_user.courses_taught.build(course_params)
-    
+
     if @course.save
-      flash[:notice] = "Course successfully created."
-      redirect_to course_selection_index_path
+      flash[:notice] = 'Course successfully created.'
     else
       flash[:alert] = "Failed to create course: #{@course.errors.full_messages.join(', ')}"
-      redirect_to course_selection_index_path
     end
+    redirect_to course_selection_index_path
   end
 
   private
@@ -96,7 +93,7 @@ class CourseSelectionController < ApplicationController
     if current_user.enrolled_courses.count < 6 && !current_user.enrolled_courses.include?(course)
       current_user.enrolled_courses << course
     else
-      flash[:alert] = "You can only enroll in up to 6 courses."
+      flash[:alert] = 'You can only enroll in up to 6 courses.'
     end
   end
 
@@ -105,17 +102,14 @@ class CourseSelectionController < ApplicationController
   end
 
   def fetch_image_url(course_title)
-    begin
-      search_results = PexelsClient.photos.search(course_title, per_page: 1)
-      if search_results && search_results.photos.any?
-        search_results.photos.first.src['medium'] # Use the medium-sized image URL
-      else
-        "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder image URL
-      end
-    rescue => e
-      Rails.logger.error "Error fetching image for #{course_title}: #{e.message}"
-      "https://via.placeholder.com/250x120?text=No+Image+Available" # Use a default placeholder on error
+    search_results = PexelsClient.photos.search(course_title, per_page: 1)
+    if search_results&.photos&.any?
+      search_results.photos.first.src['medium'] # Use the medium-sized image URL
+    else
+      'https://via.placeholder.com/250x120?text=No+Image+Available' # Use a default placeholder image URL
     end
+  rescue StandardError => e
+    Rails.logger.error "Error fetching image for #{course_title}: #{e.message}"
+    'https://via.placeholder.com/250x120?text=No+Image+Available' # Use a default placeholder on error
   end
-  
 end

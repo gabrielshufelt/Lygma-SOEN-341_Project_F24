@@ -8,8 +8,8 @@ class TeamMembership < ApplicationRecord
   private
 
   def user_must_be_student
-    unless user.role == 'student'
-      errors.add(:user, "must be a student to join a team")
-    end
+    return if user.role == 'student'
+
+    errors.add(:user, 'must be a student to join a team')
   end
 end

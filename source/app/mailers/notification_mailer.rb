@@ -9,7 +9,7 @@ class NotificationMailer < ApplicationMailer
 
     mail(
       to: @student.email,
-      subject: "Reminder: You Have Pending Evaluation(s) Due Tomorrow"
+      subject: 'Reminder: You Have Pending Evaluation(s) Due Tomorrow'
     )
   end
 

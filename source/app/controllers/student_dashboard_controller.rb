@@ -125,7 +125,8 @@ class StudentDashboardController < ApplicationController
         project_id: project.id,
         project_title: project.title,
         due_date: project.due_date,
-        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'completed').map do |eval|
+        completed: Evaluation.where(evaluator_id: @student.id, project_id: project.id,
+                                    status: 'completed').map do |eval|
           {
             member_name: eval.evaluatee.first_name,
             cooperation_rating: eval.cooperation_rating,
@@ -210,18 +211,19 @@ class StudentDashboardController < ApplicationController
   end
 
   def evaluation_params
-    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating,
+                                       :work_ethic_rating, :comment)
   end
 
   def user_params
     params.require(:user).permit(
-      :first_name, 
-      :last_name, 
-      :email, 
-      :birth_date, 
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
       :profile_picture,
       :remove_profile_picture,
-      :current_password, 
+      :current_password,
       :password,
       :student_id
     )
