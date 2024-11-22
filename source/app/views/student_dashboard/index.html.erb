@@ -1,54 +1,52 @@
-
 <div class="containers hall-building">
-	<div class="gradient-filter">
-		<header class="section one">
-			<h1>Hello <%= current_user.first_name %>!</h1>
-			<p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
-            <% unless @avg_ratings.empty? %>
-                <div class="student-overview">
-                    <div class="overview one">Cooperation: <%= @avg_ratings[:cooperation]%> </div>
-                    <div class="overview two">Conceptual Contribution: <%= @avg_ratings[:conceptual]%></div>
-                    <div class="overview three">Practical Contribution: <%= @avg_ratings[:practical]%></div>
-                    <div class="overview four">Work Ethic: <%= @avg_ratings[:work_ethic]%></div>
-                </div>
-            <% end %>
-		</header>
+  <div class="gradient-filter">
+    <header class="section one">
+      <h1>Hello <%= current_user.first_name %>!</h1>
+      <p><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</p>
 
-		<section class="section">
-			<h2>Upcoming Evaluations</h2>
-            <div class="upcoming-evaluations-container">
-                <% if @upcoming_evaluations.present? %>
-                    <% @upcoming_evaluations.each do |upcoming_evaluation| %>
-                        <%= render partial: 'evaluation', locals: {upcoming_evaluation:} %>
-                    <% end %>
-                <% else %>
-                    <%= render 'partials/floating_box', 
+      <% unless @avg_ratings.empty? %>
+      <h2>Overall Scores</h2>
+      <% colors = [] %>
+      <div class="student-overview">
+        <% [:'Cooperation', :'Conceptual', :'Practical', :'Work Ethic'].each do |category| %>
+        <% score = @project_data[category].clamp(0, 7) %>
+        <% background_color = background_color_for_score(score) %>
+        <% colors << background_color %>
+
+        <div class="overview" style="background-color: <%= background_color %>;">
+          <%= category.to_s.split('_').map(&:capitalize).join(' ') %>:
+          <strong><%= score.round(2) %>/7.00</strong>
+        </div>
+        <% end %>
+      </div>
+      <% end %>
+    </header>
+    <section class="section">
+      <h2>Upcoming Evaluations</h2>
+      <div class="upcoming-evaluations-container">
+        <% if @upcoming_evaluations.present? %>
+        <% @upcoming_evaluations.each do |upcoming_evaluation| %>
+        <%= render partial: 'evaluation', locals: { upcoming_evaluation: upcoming_evaluation } %>
+        <% end %>
+        <% else %>
+        <%= render 'partials/floating_box', 
                         icon: "fa-solid fa-clock",
                         content: "No upcoming evaluations" 
                     %>
-                <% end %>
-            </div>
-		</section>
+        <% end %>
+      </div>
+    </section>
 
-        <section class="section"> 
-            <h2>Progression Chart</h2>
-            <div class="student-chart">
-                <% # This will have to be refactored to use @student_evaluations once the 'select a course' page is implemented %>
-                <%= line_chart [
-                    { name: "Cooperation", data: @progression_data.map { |d| [d[:date_completed], d[:cooperation].to_f] }.to_h },
-                    { name: "Conceptual Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:conceptual].to_f] }.to_h },
-                    { name: "Practical Contribution", data: @progression_data.map { |d| [d[:date_completed], d[:practical].to_f] }.to_h },
-                    { name: "Work Ethic", data: @progression_data.map { |d| [d[:date_completed], d[:work_ethic].to_f] }.to_h }
-                ],
-                colors: ["#3bd23b", "#000", "#bd2611", "#0000ff"], 
-                min: 0,
-                max: 7,
-                xtitle: "Time",
-                ytitle: "Ratings",
-                empty: "You do not have any ratings for this course yet." 
-            %>
-            </div>
-        </section>
-	</div>
+    <section class="section">
+      <h2>Average Ratings by Project</h2>
+
+      <%= form_with url: course_student_dashboard_index_path, method: :get, local: true do %>
+      <%= select_tag :project, options_for_select(@average_ratings_by_project.keys.unshift('Overall'), params[:project] || 'Overall'), onchange: "this.form.submit();" %>
+      <% end %>
+
+      <div class="student-chart">
+        <%= column_chart @project_data, id: "ratings_chart", height: "300px", colors: colors, library: { title: { text: "Average Ratings" } } %>
+      </div>
+    </section>
+  </div>
 </div>
-

@@ -8,9 +8,6 @@ gem 'rails', '~> 7.1.4'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
-# Use PostgreSQL as the database
-gem "pg", "~> 1.2"
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 
@@ -50,15 +47,26 @@ gem 'ostruct'
 # Bootstrap for styling
 gem 'bootstrap', '~> 5.3.3'
 
+group :production do
+  # Use PostgreSQL as the database
+  gem "pg", "~> 1.2"
+end
+
 group :development, :test do
   gem 'faker'
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[ mri windows ]
   # See https://rspec.info/documentation/7.0/rspec-rails/
   gem 'rspec-rails', '~> 7.0.0'
+
+  # Use sqlite3 as the database for Active Record
+  gem 'sqlite3', '>= 1.4'
 end
 
 group :development do
+  # Preview email in the default browser instead of sending it
+  gem 'letter_opener_web', '~> 3.0'
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
@@ -88,6 +96,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+  gem 'rails-controller-testing'
 end
 
 # Devise for User Authentication
@@ -107,3 +116,11 @@ gem 'chartkick'
 gem 'pexels'
 
 gem 'dotenv-rails'
+
+# Whenever for scheduling jobs
+gem 'whenever', require: false
+
+# Automatically inline SCSS/CSS into mailers
+gem 'premailer-rails'
+
+gem 'active_storage_validations'

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :sign_out_on_public_pages
   before_action :set_selected_course, unless: :skip_set_selected_course?
+  before_action :check_student_id, if: :user_signed_in? # added this (ahmad)
 
   # Redirect instructors and students to the course selection menu after sign in
   def after_sign_in_path_for(resource)
@@ -54,5 +55,32 @@ class ApplicationController < ActionController::Base
   def creating_or_adding_course?
     (controller_name == 'courses' && action_name == 'create') ||
     (controller_name == 'course_selection' && ['update_course_selection', 'create'].include?(action_name))
+  end
+
+  def handle_service_response(result)
+    if result[:redirect] == :logout
+      sign_out current_user
+      redirect_to new_user_session_path, notice: result[:notice]
+    else
+      flash[:notice] = result[:notice] if result[:notice]
+      flash[:alert] = result[:alert] if result[:alert]
+      redirect_to settings_redirect_path(params[:course_id])
+    end
+  end
+
+  # Redirect path based on user role
+  def settings_redirect_path(course_id)
+    if current_user.instructor?
+      settings_instructor_dashboard_index_path(course_id: course_id)
+    else
+      settings_student_dashboard_index_path(course_id: course_id)
+    end
+  end
+
+  # Redirect students without a student_id to their settings page
+  def check_student_id
+    if current_user.student? && current_user.student_id.blank?
+      redirect_to edit_user_registration_path, alert: 'Please enter your student ID.'
+    end
   end
 end

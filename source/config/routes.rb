@@ -15,6 +15,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :evaluations do
+    collection do
+      post 'generate_feedback'
+    end
+  end
+
   devise_for :users, controllers: { registrations: 'users/registrations' }
 
   resources :instructor_dashboard, only: [:index] do
@@ -24,6 +30,7 @@ Rails.application.routes.draw do
       get 'results/:course_id', to: 'instructor_dashboard#results', as: 'results'
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
       get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
+      patch 'settings/:course_id', to: 'instructor_dashboard#update_settings'
     end
   end
 
@@ -35,6 +42,9 @@ Rails.application.routes.draw do
       get 'feedback/:course_id', to: 'student_dashboard#feedback', as: 'feedback'
       get 'new_evaluation/:course_id', to: 'student_dashboard#new_evaluation', as: 'new_evaluation'
       patch 'submit_evaluation', to: 'student_dashboard#submit_evaluation'
+      get 'project_data', to: 'student_dashboard#project_data', as: 'project_data'
+      get 'settings/:course_id', to: 'student_dashboard#settings', as: 'settings'
+      patch 'settings/:course_id', to: 'student_dashboard#update_settings'
     end
   end
 
@@ -46,9 +56,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :courses, only: [:create, :destroy]
+  resources :courses, only: %i[create destroy]
   resources :projects
   resources :evaluations
 
   get "up" => "rails/health#show", as: :rails_health_check
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

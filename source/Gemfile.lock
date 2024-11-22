@@ -50,6 +50,12 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    active_storage_validations (1.3.1)
+      activejob (>= 6.1.4)
+      activemodel (>= 6.1.4)
+      activestorage (>= 6.1.4)
+      activesupport (>= 6.1.4)
+      marcel (>= 1.0.3)
     activejob (7.1.4.2)
       activesupport (= 7.1.4.2)
       globalid (>= 0.3.6)
@@ -102,9 +108,14 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     chartkick (5.1.1)
+    childprocess (5.1.0)
+      logger (~> 1.5)
+    chronic (0.10.2)
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     crass (1.0.6)
+    css_parser (1.19.1)
+      addressable
     csv (3.3.0)
     date (3.3.4)
     debug (1.9.2)
@@ -127,20 +138,12 @@ GEM
     execjs (2.10.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-aarch64-linux-musl)
-    ffi (1.17.0-arm-linux-gnu)
-    ffi (1.17.0-arm-linux-musl)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86-linux-gnu)
-    ffi (1.17.0-x86-linux-musl)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
-    ffi (1.17.0-x86_64-linux-musl)
+    ffi (1.17.0-x64-mingw-ucrt)
     font-awesome-sass (6.5.2)
       sassc (~> 2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    htmlentities (4.3.4)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.3)
@@ -173,6 +176,16 @@ GEM
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
     language_server-protocol (3.17.0.3)
+    launchy (3.0.1)
+      addressable (~> 2.8)
+      childprocess (~> 5.0)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
+    letter_opener_web (3.0.0)
+      actionmailer (>= 6.1)
+      letter_opener (~> 1.9)
+      railties (>= 6.1)
+      rexml
     logger (1.6.1)
     loofah (2.23.1)
       crass (~> 1.0.2)
@@ -198,17 +211,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.16.7-aarch64-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.7-arm-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.7-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.7-x86-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.7-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.7-x86_64-linux)
+    nokogiri (1.16.7-x64-mingw-ucrt)
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.0)
@@ -218,8 +221,16 @@ GEM
       racc
     pexels (0.5.0)
       requests (~> 1.0.2)
-    pg (1.5.9)
+    pg (1.5.9-x64-mingw-ucrt)
     popper_js (2.11.8)
+    premailer (1.27.0)
+      addressable
+      css_parser (>= 1.19.0)
+      htmlentities (>= 4.0.0)
+    premailer-rails (1.12.0)
+      actionmailer (>= 3)
+      net-smtp
+      premailer (~> 1.7, >= 1.7.9)
     prism (0.29.0)
     psych (5.1.2)
       stringio
@@ -249,6 +260,9 @@ GEM
       activesupport (= 7.1.4.2)
       bundler (>= 1.15.0)
       railties (= 7.1.4.2)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -379,6 +393,9 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    sqlite3 (2.2.0-arm-linux-musl)
+    sqlite3 (2.2.0-x86-linux-musl)
+    sqlite3 (2.2.0-x64-mingw-ucrt)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.1)
@@ -392,6 +409,8 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2024.2)
+      tzinfo (>= 1.0.0)
     unicode-display_width (2.6.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -405,27 +424,18 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
     zeitwerk (2.7.1)
 
 PLATFORMS
-  aarch64-linux
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
-  x86-linux
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  x64-mingw-ucrt
 
 DEPENDENCIES
+  active_storage_validations
   bootsnap
   bootstrap (~> 5.3.3)
   capybara
@@ -437,11 +447,14 @@ DEPENDENCIES
   font-awesome-sass
   importmap-rails
   jbuilder
+  letter_opener_web (~> 3.0)
   ostruct
   pexels
   pg (~> 1.2)
+  premailer-rails
   puma (>= 5.0)
   rails (~> 7.1.4)
+  rails-controller-testing
   rails_db
   rspec-rails (~> 7.0.0)
   rubocop
@@ -455,10 +468,12 @@ DEPENDENCIES
   selenium-webdriver
   solargraph
   sprockets-rails
+  sqlite3 (>= 1.4)
   stimulus-rails
   turbo-rails
   tzinfo-data
   web-console
+  whenever
 
 RUBY VERSION
    ruby 3.3.5p100
