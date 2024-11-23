@@ -1,0 +1,60 @@
+<section class="section">
+  <% if project.teams.any? %>
+    <h3>Team Name: <%= project.teams.first.name %></h3>
+    <h5>Team Members:</h5>
+    <ul>
+      <% project.teams.first.students.each do |member| %>
+        <li><%= member.first_name %> <%= member.last_name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Cooperation</th>
+        <th>Conceptual Contribution</th>
+        <th>Practical Contribution</th>
+        <th>Work Ethic</th>
+        <th>Average</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if project.teams.any? %>
+        <% evaluations.each do |evaluation| %>
+          <tr>
+            <td><%= evaluation.evaluator.first_name %> <%= evaluation.evaluator.last_name %></td>
+            <td><%= evaluation.cooperation_rating || 'N/A' %></td>
+            <td><%= evaluation.conceptual_rating || 'N/A' %></td>
+            <td><%= evaluation.practical_rating || 'N/A' %></td>
+            <td><%= evaluation.work_ethic_rating || 'N/A' %></td>
+            <td>
+              <% ratings = [evaluation.cooperation_rating, evaluation.conceptual_rating, evaluation.practical_rating, evaluation.work_ethic_rating].compact %>
+              <%= ratings.present? ? (ratings.sum / ratings.size).round(2) : 'N/A' %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center" style="font-weight: bold; font-size: larger">
+            No teams available for this project.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if project.teams.any? %>
+    <h4>Comments:</h4>
+    <ul>
+      <% evaluations.each do |evaluation| %>
+        <% if evaluation.comment.present? %>
+          <li>
+            <strong><%= evaluation.evaluator.first_name %> <%= evaluation.evaluator.last_name %>:</strong> <%= evaluation.comment %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
+</section>
