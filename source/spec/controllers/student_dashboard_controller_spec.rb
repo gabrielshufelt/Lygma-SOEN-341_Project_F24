@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe StudentDashboardController, type: :controller do
-  let!(:student) { User.create!(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password", sex: "male") }
-  let!(:student_2) { User.create!(role: "student", first_name: "Joe", last_name: "Smith", email: "student_2@example.com", password: "password", sex: "female") }
-  let!(:instructor) { User.create!(role: "instructor", first_name: "John", last_name: "Doe", email: "instructor@example.com", password: "password", sex: "male") }
+  let!(:student) { User.create!(role: "student", first_name: "Jane", last_name: "Doe", email: "student@example.com", password: "password", sex: "male", student_id: 40001111) }
+  let!(:student_2) { User.create!(role: "student", first_name: "Joe", last_name: "Smith", email: "student_2@example.com", password: "password", sex: "female", student_id: 40002222) }
+  let!(:instructor) { User.create!(role: "instructor", first_name: "John", last_name: "Doe", email: "instructor@example.com", password: "password", sex: "male", student_id: 40003333) }
   let!(:course) { Course.create!(title: "Software Engineering Processes", code: "SOEN341", instructor: instructor) }
   let!(:project) { Project.create!(title: "Project Alpha", description: "A project to test the peer assessment system.", due_date: 1.week.from_now, course: course) }
   let!(:team) { Team.create!(name: "Team A", project: project, description: "A team working on Project Alpha") }

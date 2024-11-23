@@ -1,16 +1,23 @@
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
 
 development:
   <<: *default
-  database: storage/development.sqlite3
+  database: real-ratings_development
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  host: <%= ENV['POSTGRES_HOST'] || 'localhost' %>
+  port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
 
 test:
   <<: *default
-  database: storage/test.sqlite3
+  database: real-ratings_test
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  host: <%= ENV['POSTGRES_HOST'] || 'localhost' %>
+  port: <%= ENV.fetch("POSTGRES_PORT", 5432) %>
 
 production:
   <<: *default
