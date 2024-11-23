@@ -17,6 +17,9 @@ class EvaluationsController < ApplicationController
                                           :work_ethic_rating)
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
   def generate_ai_feedback(slider_values)
     # Convert ActionController::Parameters to hash
     ratings = slider_values.to_h
@@ -55,13 +58,14 @@ class EvaluationsController < ApplicationController
     return 'Could not generate feedback at this time.' unless response.code == '200'
 
     result = JSON.parse(response.body)
-    unless result.is_a?(Array) && result[0].is_a?(Hash) && result[0]['generated_text']
-      return 'Could not generate feedback at this time.'
-    end
+    return 'Could not generate feedback at this time.' unless result.is_a?(Array) && result[0].is_a?(Hash) && result[0]['generated_text']
 
     generated_text = result[0]['generated_text'].sub(prompt, '').strip
     generated_text.presence || 'Could not generate feedback at this time.'
   rescue StandardError
     'Could not generate feedback at this time.'
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
 end

@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe SendEvaluationReminderJob, type: :job do
-  let(:student_1) do
+  let(:student1) do
     User.create!(role: 'student', first_name: 'Jane', last_name: 'Doe', email: 'student@example.com',
                  password: 'password', sex: 'male')
   end
-  let(:student_2) do
+  let(:student2) do
     User.create!(role: 'student', first_name: 'Joe', last_name: 'Smith', email: 'student_2@example.com',
                  password: 'password', sex: 'female')
   end

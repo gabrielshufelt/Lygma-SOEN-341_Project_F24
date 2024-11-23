@@ -1,5 +1,6 @@
+# rubocop:disable Metrics/ClassLength
 class TeamsController < ApplicationController
-  before_action :set_team, only: %i[show edit update destroy add_member remove_member]
+  before_action :set_team, only: %i[show edit update destroy manage_member]
   before_action :authenticate_user!
 
   # GET /teams or /teams.json
@@ -84,81 +85,68 @@ class TeamsController < ApplicationController
   end
 
   def available_students
-    @available_students = User
-                          .left_outer_joins(:teams)
-                          .where(role: 'student')
-                          .group('users.id')
-                          .having('COUNT(teams.id) = 0')
+    @available_students = User.left_outer_joins(:teams).where(role: 'student').group('users.id').having('COUNT(teams.id) = 0')
   end
 
-  # PATCH /teams/:id/add_member
-  def add_member
-    @team = Team.find(params[:id])
-    @user = User.find(params[:user_id])
-    available_students
-
-    if @team.add_student(@user)
-      @team_members = @team.students
-      @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
-
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace('team-members', partial: 'teams/team_members',
-                                                 locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace('available-students', partial: 'teams/available_students',
-                                                       locals: { available_students: @available_students }),
-            turbo_stream.replace('student-teams', template: 'student_dashboard/teams',
-                                                  locals: { teams_by_project: @teams_by_project }),
-            turbo_stream.append('student-teams', '<script>initializeCollapsible();</script>') # re-trigger collapsible box initialization
-          ]
-        end
-        format.html { redirect_to edit_team_path(@team), notice: 'Team member added successfully.' }
-        format.json { render json: @team.students, status: :ok }
-      end
-    else
-      respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @team.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /teams/:id/remove_member
-  def remove_member
+  # PATCH/DELETE /teams/:id/manage_member
+  def manage_member
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
 
-    if @team.remove_student(@user)
-      @team_members = @team.students
-      @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
-      available_students
-
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace('team-members', partial: 'teams/team_members',
-                                                 locals: { team: @team, team_members: @team_members }),
-            turbo_stream.replace('available-students', partial: 'teams/available_students',
-                                                       locals: { available_students: @available_students }),
-            turbo_stream.replace('student-teams', template: 'student_dashboard/teams',
-                                                  locals: { teams_by_project: @teams_by_project }),
-            turbo_stream.append('student-teams', '<script>initializeCollapsible();</script>') # re-trigger collapsible box initialization
-          ]
-        end
-        format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
-        format.json { render json: @team.students, status: :ok }
-      end
+    if perform_member_operation(params[:operation])
+      load_team_data
+      respond_success(params[:operation])
     else
-      respond_to do |format|
-        format.html { redirect_to edit_team_path(@team), alert: 'Failed to remove team member.' }
-        format.json { render json: @team.errors, status: :unprocessable_entity }
-      end
+      respond_failure(params[:operation])
     end
   end
-
 
   private
+
+  def perform_member_operation(operation)
+    operation == 'add' ? @team.add_student(@user) : @team.remove_student(@user)
+  end
+
+  def load_team_data
+    @team_members = @team.students
+    @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
+    available_students
+  end
+
+  def respond_success(operation)
+    respond_to do |format|
+      format.turbo_stream { render_turbo_streams }
+      format.html { redirect_to edit_team_path(@team), notice: member_success_message(operation) }
+      format.json { render json: @team.students, status: :ok }
+    end
+  end
+
+  def respond_failure(operation)
+    respond_to do |format|
+      format.html { redirect_to edit_team_path(@team), alert: member_failure_message(operation) }
+      format.json { render json: @team.errors, status: :unprocessable_entity }
+    end
+  end
+
+  def render_turbo_streams
+    render turbo_stream: [
+      turbo_stream.replace('team-members', partial: 'teams/team_members',
+                                           locals: { team: @team, team_members: @team_members }),
+      turbo_stream.replace('available-students', partial: 'teams/available_students',
+                                                 locals: { available_students: @available_students }),
+      turbo_stream.replace('student-teams', template: 'student_dashboard/teams',
+                                            locals: { teams_by_project: @teams_by_project }),
+      turbo_stream.append('student-teams', '<script>initializeCollapsible();</script>')
+    ]
+  end
+
+  def member_success_message(operation)
+    operation == 'add' ? 'Team member added successfully.' : 'Team member was successfully removed.'
+  end
+
+  def member_failure_message(operation)
+    operation == 'add' ? 'Failed to add team member.' : 'Failed to remove team member.'
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_team
@@ -170,3 +158,4 @@ class TeamsController < ApplicationController
     params.require(:team).permit(:name, :description, :project_id)
   end
 end
+# rubocop:enable Metrics/ClassLength

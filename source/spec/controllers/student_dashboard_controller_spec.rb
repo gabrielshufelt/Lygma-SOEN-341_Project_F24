@@ -5,7 +5,7 @@ RSpec.describe StudentDashboardController, type: :controller do
     User.create!(role: 'student', first_name: 'Jane', last_name: 'Doe', email: 'student@example.com',
                  password: 'password', sex: 'male', student_id: 40_001_111)
   end
-  let!(:student_2) do
+  let!(:student2) do
     User.create!(role: 'student', first_name: 'Joe', last_name: 'Smith', email: 'student_2@example.com',
                  password: 'password', sex: 'female', student_id: 40_002_222)
   end
@@ -86,9 +86,10 @@ RSpec.describe StudentDashboardController, type: :controller do
       it 'redirects to evaluations path with success notice' do
         post :submit_evaluation,
              params: { course_id: course.id,
-                       evaluation: { id: pending_evaluation.id, cooperation_rating: 4, conceptual_rating: 4, practical_rating: 4,
-                                     work_ethic_rating: 4, comment: 'Good job' } }
-        expect(response).to redirect_to(evaluations_student_dashboard_index_path(course_id: pending_evaluation.project.course_id))
+                       evaluation: { id: pending_evaluation.id, cooperation_rating: 4, conceptual_rating: 4,
+                                     practical_rating: 4, work_ethic_rating: 4, comment: 'Good job' } }
+        expect(response).to redirect_to(evaluations_student_dashboard_index_path(course_id:
+                                                                                 pending_evaluation.project.course_id))
         expect(flash[:notice]).to eq('Evaluation submitted successfully.')
       end
     end
@@ -100,7 +101,9 @@ RSpec.describe StudentDashboardController, type: :controller do
 
       it 'redirects back to new evaluation path with failure alert' do
         post :submit_evaluation, params: { course_id: course.id, evaluation: { id: pending_evaluation.id } }
-        expect(response).to redirect_to(new_evaluation_student_dashboard_index_path(course_id: pending_evaluation.project.course_id))
+        expect(response).to redirect_to(new_evaluation_student_dashboard_index_path(
+                                          course_id: pending_evaluation.project.course_id
+                                        ))
         expect(flash[:alert]).to eq('Failed to submit evaluation. Please try again.')
       end
     end
@@ -120,7 +123,6 @@ RSpec.describe StudentDashboardController, type: :controller do
         end
       end
     end
-
 
     describe '#set_student' do
       it 'assigns @student as the current user if role is student' do
@@ -148,7 +150,6 @@ RSpec.describe StudentDashboardController, type: :controller do
         expect(result[:work_ethic]).to eq(5.0)
       end
     end
-
 
     describe '#student_evaluations' do
       it 'returns a list of evaluations for the student' do

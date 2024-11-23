@@ -7,15 +7,6 @@ class InstructorDashboardController < ApplicationController
   def index
     load_instructor_teams
     load_instructor_evaluations
-    load_all_ratings
-
-    respond_to do |format|
-      format.html { render :index } # This will render app/views/instructor_dashboard/index.html.erb
-      format.json do
-        render json: { teams: @teams, completed_evaluations: @completed_evaluations,
-                       pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings }
-      end
-    end
   end
 
   def projects
@@ -84,9 +75,6 @@ class InstructorDashboardController < ApplicationController
    
 
   def settings
-    # Refactor to use settings view
-
-    # This is a placeholder for future settings functionality
     respond_to do |format|
       format.html { render :settings }
       format.json { render json: { instructor: @instructor, selected_course: @selected_course } }
@@ -124,17 +112,6 @@ class InstructorDashboardController < ApplicationController
     @pending_evaluations = instructor_evaluations.where(status: 'pending')
   end
 
-  def load_all_instructor_ratings
-    @avg_overall_ratings = {
-      conceptual_rating: average_rating(:conceptual),
-      practical_rating: average_rating(:practical),
-      cooperation_rating: average_rating(:cooperation),
-      work_ethic_rating: average_rating(:work_ethic)
-    }
-
-    @all_ratings = load_all_ratings
-  end
-
   def ensure_instructor_role
     return if current_user.instructor?
 
@@ -152,35 +129,6 @@ class InstructorDashboardController < ApplicationController
                .where(projects: { course_id: @selected_course.id })
                .joins(students: :evaluations_as_evaluatee)
                .average("evaluations.#{category}_rating")
-  end
-
-  def load_all_ratings
-    # Only get ratings for the selected course's teams
-    teams_ratings = {}
-    team_ratings = @instructor.teams
-                              .joins(:project)
-                              .where(projects: { course_id: @selected_course.id })
-                              .joins(:evaluations)
-                              .group('teams.id', 'teams.name')
-                              .select(
-                                'teams.name',
-                                'AVG(evaluations.conceptual_rating) AS conceptual_avg',
-                                'AVG(evaluations.practical_rating) AS practical_avg',
-                                'AVG(evaluations.cooperation_rating) AS cooperation_avg',
-                                'AVG(evaluations.work_ethic_rating) AS work_ethic_avg'
-                              )
-
-    team_ratings.each do |team_rating|
-      teams_ratings[team_rating.name] = {
-        ratings: {
-          conceptual_rating: team_rating.conceptual_avg,
-          practical_rating: team_rating.practical_avg,
-          cooperation_rating: team_rating.cooperation_avg,
-          work_ethic_rating: team_rating.work_ethic_avg
-        }
-      }
-    end
-    teams_ratings
   end
 
   def user_params

@@ -28,7 +28,7 @@ class Team < ApplicationRecord
     end
   end
 
-  def has_space
+  def joinable?
     students.size < 6
   end
 

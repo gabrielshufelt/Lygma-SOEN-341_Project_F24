@@ -25,7 +25,8 @@ class User < ApplicationRecord
   validates :role, inclusion: %w[student instructor], presence: true
   validate :validate_role
   validates :profile_picture, content_type: ['image/png', 'image/jpg', 'image/jpeg'],
-                              size: { less_than: 2.megabytes, message: 'is too large. Please select an image under 2 MB.' }
+                              size: { less_than: 2.megabytes,
+                                      message: 'is too large. Please select an image under 2 MB.' }
   validate :birth_date_cannot_be_in_the_future # Add custom validation for birth date
 
   # Validations for student_id
@@ -56,7 +57,8 @@ class User < ApplicationRecord
   def validate_role
     return unless instructor?
 
-    if cooperation_rating.present? || conceptual_rating.present? || practical_rating.present? || work_ethic_rating.present?
+    if cooperation_rating.present? || conceptual_rating.present? ||
+       practical_rating.present? || work_ethic_rating.present?
       errors.add(:base, 'Instructors cannot have ratings')
     end
     self.cooperation_rating = nil

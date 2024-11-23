@@ -19,7 +19,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-
   # Force sign-out on certain public pages
   def sign_out_on_public_pages
     public_pages = [about_path, contact_path, home_path]
@@ -34,14 +33,18 @@ class ApplicationController < ActionController::Base
   def set_selected_course
     return unless current_user
 
-    if current_user.instructor?
-      @selected_course = Course.find_by(id: session[:selected_course_id]) || current_user.courses_taught.first
-    elsif current_user.student?
-      @selected_course = Course.find_by(id: session[:selected_course_id]) || current_user.enrolled_courses.first
-    end
+    @selected_course = find_selected_course
+    handle_no_course_available if @selected_course.nil? && !current_page?(course_selection_index_path)
+  end
 
-    return unless @selected_course.nil? && !current_page?(course_selection_index_path)
+  def find_selected_course
+    course_id = session[:selected_course_id]
+    return Course.find_by(id: course_id) || current_user.courses_taught.first if current_user.instructor?
 
+    Course.find_by(id: course_id) || current_user.enrolled_courses.first if current_user.student?
+  end
+
+  def handle_no_course_available
     flash[:alert] = 'No courses available for selection.'
     redirect_to course_selection_index_path
   end
@@ -59,11 +62,9 @@ class ApplicationController < ActionController::Base
 
   def handle_service_response(result)
     if result[:redirect] == :logout
-      sign_out current_user
-      redirect_to new_user_session_path, notice: result[:notice]
+      handle_logout(result[:notice])
     else
-      flash[:notice] = result[:notice] if result[:notice]
-      flash[:alert] = result[:alert] if result[:alert]
+      handle_flash_messages(result)
       redirect_to settings_redirect_path(params[:course_id])
     end
   end
@@ -82,5 +83,15 @@ class ApplicationController < ActionController::Base
     return unless current_user.student? && current_user.student_id.blank?
 
     redirect_to edit_user_registration_path, alert: 'Please enter your student ID.'
+  end
+
+  def handle_logout(notice)
+    sign_out current_user
+    redirect_to new_user_session_path, notice: notice
+  end
+
+  def handle_flash_messages(result)
+    flash[:notice] = result[:notice] if result[:notice]
+    flash[:alert] = result[:alert] if result[:alert]
   end
 end

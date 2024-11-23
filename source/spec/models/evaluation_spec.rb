@@ -30,14 +30,16 @@ RSpec.describe Evaluation, type: :model do
   # Test to ensure evaluations cannot have a completed date in the future
   it 'is invalid if the completed date is in the future' do
     evaluation = Evaluation.new(project_id: project.id, team_id: team.id, evaluator_id: student1.id,
-                                evaluatee_id: student2.id, cooperation_rating: 5, conceptual_rating: 5, practical_rating: 5, work_ethic_rating: 5, date_completed: Date.tomorrow)
+                                evaluatee_id: student2.id, cooperation_rating: 5, conceptual_rating: 5,
+                                practical_rating: 5, work_ethic_rating: 5, date_completed: Date.tomorrow)
     evaluation.valid?
     expect(evaluation.errors[:date_completed]).to include('cannot be in the future')
   end
 
   it 'is invalid if the evaluator is also the evaluatee' do
     evaluation = Evaluation.new(project_id: project.id, team_id: team.id, evaluator_id: student1.id,
-                                evaluatee_id: student1.id, cooperation_rating: 5, conceptual_rating: 5, practical_rating: 5, work_ethic_rating: 5, date_completed: Date.tomorrow)
+                                evaluatee_id: student1.id, cooperation_rating: 5, conceptual_rating: 5,
+                                practical_rating: 5, work_ethic_rating: 5, date_completed: Date.tomorrow)
     evaluation.valid?
     expect(evaluation.errors[:evaluator]).to include('cannot be evaluatee')
   end

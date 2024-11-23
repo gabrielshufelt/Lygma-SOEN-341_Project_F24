@@ -31,7 +31,8 @@ class Evaluation < ApplicationRecord
 
   # Automatically set status and date based on ratings
   def set_status_and_date
-    if cooperation_rating.present? && conceptual_rating.present? && practical_rating.present? && work_ethic_rating.present?
+    if cooperation_rating.present? && conceptual_rating.present? &&
+       practical_rating.present? && work_ethic_rating.present?
       self.status = 'completed'
       self.date_completed ||= Date.today # Only set date_completed if it hasn't been set yet
     else

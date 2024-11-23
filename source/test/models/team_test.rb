@@ -44,18 +44,18 @@ class TeamTest < ActiveSupport::TestCase
   end
 
   # Test that the team has space (fewer than 6 students)
-  test 'should return true for has_space if team has fewer than 6 students' do
+  test 'should return true for joinable? if team has fewer than 6 students' do
     5.times do
       @team.students << User.create!(name: 'Student', email: Faker::Internet.email)
     end
-    assert @team.has_space, 'Team should have space with fewer than 6 students'
+    assert @team.joinable?, 'Team should have space with fewer than 6 students'
   end
 
   # Test that the team has no space (6 or more students)
-  test 'should return false for has_space if team has 6 students' do
+  test 'should return false for joinable? if team has 6 students' do
     6.times do
       @team.students << User.create!(name: 'Student', email: Faker::Internet.email)
     end
-    assert_not @team.has_space, 'Team should not have space with 6 students'
+    assert_not @team.joinable?, 'Team should not have space with 6 students'
   end
 end
