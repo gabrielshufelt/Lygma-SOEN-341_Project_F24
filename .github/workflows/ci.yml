@@ -3,15 +3,39 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - master
       - develop
   pull_request:
     branches:
-      - main
+      - master
       - develop
   workflow_dispatch: # Allows manual triggering
 
 jobs:
+  static_analysis:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: source
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.5
+
+      - name: Install Ruby dependencies
+        run: |
+          gem install bundler
+          bundle update
+          bundle install --jobs 4 --retry 3
+
+      - name: Run Rubocop
+        run: bundle exec rubocop
+
   test:
     runs-on: ubuntu-latest
     defaults:
@@ -72,7 +96,7 @@ jobs:
           bundle exec rspec .
 
   deploy:
-    needs: test
+    needs: [test, static_analysis]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     defaults:
@@ -105,4 +129,3 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           heroku run rails db:seed --app ${{ secrets.HEROKU_APP_NAME }}
-        
