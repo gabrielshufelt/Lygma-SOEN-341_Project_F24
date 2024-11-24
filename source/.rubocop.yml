@@ -1,3 +1,40 @@
+AllCops:
+  Exclude:
+    - "bin/**/*"
+
+Layout/LineLength:
+  Max: 150
+  IgnoredPatterns:
+    - "#.*" # Ignore all comments
+
+Metrics/AbcSize:
+  Exclude:
+    - "db/migrate/*.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "db/schema.rb"
+  ExcludedMethods:
+    - it
+    - describe
+    - context
+  Max: 60
+  IgnoredPatterns:
+    - "spec/"
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "db/schema.rb"
+
+Metrics/MethodLength:
+  Exclude:
+    - "db/migrate/*.rb"
+  Max: 15
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "db/schema.rb"
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 

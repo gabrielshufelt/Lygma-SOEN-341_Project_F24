@@ -79,9 +79,12 @@ group :development do
 
   # Ruby LSP Extension for VS Code
   gem 'rubocop'
+  gem 'rubocop-capybara'
   gem 'rubocop-packaging'
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
   gem 'rubocop-shopify'
   gem 'rubocop-thread_safety'
   gem 'ruby-lsp'
