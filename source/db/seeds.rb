@@ -156,6 +156,7 @@ team2.update!(name: 'Fake Ratings', description: 'Providing Fake Ratings for Fak
 Evaluation.create!(
   [
     # Evaluations where Alice is the evaluatee
+    #sprint1
     { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'completed', date_completed: 3.months.ago + 1.day, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.5, conceptual_rating: 4.0, practical_rating: 4.7, work_ethic_rating: 4.9, comment: 'Excellent work!' },
     { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 3.months.ago + 3.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.5, practical_rating: 4.2, work_ethic_rating: 5.1, comment: 'Very good!' },
     { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.months.ago + 2.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.0, conceptual_rating: 3.5, practical_rating: 4.0, work_ethic_rating: 4.5, comment: 'Could improve!' },
@@ -169,6 +170,8 @@ Evaluation.create!(
     { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'pending', project_id: project2.id, team_id: team1.id },
 
     # Evaluations where Alice is the evaluator
+    { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'completed', date_completed: 3.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 2.3, conceptual_rating: 5.1, practical_rating: 5.1, work_ethic_rating: 6.9, comment: 'Alice evaluated 1' },
+    { evaluator_id: student1.id, evaluatee_id: student4.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.3, conceptual_rating: 5.0, practical_rating: 5.9, work_ethic_rating: 5.2, comment: 'Alice evaluated 2' },
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project1.id, team_id: team1.id },
     { evaluator_id: student1.id, evaluatee_id: student2.id, status: 'pending', project_id: project2.id, team_id: team1.id },
     { evaluator_id: student1.id, evaluatee_id: student3.id, status: 'pending', project_id: project2.id, team_id: team1.id },
@@ -180,3 +183,5 @@ Evaluation.create!(
 team1.add_student(student1)
 team1.add_student(student2)
 team1.add_student(student3)
+team1.add_student(student4)
+team1.add_student(student5)
