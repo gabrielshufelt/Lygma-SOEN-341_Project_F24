@@ -5,6 +5,7 @@
       <li><span style="font-weight: 600">Name: </span><%= project_teams[:student_team]&.name %></li>
       <li><span style="font-weight: 600">Description: </span><%= project_teams[:student_team]&.description %></li>
       <li><span style="font-weight: 600">Members: </span><%= project_teams[:student_team_members] %></li>
+      <li><span style="font-weight: 600">Team Creation Deadline: </span><%= project_teams[:student_team]&.project&.team_creation_deadline %></li>
       <li style="display: flex; column-gap: 8px">
         <%= button_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
         <%= button_to "Leave", remove_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id), class: "button secondary", method: :delete %>
@@ -32,6 +33,7 @@
               <th>Description</th>
               <th>Members</th>
               <th>Project</th>
+              <th>Team Creation Deadline</th>
               <th>Capacity</th>
               <th>Actions</th>
             </tr>
@@ -51,6 +53,7 @@
                   <% end %>
                 </td>
                 <td><%= team.project.title %></td>
+                <td><%= team.project.team_creation_deadline %></td>
                 <td>
                   <span style="<%= 'color: var(--red)' unless team.has_space %>">
                     <%= team.students.count %>/6

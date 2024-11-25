@@ -11,6 +11,7 @@
             <th>Description</th>
             <th>Members</th>
             <th>Project</th>
+            <th>Team Creation Deadline</th>
             <th>Capacity</th>
             <th>Actions</th>
           </tr>
@@ -30,6 +31,7 @@
                 <% end %>
               </td>
               <td><%= team.project.title %></td>
+              <td><%= team.project.team_creation_deadline %></td>
               <td>
                 <span style="<%= 'color: var(--red)' unless team.has_space %>">
                   <%= team.students.count %>/6
