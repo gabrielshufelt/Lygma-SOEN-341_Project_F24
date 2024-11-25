@@ -7,7 +7,8 @@
       <li><span style="font-weight: 600">Members: </span><%= project_teams[:student_team_members] %></li>
       <li style="display: flex; column-gap: 8px">
         <%= button_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
-        <%= button_to "Leave", remove_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id), class: "button secondary", method: :delete %>
+        <%= button_to "Leave", manage_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id, operation: 'remove'), 
+                                class: "button secondary", method: :delete %>
       </li>
     <% else %>
       <li style="display: flex; column-gap: 8px; justify-content: space-between; align-items: center">
@@ -52,15 +53,17 @@
                 </td>
                 <td><%= team.project.title %></td>
                 <td>
-                  <span style="<%= 'color: var(--red)' unless team.has_space %>">
+                  <span style="<%= 'color: var(--red)' unless team.joinable? %>">
                     <%= team.students.count %>/6
                   </span>
                 </td>
                 <td>
                   <% if team.id == project_teams[:student_team]&.id %>
-                    <%= button_to "Leave", remove_member_team_path(id: team.id, user_id: current_user.id), class: "button secondary", method: :delete %>
+                    <%= button_to "Leave", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'remove'), 
+                                  class: "button secondary", method: :delete %>
                   <% else %>
-                    <%= button_to "Join", add_member_team_path(id: team.id, user_id: current_user.id), class: "button primary", method: :patch %>
+                    <%= button_to "Join", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'add'), 
+                                  class: "button primary", method: :patch %>
                   <% end %>
                 </td>
               </tr>

@@ -13,7 +13,7 @@ class TeamsService
       {
         project_title: project.title,
         student_team: student_team || nil,
-        student_team_members: (student_team.members_to_string if student_team),
+        student_team_members: student_team&.members_to_string,
         all_teams: project.teams
       }
     end

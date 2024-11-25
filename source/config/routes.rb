@@ -9,8 +9,8 @@ Rails.application.routes.draw do
 
   resources :teams do
     member do
-      patch 'add_member'
-      delete 'remove_member'
+      patch :manage_member
+      delete :manage_member
       get 'search_members'
     end
   end
@@ -61,6 +61,6 @@ Rails.application.routes.draw do
   resources :projects
   resources :evaluations
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

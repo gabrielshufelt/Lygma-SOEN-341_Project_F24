@@ -31,7 +31,7 @@
               </td>
               <td><%= team.project.title %></td>
               <td>
-                <span style="<%= 'color: var(--red)' unless team.has_space %>">
+                <span style="<%= 'color: var(--red)' unless team.joinable? %>">
                   <%= team.students.count %>/6
                 </span>
               </td>
