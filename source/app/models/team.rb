@@ -13,6 +13,7 @@ class Team < ApplicationRecord
   def add_student(student)
     if students.size < project.maximum_team_size && !students.exists?(student.id)
       students << student
+      create_pending_evaluations_for_new_member(student)
     else
       errors.add(:team, "cannot have more than #{project.maximum_team_size} students")
       false
@@ -22,6 +23,7 @@ class Team < ApplicationRecord
   def remove_student(student)
     if students.exists?(student.id)
       students.delete(student)
+      delete_evaluations_for_member(student)
     else
       errors.add(:team, 'student is not part of this team')
       false
@@ -40,5 +42,35 @@ class Team < ApplicationRecord
     end
 
     string.chomp!(', ') if string.present?
+  end
+
+  private
+
+  def create_pending_evaluations_for_new_member(new_member)
+    students.each do |existing_member|
+      next if existing_member == new_member
+
+      Evaluation.create!(
+        evaluator: new_member,
+        evaluatee: existing_member,
+        project: project,
+        team: self,
+        status: 'pending',
+        due_date: project.due_date
+      )
+
+      Evaluation.create!(
+        evaluator: existing_member,
+        evaluatee: new_member,
+        project: project,
+        team: self,
+        status: 'pending',
+        due_date: project.due_date
+      )
+    end
+  end
+
+  def delete_evaluations_for_member(member)
+    evaluations.where(evaluator: member).or(evaluations.where(evaluatee: member)).destroy_all
   end
 end
