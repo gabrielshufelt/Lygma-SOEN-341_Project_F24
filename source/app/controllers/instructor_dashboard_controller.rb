@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class InstructorDashboardController < ApplicationController
   before_action :set_instructor, only: %i[index projects teams results settings]
   before_action :authenticate_user!
@@ -28,42 +29,36 @@ class InstructorDashboardController < ApplicationController
   end
 
   def results
-    @results = User
-             .joins(evaluations_as_evaluatee: { project: :course })
-             .where(evaluations: { project_id: Project.where(course_id: @selected_course.id), status: 'completed' })
-             .select(
-               'users.id',
-               'users.student_id as student_id',
-               'users.last_name',
-               'users.first_name',
-               'AVG(evaluations.cooperation_rating) as cooperation',
-               'AVG(evaluations.conceptual_rating) as conceptual_contribution',
-               'AVG(evaluations.practical_rating) as practical_contribution',
-               'AVG(evaluations.work_ethic_rating) as work_ethic',
-               'COUNT(evaluations.id) as num_of_evaluations_received'
-             )
-             .order('users.last_name ASC, users.first_name ASC')
-             .group('users.id', 'users.last_name', 'users.first_name')
-             .map do |student|
-               {
-                id: student.id,
-                 student_id: student.student_id,
-                 last_name: student.last_name,
-                 first_name: student.first_name,
-                 cooperation: student.cooperation,
-                 conceptual_contribution: student.conceptual_contribution,
-                 practical_contribution: student.practical_contribution,
-                 work_ethic: student.work_ethic,
-                 overall_average: [student.cooperation, student.conceptual_contribution, student.practical_contribution, student.work_ethic].compact.sum / 4,
-                 num_of_evaluations_received: student.num_of_evaluations_received
-               }
-             end
-    
-    # respond_to do |format|
-    #   format.html { render :results } # Render results view
-    #   format.json { render json: @results }
-    # end
+    @results = results_query.map do |student|
+      {
+        student:,
+        overall_average: [student.cooperation, student.conceptual_contribution, student.practical_contribution,
+                          student.work_ethic].compact.sum / 4,
+        num_of_evaluations_received: student.num_of_evaluations_received
+      }
+    end
   end
+
+  # rubocop:disable Metrics/MethodLength
+  def results_query
+    User
+      .joins(evaluations_as_evaluatee: { project: :course })
+      .where(evaluations: { project_id: Project.where(course_id: @selected_course.id), status: 'completed' })
+      .select(
+        'users.id',
+        'users.student_id as student_id',
+        'users.last_name',
+        'users.first_name',
+        'AVG(evaluations.cooperation_rating) as cooperation',
+        'AVG(evaluations.conceptual_rating) as conceptual_contribution',
+        'AVG(evaluations.practical_rating) as practical_contribution',
+        'AVG(evaluations.work_ethic_rating) as work_ethic',
+        'COUNT(evaluations.id) as num_of_evaluations_received'
+      )
+      .order('users.last_name ASC, users.first_name ASC')
+      .group('users.id', 'users.last_name', 'users.first_name')
+  end
+  # rubocop:enable Metrics/MethodLength
 
   def detailed_results
     @selected_course = Course.find(params[:course_id]) # Ensure @selected_course is set
@@ -72,7 +67,6 @@ class InstructorDashboardController < ApplicationController
     @evaluations = Evaluation.includes(:evaluator, :project)
                              .where(evaluatee_id: @student.id, project_id: @projects.pluck(:id), status: 'completed')
   end
-   
 
   def settings
     respond_to do |format|
@@ -144,3 +138,4 @@ class InstructorDashboardController < ApplicationController
     )
   end
 end
+# rubocop:enable Metrics/ClassLength
