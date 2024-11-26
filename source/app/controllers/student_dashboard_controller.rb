@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class StudentDashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_student_role
@@ -38,18 +39,16 @@ class StudentDashboardController < ApplicationController
   def new_evaluation
     @course = Course.find(params[:course_id])
     @projects = @course.projects
-    @evaluatees = get_evaluatees_for_new_evaluation
+    @evaluatees = load_evaluatees_for_new_evaluation
   end
 
   def submit_evaluation
-    @evaluation = Evaluation.find(params[:evaluation][:id])
+    evaluation = Evaluation.find(params[:evaluation][:id])
 
-    if @evaluation.update(evaluation_params)
-      flash[:notice] = 'Evaluation submitted successfully.'
-      redirect_to evaluations_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+    if evaluation.update(evaluation_params)
+      handle_successful_evaluation_submission(evaluation)
     else
-      flash[:alert] = 'Failed to submit evaluation. Please try again.'
-      redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+      handle_failed_evaluation_submission(evaluation)
     end
   end
 
@@ -61,22 +60,46 @@ class StudentDashboardController < ApplicationController
 
   private
 
-  # Method to calculate average ratings for each project
+  def handle_successful_evaluation_submission(evaluation)
+    flash[:notice] = 'Evaluation submitted successfully.'
+    redirect_to evaluations_student_dashboard_index_path(course_id: evaluation.project.course_id)
+  end
+
+  def handle_failed_evaluation_submission(evaluation)
+    flash[:alert] = 'Failed to submit evaluation. Please try again.'
+    redirect_to new_evaluation_student_dashboard_index_path(course_id: evaluation.project.course_id)
+  end
+
   def calculate_average_ratings_by_project
-    completed_evaluations = Evaluation.joins(:project)
-                                      .where(projects: { course_id: @selected_course.id },
-                                             evaluatee_id: @student.id,
-                                             status: 'completed')
-                                      .group_by(&:project)
+    completed_evaluations = fetch_completed_evaluations
 
     completed_evaluations.each_with_object({}) do |(project, evaluations), result|
-      result[project.title] = {
-        'Conceptual': evaluations.map(&:conceptual_rating).compact.sum / evaluations.size.to_f,
-        'Cooperation': evaluations.map(&:cooperation_rating).compact.sum / evaluations.size.to_f,
-        'Practical': evaluations.map(&:practical_rating).compact.sum / evaluations.size.to_f,
-        'Work Ethic': evaluations.map(&:work_ethic_rating).compact.sum / evaluations.size.to_f
-      }
+      result[project.title] = calculate_project_averages(evaluations)
     end
+  end
+
+  def fetch_completed_evaluations
+    Evaluation.joins(:project)
+              .where(projects: { course_id: @selected_course.id },
+                     evaluatee_id: @student.id,
+                     status: 'completed')
+              .group_by(&:project)
+  end
+
+  def calculate_project_averages(evaluations)
+    {
+      'Cooperation': calculate_average(evaluations, :cooperation_rating).round(2),
+      'Conceptual': calculate_average(evaluations, :conceptual_rating).round(2),
+      'Practical': calculate_average(evaluations, :practical_rating).round(2),
+      'Work Ethic': calculate_average(evaluations, :work_ethic_rating).round(2)
+    }
+  end
+
+  def calculate_average(evaluations, attribute)
+    ratings = evaluations.map(&attribute).compact
+    return 0.0 if ratings.empty?
+
+    ratings.sum / ratings.size.to_f
   end
 
   def ensure_student_role
@@ -91,14 +114,19 @@ class StudentDashboardController < ApplicationController
   end
 
   def upcoming_evaluations
-    upcoming_evaluations = Project.where(course_id: @selected_course.id).includes(:evaluations).select do |project|
+    projects_with_pending_evaluations = Project.where(course_id: @selected_course.id)
+                                               .includes(:evaluations)
+                                               .select do |project|
       project.evaluations.any? { |evaluation| evaluation.status == 'pending' }
-    end.map do |project|
+    end
+
+    upcoming_evaluations = projects_with_pending_evaluations.map do |project|
       {
         project: project,
         evaluations: project.evaluations.select { |evaluation| evaluation.status == 'pending' }
       }
     end
+
     upcoming_evaluations.presence || {}
   end
 
@@ -109,14 +137,11 @@ class StudentDashboardController < ApplicationController
                                              status: 'completed')
     return [] if completed_evaluations.empty?
 
-    {
-      'Cooperation': completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
-      'Conceptual': completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
-      'Practical': completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
-      'Work Ethic': completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
-    }
+    calculate_project_averages(completed_evaluations)
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def student_evaluations
     projects = Project.where(course_id: @selected_course.id)
     return [] if projects.empty?
@@ -148,35 +173,20 @@ class StudentDashboardController < ApplicationController
     Rails.logger.error "Error fetching student evaluations: #{e.message}"
     []
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def received_evaluations
-    @progression_data = []
-
     projects = Project.where(course_id: @selected_course.id).includes(:evaluations)
 
-    evaluations_data = projects.each_with_object({}) do |project, hash|
+    evaluations_data = projects.map do |project|
       individual_ratings = project.evaluations
                                   .where(evaluatee_id: @student.id, status: 'completed')
                                   .order(:date_completed)
-
-      individual_ratings.each do |rating|
-        @progression_data << {
-          date_completed: rating.date_completed,
-          cooperation: rating.cooperation_rating,
-          conceptual: rating.conceptual_rating,
-          practical: rating.practical_rating,
-          work_ethic: rating.work_ethic_rating
-        }
-      end
-
-      hash[project.id] = {
+      {
         project_title: project.title,
         due_date: project.due_date,
-        individual_ratings: individual_ratings,
-        avg_cooperation: individual_ratings.average(:cooperation_rating)&.round(2),
-        avg_conceptual: individual_ratings.average(:conceptual_rating)&.round(2),
-        avg_practical: individual_ratings.average(:practical_rating)&.round(2),
-        avg_work_ethic: individual_ratings.average(:work_ethic_rating)&.round(2)
+        individual_ratings: individual_ratings
       }
     end
 
@@ -187,17 +197,14 @@ class StudentDashboardController < ApplicationController
     @selected_course = Course.find(params[:course_id])
   end
 
-  def get_evaluatees_for_new_evaluation
+  # rubocop:disable Metrics/AbcSize
+  def load_evaluatees_for_new_evaluation
     projects = Project.where(course_id: @course.id)
-    return [] if projects.empty?
+    return [] if projects.blank?
 
-    evaluatees = []
-
-    projects.each do |project|
-      pending_evaluations = Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
-
-      pending_evaluations.each do |eval|
-        evaluatees << {
+    evaluatees = projects.flat_map do |project|
+      Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending').map do |eval|
+        {
           id: eval.evaluatee_id,
           name: eval.evaluatee.first_name,
           project_id: project.id,
@@ -206,31 +213,33 @@ class StudentDashboardController < ApplicationController
         }
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     evaluatees.uniq { |e| [e[:id], e[:project_id]] }
   end
 
   def evaluation_params
-    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+    params.require(:evaluation).permit(:id, :evaluator_id, :evaluatee_id, :project_id, :cooperation_rating,
+                                       :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
   end
 
   def user_params
     params.require(:user).permit(
-      :first_name, 
-      :last_name, 
-      :email, 
-      :birth_date, 
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
       :profile_picture,
       :remove_profile_picture,
-      :current_password, 
-      :password
+      :current_password,
+      :password,
+      :student_id
     )
   end
-
+  
   def collected_evaluations
     @evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed').order(:date_completed)
   end
-
 
   def aggregate_evaluation_data
     @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
@@ -301,3 +310,4 @@ class StudentDashboardController < ApplicationController
     @student.insights_updated_at >= latest_evaluation_date
   end
 end
+# rubocop:enable Metrics/ClassLength

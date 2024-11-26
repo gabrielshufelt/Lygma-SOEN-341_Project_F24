@@ -25,6 +25,18 @@
     <% end %>
   </div>
 
+  <div class="feedback-display">
+    <div class="feedback-header">
+      <h4>AI Generated Feedback</h4>
+      <button type="button" class="copy-button" onclick="copyFeedback()">
+        <i class="fas fa-copy"></i> Copy to Comments
+      </button>
+    </div>
+    <div id="ai-feedback">
+      Move the sliders to generate feedback...
+    </div>
+  </div>
+
   <div class="comment-box">
     <%= form.label :comment, "Additional Comments" %>
     <%= form.text_area :comment, class: 'form-control', placeholder: 'Enter your comments here...' %>
@@ -36,17 +48,113 @@
 <% end %>
 
 <script>
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function copyFeedback() {
+  const feedbackText = document.getElementById('ai-feedback').textContent;
+  const commentBox = document.querySelector('.form-control');
+  
+  // Append the feedback to existing comments with a separator
+  const existingComment = commentBox.value;
+  const separator = existingComment ? '\n\n' : '';
+  commentBox.value = existingComment + separator + feedbackText;
+  
+  // Flash the copy button to show success
+  const copyButton = document.querySelector('.copy-button');
+  copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+  copyButton.style.backgroundColor = '#28a745';
+  
+  setTimeout(() => {
+    copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy to Comments';
+    copyButton.style.backgroundColor = '';
+  }, 2000);
+}
+
 document.addEventListener('turbo:load', function() {
   const sliders = document.querySelectorAll('.custom-slider');
+  let hasSliderMoved = false;
+  
+  const updateDisplay = (criterion, value) => {
+    const displayElement = document.getElementById(`${criterion}-value`);
+    if (displayElement) {
+      displayElement.textContent = `${criterion.charAt(0).toUpperCase() + criterion.slice(1).replace('_', ' ')}: ${value}`;
+    }
+  };
+
+  const getAllSliderValues = () => {
+    const values = {};
+    sliders.forEach(slider => {
+      const criterion = slider.id.replace('evaluation_', '');
+      values[criterion] = slider.value;
+    });
+    console.log('Collected slider values:', values);
+    return values;
+  };
+
+  const fetchAIFeedback = debounce(() => {
+    if (!hasSliderMoved) return;
+    
+    const values = getAllSliderValues();
+    const feedbackDisplay = document.getElementById('ai-feedback');
+    feedbackDisplay.textContent = 'Generating feedback...';
+    feedbackDisplay.classList.add('loading');
+
+    console.log('Sending request to generate feedback with values:', values);
+
+    fetch('<%= generate_feedback_evaluations_path %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ slider_values: values })
+    })
+    .then(response => {
+      console.log('Received response:', response.status);
+      return response.json();
+    })
+    .then(data => {
+      console.log('Received feedback:', data);
+      feedbackDisplay.textContent = data.feedback;
+      feedbackDisplay.classList.remove('loading');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      feedbackDisplay.textContent = 'Error generating feedback. Please try again.';
+      feedbackDisplay.classList.remove('loading');
+    });
+  }, 1000);
+
   sliders.forEach(slider => {
     slider.addEventListener('input', function() {
+      hasSliderMoved = true;
+      
+      // Update slider background
       const value = this.value;
-      const min = this.min ? this.min : 0;
-      const max = this.max ? this.max : 100;
+      const min = this.min || 0;
+      const max = this.max || 7;
       const newVal = Number(((value - min) * 100) / (max - min));
       this.style.background = `linear-gradient(to right, var(--dark-red) 0%, var(--dark-red) ${newVal}%, #e0e0e0 ${newVal}%, #e0e0e0 100%)`;
+
+      // Update display
+      const criterion = this.id.replace('evaluation_', '').replace('_rating', '');
+      updateDisplay(criterion, value);
+
+      // Generate feedback
+      fetchAIFeedback();
     });
-    // Trigger the input event to set initial background
+    
+    // Set initial values
     slider.dispatchEvent(new Event('input'));
   });
 });

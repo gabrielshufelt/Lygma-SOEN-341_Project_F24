@@ -11,7 +11,7 @@
         <tr>
           <td><%= student.first_name + ' ' + student.last_name %></td>
           <td>
-            <%= link_to remove_member_team_path(@team, user_id: student.id), method: :delete, data: { turbo_method: :delete } do %>
+            <%= link_to manage_member_team_path(id: @team.id, user_id: student.id), method: :delete, data: { turbo_method: :delete } do %>
               <i class="fa-solid fa-trash"></i>
             <% end %>
           </td>

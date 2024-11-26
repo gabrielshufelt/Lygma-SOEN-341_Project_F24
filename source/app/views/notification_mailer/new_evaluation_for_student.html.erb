@@ -1,0 +1,14 @@
+<p>Hello <%= @student.first_name %>,</p>
+
+<p>You have just received a new evaluation for <strong><%= @project.course.title %> - <%= @project.title %></strong></p>
+<p>Here is an overview of the new evaluation:</p>
+<ul>
+  <li>Conceptual Contribution: <%= @evaluation.conceptual_rating %></li>
+  <li>Practical Contribution: <%= @evaluation.practical_rating %></li>
+  <li>Cooperation: <%= @evaluation.conceptual_rating %></li>
+  <li>Work Ethic: <%= @evaluation.work_ethic_rating %></li>
+</ul>
+
+<%= link_to 'View your new evaluation', new_user_session_url, class: 'email-button' %>
+
+<p>Best regards,<br>The Real Ratings Team</p>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    <%= Rails.application.assets['email.css'].source.html_safe %>
+  </style>
+</head>
+<body class="email-body">
+  <div class="email-container">
+    <div class="email-header">
+      <div class="nav-signedin-logo">
+        <%= image_tag 'real ratings.svg', alt: 'Real Rating Logo', class: 'd-inline-block align-text-top', size: '200x40' %>
+      </div>
+    </div>
+    <div class="email-content">
+			<%= yield %>
+    </div>
+    <div class="email-footer">
+      &copy; <%= Time.now.year %> Real Ratings. All rights reserved.
+      <div class="social-icons">
+        <%= link_to image_tag('facebook_icon.png', alt: 'Facebook'), 'https://www.facebook.com', target: '_blank' %>
+        <%= link_to image_tag('x_icon.png', alt: 'Twitter'), 'https://www.x.com', target: '_blank' %>
+        <%= link_to image_tag('linkedin_icon.png', alt: 'LinkedIn'), 'https://www.linkedin.com', target: '_blank' %>
+        <%= link_to image_tag('instagram_icon.png', alt: 'Instagram'), 'https://www.instagram.com', target: '_blank' %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

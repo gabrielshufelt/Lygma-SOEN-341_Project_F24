@@ -1,0 +1,32 @@
+AllCops:
+  Exclude:
+    - "bin/**/*"
+    - "db/**/*"
+  SuggestExtensions: false
+
+Layout/LineLength:
+  Max: 150
+  IgnoredPatterns:
+    - "#.*" # Ignore all comments
+
+Metrics/AbcSize:
+  Exclude:
+    - "db/migrate/*.rb"
+
+Metrics/BlockLength:
+  ExcludedMethods:
+    - it
+    - describe
+    - context
+  Max: 60
+  IgnoredPatterns:
+    - "spec/"
+
+Metrics/MethodLength:
+  Max: 15
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

@@ -35,4 +35,5 @@
 /config/master.key
 
 # Ignore Gemfile.lock
+./Gemfile.lock
 /Gemfile.lock

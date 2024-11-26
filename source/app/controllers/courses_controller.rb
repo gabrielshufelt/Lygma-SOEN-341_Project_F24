@@ -12,7 +12,8 @@ class CoursesController < ApplicationController
     if @course.save
       redirect_to course_selection_index_path, notice: 'Course was successfully created.'
     else
-      redirect_to course_selection_index_path, alert: "Failed to create course: #{@course.errors.full_messages.join(', ')}"
+      redirect_to course_selection_index_path,
+                  alert: "Failed to create course: #{@course.errors.full_messages.join(', ')}"
     end
   end
 

@@ -9,9 +9,15 @@ Rails.application.routes.draw do
 
   resources :teams do
     member do
-      patch 'add_member'
-      delete 'remove_member'
+      patch :manage_member
+      delete :manage_member
       get 'search_members'
+    end
+  end
+
+  resources :evaluations do
+    collection do
+      post 'generate_feedback'
     end
   end
 
@@ -22,6 +28,7 @@ Rails.application.routes.draw do
       get 'course/:course_id', to: 'instructor_dashboard#index', as: 'course'
       get 'teams/:course_id', to: 'instructor_dashboard#teams', as: 'teams'
       get 'results/:course_id', to: 'instructor_dashboard#results', as: 'results'
+      get 'results/:course_id/student/:id', to: 'instructor_dashboard#detailed_results', as: 'detailed_results'
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
       get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
       patch 'settings/:course_id', to: 'instructor_dashboard#update_settings'
@@ -54,6 +61,6 @@ Rails.application.routes.draw do
   resources :projects
   resources :evaluations
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end
