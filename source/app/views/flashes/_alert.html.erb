@@ -1,0 +1,14 @@
+<div class="flash warning">
+  <i class="fa-solid fa-circle-exclamation"></i>
+  <div>
+    <h4>Warning</h4>
+    <p><%= msg %></p>
+  </div>
+  <i class="fa-solid fa-x close-button" onclick="this.parentElement.remove()"></i>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.querySelector('.flash.warning').remove();
+  }, 10000);
+</script>

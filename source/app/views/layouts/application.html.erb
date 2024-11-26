@@ -26,8 +26,15 @@
       <% elsif !user_signed_in? %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
+
+
       
       <div class="content">
+        <% if user_signed_in? %>
+         <% flash.each do |type, msg| %>
+          <%= render "flashes/#{type}", msg: %>
+        <% end %>
+        <% end %>
         <%= yield %>
       </div>
 

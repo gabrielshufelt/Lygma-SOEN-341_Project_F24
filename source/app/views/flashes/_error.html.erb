@@ -1,0 +1,14 @@
+<div class="flash error">
+  <i class="fa-solid fa-circle-xmark"></i>
+  <div>
+    <h4>Error</h4>
+    <p><%= msg %></p>
+  </div>
+  <i class="fa-solid fa-x close-button" onclick="this.parentElement.remove()"></i>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.querySelector('.flash.error').remove();
+  }, 10000);
+</script>
