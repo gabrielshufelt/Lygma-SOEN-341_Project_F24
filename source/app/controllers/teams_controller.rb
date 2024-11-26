@@ -13,7 +13,8 @@ class TeamsController < ApplicationController
 
   # GET /teams/new
   def new
-    @team = Team.new
+    @project = Project.find(params[:id].to_i) if params[:id].present?
+    @team = Team.new(project_id: @project&.id)
     load_projects
   end
 
@@ -33,8 +34,8 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.save
         format.html do
-          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
-                      notice: 'Team was successfully created.'
+          role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+          redirect_to role_based_path, notice: 'Team was successfully created.'
         end
         format.json { render :show, status: :created, location: @team }
       else
@@ -69,8 +70,8 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), status: :see_other,
-                                                                                           notice: 'Team was successfully destroyed.'
+        role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+        redirect_to role_based_path, notice: 'Team was successfully deleted.'
       end
       format.json { head :no_content }
     end

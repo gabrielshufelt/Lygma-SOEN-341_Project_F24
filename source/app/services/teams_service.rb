@@ -12,6 +12,7 @@ class TeamsService
       student_team = @student.teams.find_by(project_id: project.id)
       {
         project_title: project.title,
+        project_id: project.id,
         student_team: student_team || nil,
         student_team_members: student_team&.members_to_string,
         all_teams: project.teams

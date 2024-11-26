@@ -30,6 +30,8 @@
         <%= form.select :project_id, @projects.collect { |p| [p.title, p.id] }, { prompt: "Select a project" } %>
       </div>
     </div>
+  <% else %>
+    <%= form.hidden_field :project_id, value: @team.project_id %>
   <% end %>
   <div class="actions">
     <%= form.submit %>

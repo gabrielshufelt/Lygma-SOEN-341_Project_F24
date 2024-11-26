@@ -13,7 +13,7 @@
     <% else %>
       <li style="display: flex; column-gap: 8px; justify-content: space-between; align-items: center">
         Create or join a team to view your team details.
-        <%= button_to new_team_path, class: "button primary", method: :get do %>
+        <%= link_to new_team_path(id: project_teams[:project_id]), class: "button primary", method: :get do %>
           <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
         <% end %>
       </li>
