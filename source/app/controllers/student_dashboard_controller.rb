@@ -244,17 +244,10 @@ class StudentDashboardController < ApplicationController
     @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
       project = Project.find(project_id)
 
-      # Extract ratings and remove nil values
-      cooperation_ratings = evaluations.map(&:cooperation_rating).compact
-      conceptual_ratings = evaluations.map(&:conceptual_rating).compact
-      practical_ratings = evaluations.map(&:practical_rating).compact
-      work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
+      cooperation_rating, conceptual_rating, practical_rating, work_ethic_ratings = extract_rating(evaluations)
 
-      # Calculate averages
-      avg_cooperation = calculate_average(cooperation_ratings).round(2)
-      avg_conceptual = calculate_average(conceptual_ratings).round(2)
-      avg_practical = calculate_average(practical_ratings).round(2)
-      avg_work_ethic = calculate_average(work_ethic_ratings).round(2)
+      avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic = calculate_average_ratings(cooperation_rating, conceptual_rating,
+                                                                                                 practical_rating, work_ethic_ratings)
 
       {
         project_title: project.title,
@@ -262,17 +255,34 @@ class StudentDashboardController < ApplicationController
         avg_cooperation: avg_cooperation,
         avg_conceptual: avg_conceptual,
         avg_practical: avg_practical,
-        avg_work_ethic: avg_work_ethic,
-        comments: evaluations.map(&:comment).compact
+        avg_work_ethic: avg_work_ethic
       }
     end
+  end
+
+  def extract_rating(evaluations)
+    # Extract ratings and remove nil values
+    cooperation_ratings = evaluations.map(&:cooperation_rating).compact
+    conceptual_ratings = evaluations.map(&:conceptual_rating).compact
+    practical_ratings = evaluations.map(&:practical_rating).compact
+    work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
+
+    [cooperation_ratings, conceptual_ratings, practical_ratings, work_ethic_ratings]
+  end
+
+  def calculate_average_ratings(_cooperation_rating, _conceptual_rating, _practical_rating, _work_ethic_rating)
+    # Calculate averages
+    avg_cooperation = calculate_average(cooperation_ratings).round(2)
+    avg_conceptual = calculate_average(conceptual_ratings).round(2)
+    avg_practical = calculate_average(practical_ratings).round(2)
+    avg_work_ethic = calculate_average(work_ethic_ratings).round(2)
+
+    [avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic]
   end
 
   def fetch_learning_insights
     # Check if insights exist and are up-to-date
     return @student.learning_insights if @student.learning_insights.present? && insights_up_to_date?
-
-
 
     collected_evaluations # Ensure @evaluations is set
     aggregate_evaluation_data

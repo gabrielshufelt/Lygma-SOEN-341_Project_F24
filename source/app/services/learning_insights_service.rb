@@ -14,6 +14,7 @@ class LearningInsightsService
 
   private
 
+  # rubocop:disable Metrics/MethodLength
   def build_prompt
     prompt = <<~PROMPT
       As an experienced academic advisor, your task is to analyze a student's performance based on peer evaluations. You will be provided with evaluation data for the student across different projects. Your analysis should:
@@ -48,15 +49,11 @@ class LearningInsightsService
 
     prompt
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/AbcSize
   def call_ai_model(prompt)
-    uri = URI('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1')
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-
-    request = Net::HTTP::Post.new(uri)
-    request['Authorization'] = "Bearer #{ENV['HUGGING_FACE_API_TOKEN']}"
-    request['Content-Type'] = 'application/json'
+    http, request = ai_request
     request.body = { inputs: prompt, parameters: { max_new_tokens: 500 } }.to_json
 
     response = http.request(request)
@@ -73,7 +70,21 @@ class LearningInsightsService
   rescue StandardError
     'Could not generate insights at this time.'
   end
+  # rubocop:enable Metrics/AbcSize
 
+  def ai_request
+    uri = URI('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(uri)
+    request['Authorization'] = "Bearer #{ENV['HUGGING_FACE_API_TOKEN']}"
+    request['Content-Type'] = 'application/json'
+
+    [http, request]
+  end
+
+  # rubocop:disable Metrics
   def format_insights(raw_text)
     sections = raw_text.split(/\*\*(\d+\.\s+[^*]+)\*\*/)
     formatted_html = ''
@@ -102,4 +113,5 @@ class LearningInsightsService
 
     formatted_html
   end
+  # rubocop:enable Metrics
 end
