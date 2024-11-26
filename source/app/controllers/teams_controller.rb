@@ -93,6 +93,12 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
 
+    # Check if the user is already part of another team for the same project
+    current_team = @user.teams.find_by(project_id: @team.project_id)
+    if current_team && current_team != @team
+      current_team.remove_student(@user)
+    end
+
     if perform_member_operation(params[:operation])
       load_team_data
       respond_success(params[:operation])
