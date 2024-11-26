@@ -6,8 +6,10 @@
     <%= render "form", team: @team %>
   </div>
   <div style="width: 50%">
-    <%= turbo_frame_tag 'edit_members_form' do %>
-      <%= render 'edit_members_form', available_students: @available_students %>
+    <% if current_user.instructor? %>
+      <%= turbo_frame_tag 'edit_members_form' do %>
+        <%= render 'edit_members_form', available_students: @available_students %>
+      <% end %>
     <% end %>
   </div>
 </div>
