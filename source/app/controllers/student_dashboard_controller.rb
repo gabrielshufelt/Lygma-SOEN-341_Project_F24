@@ -272,10 +272,8 @@ class StudentDashboardController < ApplicationController
   def fetch_learning_insights
     # Check if insights exist and are up-to-date
     if @student.learning_insights.present? && insights_up_to_date?
-      Rails.logger.info "Using cached learning insights."
       return @student.learning_insights
     else
-      Rails.logger.info "Generating new learning insights."
       
       collected_evaluations  # Ensure @evaluations is set
       aggregate_evaluation_data
