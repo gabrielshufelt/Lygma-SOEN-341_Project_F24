@@ -8,7 +8,7 @@
 			<% unless @teams_by_project.empty? %>
 				<% @teams_by_project.each do |project_teams| %>
 					<%= render 'partials/collapsible_box',
-            title: "Project Name: #{project_teams[:project_title]} (Team Creation Deadline: #{project_teams[:team_creation_deadline]})",
+            title: "Project Name: #{project_teams[:project_title]}",
 						collapsed: true,
 						content: render('student_dashboard/teams', project_teams: project_teams)
 					%>

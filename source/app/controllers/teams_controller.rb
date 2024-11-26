@@ -165,7 +165,7 @@ class TeamsController < ApplicationController
   end
 
   def role_based_dashboard_path
-    path send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+    send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
   end
 
 end
