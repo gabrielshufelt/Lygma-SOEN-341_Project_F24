@@ -23,14 +23,14 @@
       <%= form.text_field :description %>
     </div>
   </div>
-
-  <div class="fields">
-    <div class="full">
-      <%= form.label :project_id, "Project", style: "display: block" %>
-      <%= form.select :project_id, @projects.collect { |p| [p.title, p.id] }, { prompt: "Select a project" } %>
+  <% if current_user.instructor? %>
+    <div class="fields">
+      <div class="full">
+        <%= form.label :project_id, "Project", style: "display: block" %>
+        <%= form.select :project_id, @projects.collect { |p| [p.title, p.id] }, { prompt: "Select a project" } %>
+      </div>
     </div>
-  </div>
-
+  <% end %>
   <div class="actions">
     <%= form.submit %>
   </div>

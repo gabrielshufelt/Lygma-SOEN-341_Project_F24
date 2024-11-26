@@ -14,21 +14,21 @@ class TeamsController < ApplicationController
   # GET /teams/new
   def new
     @team = Team.new
-    load_projects_for_instructors
+    load_projects
   end
 
   # GET /teams/1/edit
   def edit
     @team = Team.find(params[:id])
     @team_members = @team.students
-    available_students
-    load_projects_for_instructors
+    @available_students = available_students if current_user.instructor?
+    @projects = load_projects if current_user.instructor?
   end
 
   # POST /teams or /teams.json
   def create
     @team = Team.new(team_params)
-    load_projects_for_instructors
+    load_projects
 
     respond_to do |format|
       if @team.save
@@ -47,13 +47,13 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1 or /teams/1.json
   def update
     available_students
-    load_projects_for_instructors
+    load_projects
 
     respond_to do |format|
       if @team.update(team_params)
         format.html do
-          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
-                      notice: 'Team was successfully updated.'
+          role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+          redirect_to role_based_path, notice: 'Team was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @team }
       else
@@ -76,12 +76,8 @@ class TeamsController < ApplicationController
     end
   end
 
-  def load_projects_for_instructors
-    @projects = if current_user.role == 'instructor'
-                  Project.where(course_id: current_user.courses_taught.pluck(:id))
-                else
-                  []
-                end
+  def load_projects
+    @projects = Project.where(course_id: @selected_course.id)
   end
 
   def available_students

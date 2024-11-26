@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       patch :manage_member
       delete :manage_member
       get 'search_members'
+      post :edit
     end
   end
 
