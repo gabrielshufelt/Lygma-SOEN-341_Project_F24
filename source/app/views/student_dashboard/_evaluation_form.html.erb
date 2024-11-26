@@ -43,9 +43,18 @@
   </div>
 
   <div class="form-actions">
-    <%= form.submit 'Submit Evaluation', class: 'button primary' %>
+    <%= form.submit 'Submit Evaluation', class: 'button primary submit-evaluation-button' %>
   </div>
 <% end %>
+
+<div id="confirm-submit-popup" class="confirm-popup" style="display: none;">
+  <h4>Are you sure you want to submit this evaluation?</h4>
+  <div class="actions">
+    <button id="confirm-submit-yes" class="button primary">Yes</button>
+    <button id="confirm-submit-no" class="button secondary">No</button>
+  </div>
+</div>
+<div id="overlay" class="overlay" style="display: none;"></div>
 
 <script>
 function debounce(func, wait) {
@@ -156,6 +165,32 @@ document.addEventListener('turbo:load', function() {
     
     // Set initial values
     slider.dispatchEvent(new Event('input'));
+  });
+
+  // Confirmation popup for submit button
+  const submitButton = document.querySelector('.submit-evaluation-button');
+  const confirmSubmitPopup = document.getElementById('confirm-submit-popup');
+  const overlay = document.getElementById('overlay');
+  const confirmSubmitYes = document.getElementById('confirm-submit-yes');
+  const confirmSubmitNo = document.getElementById('confirm-submit-no');
+  let formToSubmit = null;
+
+  submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    formToSubmit = submitButton.closest('form');
+    confirmSubmitPopup.style.display = 'block';
+    overlay.style.display = 'block';
+  });
+
+  confirmSubmitYes.addEventListener('click', function() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  });
+
+  confirmSubmitNo.addEventListener('click', function() {
+    confirmSubmitPopup.style.display = 'none';
+    overlay.style.display = 'none';
   });
 });
 </script>
