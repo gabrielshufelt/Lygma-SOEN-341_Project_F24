@@ -88,18 +88,17 @@ class StudentDashboardController < ApplicationController
 
   def calculate_project_averages(evaluations)
     {
-      'Cooperation': calculate_average(evaluations, :cooperation_rating).round(2),
-      'Conceptual': calculate_average(evaluations, :conceptual_rating).round(2),
-      'Practical': calculate_average(evaluations, :practical_rating).round(2),
-      'Work Ethic': calculate_average(evaluations, :work_ethic_rating).round(2)
+      'Cooperation': calculate_average(evaluations.map(&:cooperation_rating).compact).round(2),
+      'Conceptual': calculate_average(evaluations.map(&:conceptual_rating).compact).round(2),
+      'Practical': calculate_average(evaluations.map(&:practical_rating).compact).round(2),
+      'Work Ethic': calculate_average(evaluations.map(&:work_ethic_rating).compact).round(2)
     }
   end
 
-  def calculate_average(evaluations, attribute)
-    ratings = evaluations.map(&attribute).compact
+  def calculate_average(ratings)
     return 0.0 if ratings.empty?
 
-    ratings.sum / ratings.size.to_f
+    ratings.sum.to_f / ratings.size
   end
 
   def ensure_student_role
@@ -268,12 +267,6 @@ class StudentDashboardController < ApplicationController
       }
     end
   end
-  
-  def calculate_average(ratings)
-    return 0.0 if ratings.empty?
-    ratings.sum.to_f / ratings.size
-  end
-
 
   def fetch_learning_insights
     # Check if insights exist and are up-to-date
@@ -284,12 +277,12 @@ class StudentDashboardController < ApplicationController
       Rails.logger.info "Generating new learning insights."
       
       collected_evaluations  # Ensure @evaluations is set
-      aggregated_data = aggregate_evaluation_data
-  
-      if aggregated_data.present?
-        insights_service = LearningInsightsService.new(aggregated_data)
+      aggregate_evaluation_data
+
+      if @evaluation_data.present?
+        insights_service = LearningInsightsService.new(@evaluation_data)
         insights = insights_service.generate_insights
-  
+
         # Save insights to student's record
         @student.update(
           learning_insights: insights,
