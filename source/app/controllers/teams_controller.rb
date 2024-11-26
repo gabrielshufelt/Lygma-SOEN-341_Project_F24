@@ -34,8 +34,8 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.save
         format.html do
-          role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
-          redirect_to role_based_path, notice: 'Team was successfully created.'
+          teams_dashboard_path = role_based_dashboard_path
+          redirect_to teams_dashboard_path, notice: 'Team was successfully created.'
         end
         format.json { render :show, status: :created, location: @team }
       else
@@ -53,8 +53,8 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.update(team_params)
         format.html do
-          role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
-          redirect_to role_based_path, notice: 'Team was successfully updated.'
+          teams_dashboard_path = role_based_dashboard_path
+          redirect_to teams_dashboard_path, notice: 'Team was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @team }
       else
@@ -70,8 +70,8 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        role_based_path = send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
-        redirect_to role_based_path, notice: 'Team was successfully deleted.'
+        teams_dashboard_path = role_based_dashboard_path
+        redirect_to teams_dashboard_path, notice: 'Team was successfully deleted.'
       end
       format.json { head :no_content }
     end
@@ -99,6 +99,10 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def role_based_dashboard_path
+    path send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+  end
 
   def perform_member_operation(operation)
     operation == 'add' ? @team.add_student(@user) : @team.remove_student(@user)
