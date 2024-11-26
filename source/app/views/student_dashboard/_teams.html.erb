@@ -79,3 +79,89 @@
     <% end %>
   </ul>
 </section>
+
+<div id="confirm-leave-popup" class="confirm-popup" style="display: none;">
+  <h4>Are you sure you want to leave this team?</h4>
+  <div class="actions">
+    <button id="confirm-leave-yes" class="button primary">Yes</button>
+    <button id="confirm-leave-no" class="button secondary">No</button>
+  </div>
+</div>
+
+<div id="confirm-join-popup" class="confirm-popup" style="display: none;">
+  <h4>Are you sure you want to join this new team? You will leave your current team.</h4>
+  <div class="actions">
+    <button id="confirm-join-yes" class="button primary">Yes</button>
+    <button id="confirm-join-no" class="button secondary">No</button>
+  </div>
+</div>
+
+<div id="overlay" class="overlay" style="display: none;"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('JavaScript loaded and executed');
+
+  const confirmLeavePopup = document.getElementById('confirm-leave-popup');
+  const confirmJoinPopup = document.getElementById('confirm-join-popup');
+  const overlay = document.getElementById('overlay');
+  const confirmLeaveYes = document.getElementById('confirm-leave-yes');
+  const confirmLeaveNo = document.getElementById('confirm-leave-no');
+  const confirmJoinYes = document.getElementById('confirm-join-yes');
+  const confirmJoinNo = document.getElementById('confirm-join-no');
+  let formToSubmit = null;
+
+  function attachEventListeners() {
+    const leaveButtons = document.querySelectorAll('.leave-team-button');
+    const joinButtons = document.querySelectorAll('.join-team-button');
+
+    leaveButtons.forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Leave button clicked');
+        formToSubmit = button.closest('form');
+        confirmLeavePopup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+    });
+
+    joinButtons.forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Join button clicked');
+        formToSubmit = button.closest('form');
+        confirmJoinPopup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+    });
+  }
+
+  attachEventListeners();
+
+  confirmLeaveYes.addEventListener('click', function() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  });
+
+  confirmLeaveNo.addEventListener('click', function() {
+    confirmLeavePopup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+
+  confirmJoinYes.addEventListener('click', function() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  });
+
+  confirmJoinNo.addEventListener('click', function() {
+    confirmJoinPopup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+
+  // Use MutationObserver to re-attach event listeners when the DOM changes
+  const observer = new MutationObserver(attachEventListeners);
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>

@@ -122,14 +122,14 @@ class TeamsController < ApplicationController
   def respond_success(operation)
     respond_to do |format|
       format.turbo_stream { render_turbo_streams }
-      format.html { redirect_to edit_team_path(@team), notice: member_success_message(operation) }
+      format.html { redirect_to role_based_dashboard_path, notice: member_success_message(operation) }
       format.json { render json: @team.students, status: :ok }
     end
   end
 
   def respond_failure(operation)
     respond_to do |format|
-      format.html { redirect_to edit_team_path(@team), alert: member_failure_message(operation) }
+      format.html { redirect_to role_based_dashboard_path, alert: member_failure_message(operation) }
       format.json { render json: @team.errors, status: :unprocessable_entity }
     end
   end
@@ -163,5 +163,10 @@ class TeamsController < ApplicationController
   def team_params
     params.require(:team).permit(:name, :description, :project_id)
   end
+
+  def role_based_dashboard_path
+    path send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+  end
+
 end
 # rubocop:enable Metrics/ClassLength
