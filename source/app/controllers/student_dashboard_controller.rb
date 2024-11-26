@@ -240,23 +240,22 @@ class StudentDashboardController < ApplicationController
     @evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed').order(:date_completed)
   end
 
-
   def aggregate_evaluation_data
     @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
       project = Project.find(project_id)
-      
+
       # Extract ratings and remove nil values
       cooperation_ratings = evaluations.map(&:cooperation_rating).compact
       conceptual_ratings = evaluations.map(&:conceptual_rating).compact
       practical_ratings = evaluations.map(&:practical_rating).compact
       work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
-  
+
       # Calculate averages
       avg_cooperation = calculate_average(cooperation_ratings).round(2)
       avg_conceptual = calculate_average(conceptual_ratings).round(2)
       avg_practical = calculate_average(practical_ratings).round(2)
       avg_work_ethic = calculate_average(work_ethic_ratings).round(2)
-  
+
       {
         project_title: project.title,
         date_completed: evaluations.map(&:date_completed).compact.max,
@@ -271,34 +270,31 @@ class StudentDashboardController < ApplicationController
 
   def fetch_learning_insights
     # Check if insights exist and are up-to-date
-    if @student.learning_insights.present? && insights_up_to_date?
-      return @student.learning_insights
-    else
-      
-      collected_evaluations  # Ensure @evaluations is set
-      aggregate_evaluation_data
+    return @student.learning_insights if @student.learning_insights.present? && insights_up_to_date?
 
-      if @evaluation_data.present?
-        insights_service = LearningInsightsService.new(@evaluation_data)
-        insights = insights_service.generate_insights
 
-        # Save insights to student's record
-        @student.update(
-          learning_insights: insights,
-          insights_updated_at: Time.current
-        )
-  
-        return insights
-      else
-        return nil
-      end
-    end
+
+    collected_evaluations # Ensure @evaluations is set
+    aggregate_evaluation_data
+
+    return nil unless @evaluation_data.present?
+
+    insights_service = LearningInsightsService.new(@evaluation_data)
+    insights = insights_service.generate_insights
+
+    # Save insights to student's record
+    @student.update(
+      learning_insights: insights,
+      insights_updated_at: Time.current
+    )
+
+    insights
   end
 
   def insights_up_to_date?
     latest_evaluation_date = Evaluation.where(evaluatee_id: @student.id, status: 'completed').maximum(:updated_at)
     return false if latest_evaluation_date.nil? || @student.insights_updated_at.nil?
-  
+
     @student.insights_updated_at >= latest_evaluation_date
   end
 end
