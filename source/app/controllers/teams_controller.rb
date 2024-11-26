@@ -91,14 +91,8 @@ class TeamsController < ApplicationController
 
   # PATCH/DELETE /teams/:id/manage_member
   def manage_member
-    @team = Team.find(params[:id])
-    @user = User.find(params[:user_id])
-
-    # Check if the user is already part of another team for the same project
-    current_team = @user.teams.find_by(project_id: @team.project_id)
-    if current_team && current_team != @team
-      current_team.remove_student(@user)
-    end
+    set_team_and_user
+    remove_user_from_current_team
 
     if perform_member_operation(params[:operation])
       load_team_data
@@ -106,6 +100,16 @@ class TeamsController < ApplicationController
     else
       respond_failure(params[:operation])
     end
+  end
+
+  def set_team_and_user
+    @team = Team.find(params[:id])
+    @user = User.find(params[:user_id])
+  end
+
+  def remove_user_from_current_team
+    current_team = @user.teams.find_by(project_id: @team.project_id)
+    current_team.remove_student(@user) if current_team && current_team != @team
   end
 
   private
@@ -171,11 +175,11 @@ class TeamsController < ApplicationController
 
   def check_team_creation_deadline
     project = Project.find(params[:project_id] || team_params[:project_id])
-    if project.team_creation_deadline < Date.today
-      respond_to do |format|
-        format.html { redirect_to role_based_dashboard_path, alert: 'The team creation deadline has passed.' }
-        format.json { render json: { error: 'The team creation deadline has passed.' }, status: :unprocessable_entity }
-      end
+    return unless project.team_creation_deadline < Date.today
+
+    respond_to do |format|
+      format.html { redirect_to role_based_dashboard_path, alert: 'The team creation deadline has passed.' }
+      format.json { render json: { error: 'The team creation deadline has passed.' }, status: :unprocessable_entity }
     end
   end
 end

@@ -15,8 +15,8 @@ class Project < ApplicationRecord
   end
 
   def team_creation_deadline_before_due_date
-    if team_creation_deadline.present? && team_creation_deadline > due_date
-      errors.add(:team_creation_deadline, 'must be before the project due date.')
-    end
+    return unless team_creation_deadline.present? && team_creation_deadline > due_date
+
+    errors.add(:team_creation_deadline, 'must be before the project due date.')
   end
 end

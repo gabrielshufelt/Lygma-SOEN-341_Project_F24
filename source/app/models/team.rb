@@ -50,24 +50,20 @@ class Team < ApplicationRecord
     students.each do |existing_member|
       next if existing_member == new_member
 
-      Evaluation.create!(
-        evaluator: new_member,
-        evaluatee: existing_member,
-        project: project,
-        team: self,
-        status: 'pending',
-        due_date: project.due_date
-      )
-
-      Evaluation.create!(
-        evaluator: existing_member,
-        evaluatee: new_member,
-        project: project,
-        team: self,
-        status: 'pending',
-        due_date: project.due_date
-      )
+      create_evaluation(new_member, existing_member)
+      create_evaluation(existing_member, new_member)
     end
+  end
+
+  def create_evaluation(evaluator, evaluatee)
+    Evaluation.create!(
+      evaluator: evaluator,
+      evaluatee: evaluatee,
+      project: project,
+      team: self,
+      status: 'pending',
+      due_date: project.due_date
+    )
   end
 
   def delete_evaluations_for_member(member)
