@@ -39,9 +39,11 @@
     </div>
   </div>
 
-  <div class="field">
-    <%= form.label :team_creation_deadline %>
-    <%= form.date_select :team_creation_deadline %>
+  <div class="fields">
+    <div class="full">
+      <%= form.label :team_creation_deadline, style: "display: block" %>
+      <%= form.date_field :team_creation_deadline %>
+    </div>
   </div>
 
   <div class="actions">
