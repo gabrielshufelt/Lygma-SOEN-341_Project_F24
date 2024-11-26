@@ -2,6 +2,7 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy manage_member]
   before_action :authenticate_user!
+  before_action :check_team_creation_deadline, only: %i[create manage_member destroy]
 
   # GET /teams or /teams.json
   def index
@@ -168,5 +169,14 @@ class TeamsController < ApplicationController
     send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
   end
 
+  def check_team_creation_deadline
+    project = Project.find(params[:project_id] || team_params[:project_id])
+    if project.team_creation_deadline < Date.today
+      respond_to do |format|
+        format.html { redirect_to role_based_dashboard_path, alert: 'The team creation deadline has passed.' }
+        format.json { render json: { error: 'The team creation deadline has passed.' }, status: :unprocessable_entity }
+      end
+    end
+  end
 end
 # rubocop:enable Metrics/ClassLength

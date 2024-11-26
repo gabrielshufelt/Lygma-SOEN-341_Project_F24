@@ -142,10 +142,22 @@ course2.enroll([student2, student4, student6])
 course3.enroll([student1, student2, student3, student4, student5, student6])
 
 project1 = Project.find_or_initialize_by(id: 1)
-project1.update!(title: 'Sprint 1', due_date: Date.new(2024, 9, 29), course_id: course1.id, maximum_team_size: 6)
+project1.update!(
+  title: 'Sprint 1',
+  due_date: Date.new(2024, 12, 15),
+  team_creation_deadline: Date.new(2024, 12, 2),
+  course_id: course1.id,
+  maximum_team_size: 6
+)
 
 project2 = Project.find_or_initialize_by(id: 2)
-project2.update!(title: 'Sprint 2', due_date: Date.tomorrow, course_id: course1.id, maximum_team_size: 6)
+project2.update!(
+  title: 'Sprint 2',
+  due_date: Date.tomorrow,
+  team_creation_deadline: Date.today - 1.day,
+  course_id: course1.id,
+  maximum_team_size: 6
+)
 
 team1 = Team.find_or_initialize_by(id: 1000)
 team1.update!(name: 'Real Ratings', description: 'Providing Real Ratings for Real People', project_id: project1.id)

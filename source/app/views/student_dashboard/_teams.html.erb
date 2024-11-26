@@ -1,5 +1,4 @@
 <section class="section">
-  <p style="font-size: 1.4em;"><strong>Team Creation Deadline: </strong><%= project_teams[:team_creation_deadline] %></p>
   <h5><strong>My Team Details</strong></h5>
   <ul style="list-style-type: none">
     <% if project_teams[:student_team].present? %>
@@ -9,14 +8,22 @@
       <li><span style="font-weight: 600">Team Creation Deadline: </span><%= project_teams[:student_team]&.project&.team_creation_deadline %></li>
       <li style="display: flex; column-gap: 8px">
         <%= button_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
-        <%= button_to "Leave", manage_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id, operation: 'remove'), 
+        <% if project_teams[:student_team]&.project&.team_creation_deadline && project_teams[:student_team].project.team_creation_deadline >= Date.today %>
+          <%= button_to "Leave", manage_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id, project_id: project_teams[:student_team].project_id, operation: 'remove'), 
                                 class: "button secondary leave-team-button", method: :delete %>
+        <% else %>
+          <button class="button secondary" disabled>Leave</button>
+        <% end %>
       </li>
     <% else %>
       <li style="display: flex; column-gap: 8px; justify-content: space-between; align-items: center">
         Create or join a team to view your team details.
-        <%= button_to new_team_path, class: "button primary", method: :get do %>
-          <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+        <% if project_teams[:student_team]&.project&.team_creation_deadline && project_teams[:student_team].project.team_creation_deadline >= Date.today %>
+          <%= link_to new_team_path(id: project_teams[:project_id]), class: "button primary", method: :get do %>
+            <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+          <% end %>
+        <% else %>
+          <button class="button primary" disabled>Create a new team</button>
         <% end %>
       </li>
     <% end %>
@@ -63,11 +70,19 @@
                 </td>
                 <td>
                   <% if team.id == project_teams[:student_team]&.id %>
-                    <%= button_to "Leave", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'remove'), 
-                                  class: "button secondary leave-team-button", method: :delete %>
+                    <% if team.project.team_creation_deadline && team.project.team_creation_deadline >= Date.today %>
+                      <%= button_to "Leave", manage_member_team_path(id: team.id, user_id: current_user.id, project_id: team.project_id, operation: 'remove'), 
+                                        class: "button secondary leave-team-button", method: :delete %>
+                    <% else %>
+                      <button class="button secondary" disabled>Leave</button>
+                    <% end %>
                   <% else %>
-                    <%= button_to "Join", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'add'), 
-                                  class: "button primary join-team-button", method: :patch %>
+                    <% if team.project.team_creation_deadline && team.project.team_creation_deadline >= Date.today %>
+                      <%= button_to "Join", manage_member_team_path(id: team.id, user_id: current_user.id, project_id: team.project_id, operation: 'add'), 
+                                        class: "button primary join-team-button", method: :patch %>
+                    <% else %>
+                      <button class="button primary" disabled>Join</button>
+                    <% end %>
                   <% end %>
                 </td>
               </tr>
