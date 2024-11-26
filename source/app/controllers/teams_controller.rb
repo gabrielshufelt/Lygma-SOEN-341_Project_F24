@@ -88,7 +88,13 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
     @user = User.find(params[:user_id])
     available_students
-  
+
+    # Check if the user is already part of another team for the same project
+    current_team = @user.teams.find_by(project_id: @team.project_id)
+    if current_team && current_team != @team
+      current_team.remove_student(@user)
+    end
+
     if @team.add_student(@user)
       @team_members = @team.students
       @teams_by_project = TeamsService.new(@selected_course.id, @user).teams_by_project
@@ -111,7 +117,7 @@ class TeamsController < ApplicationController
         format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end
-  end  
+  end
   
 
   # DELETE /teams/:id/remove_member
