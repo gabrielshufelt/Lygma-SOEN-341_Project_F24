@@ -108,12 +108,12 @@ class TeamsController < ApplicationController
             turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
           ]
         end
-        format.html { redirect_to edit_team_path(@team), notice: 'Team member added successfully.' }
+        format.html { redirect_to teams_student_dashboard_index_path(course_id: @selected_course.id), notice: 'Team member added successfully.' }
         format.json { render json: @team.students, status: :ok }
       end
     else
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { redirect_to teams_student_dashboard_index_path(course_id: @selected_course.id), alert: 'Failed to add team member.' }
         format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end
@@ -139,12 +139,12 @@ class TeamsController < ApplicationController
             turbo_stream.append("student-teams", "<script>initializeCollapsible();</script>") # re-trigger collapsible box initialization
           ]
         end
-        format.html { redirect_to edit_team_path(@team), notice: 'Team member was successfully removed.' }
+        format.html { redirect_to teams_student_dashboard_index_path(course_id: @selected_course.id), notice: 'Team member was successfully removed.' }
         format.json { render json: @team.students, status: :ok }
       end
     else
       respond_to do |format|
-        format.html { redirect_to edit_team_path(@team), alert: 'Failed to remove team member.' }
+        format.html { redirect_to teams_student_dashboard_index_path(course_id: @selected_course.id), alert: 'Failed to remove team member.' }
         format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end
