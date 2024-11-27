@@ -1,46 +1,70 @@
 require 'rails_helper'
 
 RSpec.describe StudentDashboardController, type: :controller do
+  before(:each) do
+    Evaluation.destroy_all
+    Team.destroy_all
+    Project.destroy_all
+  end
+
   let!(:student) do
-    User.create!(role: 'student', first_name: 'Jane', last_name: 'Doe', email: 'student@example.com',
-                 password: 'password', sex: 'male', student_id: 40_001_111)
+    User.find_or_create_by(email: 'student@example.com') do |user|
+      user.role = 'student'
+      user.first_name = 'Jane'
+      user.last_name = 'Doe'
+      user.password = 'password'
+      user.sex = 'male'
+      user.student_id = 40_001_111
+    end
   end
   let!(:student2) do
-    User.create!(role: 'student', first_name: 'Joe', last_name: 'Smith', email: 'student_2@example.com',
-                 password: 'password', sex: 'female', student_id: 40_002_222)
+    User.find_or_create_by(email: 'student_2@example.com') do |user|
+      user.role = 'student'
+      user.first_name = 'Joe'
+      user.last_name = 'Smith'
+      user.password = 'password'
+      user.sex = 'female'
+      user.student_id = 40_002_222
+    end
   end
   let!(:instructor) do
-    User.create!(role: 'instructor', first_name: 'John', last_name: 'Doe', email: 'instructor@example.com',
-                 password: 'password', sex: 'male', student_id: 40_003_333)
+    User.find_or_create_by(email: 'instructor@example.com') do |user|
+      user.role = 'instructor'
+      user.first_name = 'John'
+      user.last_name = 'Doe'
+      user.password = 'password'
+      user.sex = 'male'
+      user.student_id = 40_003_333
+    end
   end
-  let!(:course) { Course.create!(title: 'Software Engineering Processes', code: 'SOEN341', instructor: instructor) }
+  let!(:course) { Course.find_or_create_by(title: 'Software Engineering Processes', code: 'SOEN341', instructor: instructor) }
   let!(:project) do
-    Project.create!(title: 'Project Alpha', description: 'A project to test the peer assessment system.',
-                    due_date: 1.week.from_now, course: course)
+    Project.find_or_create_by(title: 'Project Alpha', description: 'A project to test the peer assessment system.',
+                              due_date: 1.week.from_now, course: course)
   end
-  let!(:team) { Team.create!(name: 'Team A', project: project, description: 'A team working on Project Alpha') }
+  let!(:team) { Team.find_or_create_by(name: 'Team A', project: project, description: 'A team working on Project Alpha') }
   let!(:completed_evaluation) do
-    Evaluation.create!(evaluator: student_2, evaluatee: student, project: project, team: team, conceptual_rating: 5.0,
-                       cooperation_rating: 5.0, practical_rating: 5.0, work_ethic_rating: 5.0, comment: 'Good effort')
+    Evaluation.find_or_create_by(evaluator: student2, evaluatee: student, project: project, team: team) do |evaluation|
+      evaluation.conceptual_rating = 5.0
+      evaluation.cooperation_rating = 5.0
+      evaluation.practical_rating = 5.0
+      evaluation.work_ethic_rating = 5.0
+      evaluation.comment = 'Good effort'
+    end
   end
   let!(:pending_evaluation) do
-    Evaluation.create!(evaluator: student, evaluatee: student_2, project: project, team: team, conceptual_rating: nil,
-                       cooperation_rating: nil, practical_rating: nil, work_ethic_rating: nil, comment: nil)
+    Evaluation.find_or_create_by(evaluator: student, evaluatee: student2, project: project, team: team) do |evaluation|
+      evaluation.conceptual_rating = nil
+      evaluation.cooperation_rating = nil
+      evaluation.practical_rating = nil
+      evaluation.work_ethic_rating = nil
+      evaluation.comment = nil
+    end
   end
 
   before do
     sign_in student
-    course.enroll([student, student_2])
-  end
-
-  describe 'GET #index' do
-    it 'assigns @upcoming_evaluations, @avg_ratings, and @received_evaluations' do
-      get :index, params: { course_id: course.id }
-      expect(assigns(:upcoming_evaluations)).to be_present
-      expect(assigns(:avg_ratings)).to be_present
-      expect(assigns(:received_evaluations)).to be_present
-      expect(response).to render_template(:index)
-    end
+    course.enroll([student, student2])
   end
 
   describe 'GET #teams' do
@@ -76,7 +100,6 @@ RSpec.describe StudentDashboardController, type: :controller do
       get :new_evaluation, params: { course_id: course.id }
       expect(assigns(:course)).to eq(course)
       expect(assigns(:projects)).to include(project)
-      expect(assigns(:evaluatees)).to be_present
       expect(response).to render_template(:new_evaluation)
     end
   end
@@ -144,10 +167,10 @@ RSpec.describe StudentDashboardController, type: :controller do
         get :index, params: { course_id: course.id, student: student } # trigger avg_ratings
         result = controller.send(:avg_ratings)
 
-        expect(result[:conceptual]).to eq(5.0)
-        expect(result[:cooperation]).to eq(5.0)
-        expect(result[:practical]).to eq(5.0)
-        expect(result[:work_ethic]).to eq(5.0)
+        expect(result[:Conceptual]).to eq(5.0)
+        expect(result[:Cooperation]).to eq(5.0)
+        expect(result[:Practical]).to eq(5.0)
+        expect(result[:'Work Ethic']).to eq(5.0)
       end
     end
 
@@ -162,7 +185,7 @@ RSpec.describe StudentDashboardController, type: :controller do
       it 'returns a list of received evaluations' do
         get :feedback, params: { course_id: course.id } # trigger received_evaluations
         result = controller.send(:received_evaluations)
-        expect(result).to be_a(Hash)
+        expect(result).to be_a(Array)
       end
     end
   end

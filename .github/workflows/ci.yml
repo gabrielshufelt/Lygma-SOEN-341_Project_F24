@@ -82,8 +82,11 @@ jobs:
 
       - name: Set up database
         run: |
+          bin/rails db:drop:_unsafe
           bin/rails db:create
-          bin/rails db:schema:load
+          bin/rails db:migrate
+          bin/rails db:seed
+
         env:
           RAILS_ENV: test
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
