@@ -1,16 +1,14 @@
-<div class="containers hall-building">
-  <div class="gradient-filter">
-    <header class="section one">
-      <h1>Detailed results for <%= @student.first_name %> <%= @student.last_name %></h1>
-    </header>
+<div class="containers hall-building left-navbar">
+  <header class="section one">
+    <h1>Detailed results for <%= @student.first_name %> <%= @student.last_name %></h1>
+  </header>
 
-    <section class="section">
-      <% @projects.each do |project| %>
-        <%= render 'partials/collapsible_box',
-          title: "Project Name: #{project.title}",
-          collapsed: true,
-          content: render('instructor_dashboard/detailed_evals', project: project, evaluations: @evaluations.where(project_id: project.id)) %>
-      <% end %>
-    </section>
-  </div>
+  <section class="section">
+    <% @projects.each do |project| %>
+      <%= render 'partials/collapsible_box',
+        title: "Project Name: #{project.title}",
+        collapsed: true,
+        content: render('instructor_dashboard/detailed_evals', project: project, evaluations: @evaluations.where(project_id: project.id)) %>
+    <% end %>
+  </section>
 </div>

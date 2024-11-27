@@ -1,36 +1,34 @@
-<div class="containers hall-building">
-  <div class="gradient-filter">
-    <header class="title">
-      <h1>Project Details</h1>
-    </header>
-    <section class="instructor-dashboard projects">
-      <div id="<%= dom_id @project %>">
-        <p>
-          <strong>Title:</strong>
-          <%= @project.title %>
-        </p>
+<div class="containers hall-building left-navbar">
+  <header class="title">
+    <h1>Project Details</h1>
+  </header>
+  <section class="instructor-dashboard projects">
+    <div id="<%= dom_id @project %>">
+      <p>
+        <strong>Title:</strong>
+        <%= @project.title %>
+      </p>
 
-        <p>
-          <strong>Description:</strong>
-          <%= @project.description || 'No description provided.' %>
-        </p>
+      <p>
+        <strong>Description:</strong>
+        <%= @project.description || 'No description provided.' %>
+      </p>
 
-        <p>
-          <strong>Due Date:</strong>
-          <%= @project.due_date.strftime('%B %d, %Y') %>
-        </p>
+      <p>
+        <strong>Due Date:</strong>
+        <%= @project.due_date.strftime('%B %d, %Y') %>
+      </p>
 
-        <p>
-          <strong>Maximum Team Size:</strong>
-          <%= @project.maximum_team_size %>
-        </p>
+      <p>
+        <strong>Maximum Team Size:</strong>
+        <%= @project.maximum_team_size %>
+      </p>
 
-        <div class="actions">
-          <%= link_to 'Edit', edit_project_path(@project), class: "button secondary" %>
-          <%= link_to 'Back to Projects', projects_instructor_dashboard_index_path(course_id: @selected_course.id), class: "button" %>
-          <%= link_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: "button danger" %>
-        </div>
+      <div class="actions">
+        <%= link_to 'Edit', edit_project_path(@project), class: "button secondary" %>
+        <%= link_to 'Back to Projects', projects_instructor_dashboard_index_path(course_id: @selected_course.id), class: "button" %>
+        <%= link_to 'Delete Project', project_path(@project), method: :delete, data: { confirm: 'Are you sure?' }, class: "button danger" %>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </div>

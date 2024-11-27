@@ -1,54 +1,52 @@
-<div class="containers hall-building">
-  <div class="gradient-filter">
-    <header class="section one">
-      <h1>Results</h1>
-      <h2>Detailed peer assessment results (<%= @results.size %> student(s))</h2>
-    </header>
+<div class="containers hall-building left-navbar">
+  <header class="section one">
+    <h1>Results</h1>
+    <h2>Detailed peer assessment results (<%= @results.size %> student(s))</h2>
+  </header>
 
-    <section class="section">
-      <% if @results.present? %>
-        <table class="table">
-          <thead>
+  <section class="section">
+    <% if @results.present? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>Cooperation</th>
+            <th>Conceptual Contribution</th>
+            <th>Practical Contribution</th>
+            <th>Work Ethic</th>
+            <th>Average</th>
+            <th># of Evaluations Received</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @results.each do |student| %>
             <tr>
-              <th>Student ID</th>
-              <th>Last Name</th>
-              <th>First Name</th>
-              <th>Cooperation</th>
-              <th>Conceptual Contribution</th>
-              <th>Practical Contribution</th>
-              <th>Work Ethic</th>
-              <th>Average</th>
-              <th># of Evaluations Received</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @results.each do |student| %>
-              <tr>
-                <td><%= student[:student][:student_id] %></td>
-                <td><%= student[:student][:last_name] %></td>
-                <td><%= student[:student][:first_name] %></td>
-                <td><%= student[:student][:cooperation].round(2) rescue 'N/A' %></td>
-                <td><%= student[:student][:conceptual_contribution].round(2) rescue 'N/A' %></td>
-                <td><%= student[:student][:practical_contribution].round(2) rescue 'N/A' %></td>
-                <td><%= student[:student][:work_ethic].round(2) rescue 'N/A' %></td>
-                <td><%= student[:overall_average].round(2) rescue 'N/A' %></td>
-                <td><%= student[:num_of_evaluations_received] %></td>
-                <td>
-                  <%= link_to 'See detailed view', detailed_results_instructor_dashboard_index_path(course_id: @selected_course.id, id: student[:student][:id]), class: 'button primary' %>
-                </td>
+              <td><%= student[:student][:student_id] %></td>
+              <td><%= student[:student][:last_name] %></td>
+              <td><%= student[:student][:first_name] %></td>
+              <td><%= student[:student][:cooperation].round(2) rescue 'N/A' %></td>
+              <td><%= student[:student][:conceptual_contribution].round(2) rescue 'N/A' %></td>
+              <td><%= student[:student][:practical_contribution].round(2) rescue 'N/A' %></td>
+              <td><%= student[:student][:work_ethic].round(2) rescue 'N/A' %></td>
+              <td><%= student[:overall_average].round(2) rescue 'N/A' %></td>
+              <td><%= student[:num_of_evaluations_received] %></td>
+              <td>
+                <%= link_to 'See detailed view', detailed_results_instructor_dashboard_index_path(course_id: @selected_course.id, id: student[:student][:id]), class: 'button primary' %>
+              </td>
 
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <div class="center-wrapper">
-          <section class="center-content">
-            <h3>No evaluations have been completed yet.</h3>
-          </section>
-        </div>
-      <% end %>
-    </section>
-  </div>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="center-wrapper">
+        <section class="center-content">
+          <h3>No evaluations have been completed yet.</h3>
+        </section>
+      </div>
+    <% end %>
+  </section>
 </div>
