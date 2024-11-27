@@ -1,0 +1,15 @@
+<div class="flash success">
+  <i class="fa-solid fa-circle-check"></i>
+  <div>
+    <h4>Success</h4>
+    <p><%= msg %></p>
+  </div>
+  <i class="fa-solid fa-x close-button" onclick="this.parentElement.remove()"></i>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.querySelector('.flash.success').remove();
+  }, 10000);
+</script>
+

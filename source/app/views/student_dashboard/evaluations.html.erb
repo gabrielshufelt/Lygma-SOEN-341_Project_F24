@@ -1,30 +1,27 @@
-
-<div class="containers hall-building left-navbar">
-	<header class="section one eval">
-			<h1>Evaluations</h1>
-			<% unless @student_evaluations.empty? %>
-				<%= link_to new_evaluation_student_dashboard_index_path(course_id: @selected_course.id), class: "button primary" do %>
-					<i class="fa-solid fa-plus"></i>&nbsp;Create a New Evaluation
-				<% end %>
+<header class="section one eval">
+		<h1>Evaluations</h1>
+		<% unless @student_evaluations.empty? %>
+			<%= link_to new_evaluation_student_dashboard_index_path(course_id: @selected_course.id), class: "button primary" do %>
+				<i class="fa-solid fa-plus"></i>&nbsp;Create a New Evaluation
 			<% end %>
-	</header>
-	<section class="section">
-			<% if @student_evaluations.empty? %>
-				<div class="center-wrapper">
-					<section class="center-content">
-						<h3>No evaluations have been made available yet.</h3>
-						<p>Projects and evaluations will appear here when made available.</p>
-					</section>
-				</div>
-			<% else %>
-				<% @student_evaluations.each do |project_evaluations| %>
-					<%= render 'partials/collapsible_box',
-						title: "#{project_evaluations[:project_title]} (due #{project_evaluations[:due_date].strftime('%B %d')})",
-						collapsed: true,
-						content: render('student_dashboard/evaluations', project_evaluations: project_evaluations)
-					%>
-				<% end %>
+		<% end %>
+</header>
+<section class="section">
+		<% if @student_evaluations.empty? %>
+			<div class="center-wrapper">
+				<section class="center-content">
+					<h3>No evaluations have been made available yet.</h3>
+					<p>Projects and evaluations will appear here when made available.</p>
+				</section>
+			</div>
+		<% else %>
+			<% @student_evaluations.each do |project_evaluations| %>
+				<%= render 'partials/collapsible_box',
+					title: "#{project_evaluations[:project_title]} (due #{project_evaluations[:due_date].strftime('%B %d')})",
+					collapsed: true,
+					content: render('student_dashboard/evaluations', project_evaluations: project_evaluations)
+				%>
 			<% end %>
-	</section>
-</div>
+		<% end %>
+</section>
 

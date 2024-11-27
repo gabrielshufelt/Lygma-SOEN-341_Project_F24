@@ -1,0 +1,14 @@
+<div class="flash info">
+  <i class="fa-solid fa-circle-info"></i>
+  <div>
+    <h4>Info</h4>
+    <p><%= msg %></p>
+  </div>
+  <i class="fa-solid fa-x close-button" onclick="this.parentElement.remove()"></i>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.querySelector('.flash.info').remove();
+  }, 10000);
+</script>
