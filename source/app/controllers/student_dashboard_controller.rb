@@ -33,6 +33,7 @@ class StudentDashboardController < ApplicationController
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
+    @learning_insights = fetch_learning_insights
   end
 
   def new_evaluation
@@ -87,18 +88,17 @@ class StudentDashboardController < ApplicationController
 
   def calculate_project_averages(evaluations)
     {
-      'Cooperation': calculate_average(evaluations, :cooperation_rating).round(2),
-      'Conceptual': calculate_average(evaluations, :conceptual_rating).round(2),
-      'Practical': calculate_average(evaluations, :practical_rating).round(2),
-      'Work Ethic': calculate_average(evaluations, :work_ethic_rating).round(2)
+      'Cooperation': calculate_average(evaluations.map(&:cooperation_rating).compact).round(2),
+      'Conceptual': calculate_average(evaluations.map(&:conceptual_rating).compact).round(2),
+      'Practical': calculate_average(evaluations.map(&:practical_rating).compact).round(2),
+      'Work Ethic': calculate_average(evaluations.map(&:work_ethic_rating).compact).round(2)
     }
   end
 
-  def calculate_average(evaluations, attribute)
-    ratings = evaluations.map(&attribute).compact
+  def calculate_average(ratings)
     return 0.0 if ratings.empty?
 
-    ratings.sum / ratings.size.to_f
+    ratings.sum.to_f / ratings.size
   end
 
   def ensure_student_role
@@ -234,6 +234,78 @@ class StudentDashboardController < ApplicationController
       :password,
       :student_id
     )
+  end
+
+  def collected_evaluations
+    @evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed').order(:date_completed)
+  end
+
+  def aggregate_evaluation_data
+    @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
+      project = Project.find(project_id)
+
+      cooperation_rating, conceptual_rating, practical_rating, work_ethic_ratings = extract_rating(evaluations)
+
+      avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic = calculate_average_ratings(cooperation_rating, conceptual_rating,
+                                                                                                 practical_rating, work_ethic_ratings)
+
+      {
+        project_title: project.title,
+        date_completed: evaluations.map(&:date_completed).compact.max,
+        avg_cooperation: avg_cooperation,
+        avg_conceptual: avg_conceptual,
+        avg_practical: avg_practical,
+        avg_work_ethic: avg_work_ethic
+      }
+    end
+  end
+
+  def extract_rating(evaluations)
+    # Extract ratings and remove nil values
+    cooperation_ratings = evaluations.map(&:cooperation_rating).compact
+    conceptual_ratings = evaluations.map(&:conceptual_rating).compact
+    practical_ratings = evaluations.map(&:practical_rating).compact
+    work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
+
+    [cooperation_ratings, conceptual_ratings, practical_ratings, work_ethic_ratings]
+  end
+
+  def calculate_average_ratings(_cooperation_rating, _conceptual_rating, _practical_rating, _work_ethic_rating)
+    # Calculate averages
+    avg_cooperation = calculate_average(cooperation_ratings).round(2)
+    avg_conceptual = calculate_average(conceptual_ratings).round(2)
+    avg_practical = calculate_average(practical_ratings).round(2)
+    avg_work_ethic = calculate_average(work_ethic_ratings).round(2)
+
+    [avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic]
+  end
+
+  def fetch_learning_insights
+    # Check if insights exist and are up-to-date
+    return @student.learning_insights if @student.learning_insights.present? && insights_up_to_date?
+
+    collected_evaluations # Ensure @evaluations is set
+    aggregate_evaluation_data
+
+    return nil unless @evaluation_data.present?
+
+    insights_service = LearningInsightsService.new(@evaluation_data)
+    insights = insights_service.generate_insights
+
+    # Save insights to student's record
+    @student.update(
+      learning_insights: insights,
+      insights_updated_at: Time.current
+    )
+
+    insights
+  end
+
+  def insights_up_to_date?
+    latest_evaluation_date = Evaluation.where(evaluatee_id: @student.id, status: 'completed').maximum(:updated_at)
+    return false if latest_evaluation_date.nil? || @student.insights_updated_at.nil?
+
+    @student.insights_updated_at >= latest_evaluation_date
   end
 end
 # rubocop:enable Metrics/ClassLength
