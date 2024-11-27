@@ -1,17 +1,23 @@
+
 <header class="section one">
   <h1>Hello <%= current_user.first_name %>!</h1>
   <h5><%= DateTime.now.strftime("Today is %A, %B %d, %Y") %>.</h5>
   <% unless @avg_ratings.empty? %>
   <h2>Overall Scores</h2>
-  <% colors = [] %>
+  <% overall_colors = [] %>
+  <% current_colors = [] %>
   <div class="student-overview">
     <% [:'Cooperation', :'Conceptual', :'Practical', :'Work Ethic'].each do |category| %>
-    <% score = @project_data[category].clamp(0, 7) %>
-    <% background_color = background_color_for_score(score) %>
-    <% colors << background_color %>
-    <div class="overview" style="background-color: <%= background_color %>;">
+    <% overall_score = @avg_ratings[category].clamp(0, 7) %>
+    <% current_score = @project_data[category].clamp(0,7) %>
+    <% overall_color = background_color_for_score(overall_score) %>
+    <% current_color = background_color_for_score(current_score) %>
+    <% overall_colors << overall_color %>
+    <% current_colors << current_color %>
+
+    <div class="overview" style="background-color: <%= overall_color %>;">
       <%= category.to_s.split('_').map(&:capitalize).join(' ') %>:
-      <strong><%= score.round(2) %>/7.00</strong>
+      <strong><%= @avg_ratings[category] %>/7.00</strong>
     </div>
     <% end %>
   </div>
@@ -37,10 +43,10 @@
   <h2>Average Ratings by Project</h2>
 
   <%= form_with url: course_student_dashboard_index_path, method: :get, local: true do %>
-  <%= select_tag :project, options_for_select(@average_ratings_by_project.keys.unshift('Overall'), params[:project] || 'Overall'), onchange: "this.form.submit();" %>
+    <%= select_tag :project, options_for_select(@average_ratings_by_project.keys.unshift('Overall'), params[:project] || 'Overall'), onchange: "this.form.submit();" %>
   <% end %>
 
   <div class="student-chart">
-    <%= column_chart @project_data, id: "ratings_chart", height: "300px", colors: colors, library: { title: { text: "Average Ratings" } } %>
+    <%= column_chart @project_data, id: "ratings_chart", height: "300px", min: 0.0, max: 7.0, colors: current_colors, library: { title: { text: "Average Ratings" } } %>
   </div>
 </section>
