@@ -1,11 +1,9 @@
-<div class="containers hall-building">
-  <div class="gradient-filter">
-    <header class="section one">
-      <h1>Settings</h1>
-      <h2>Edit personal information</h2>
-    </header>
-    <section class="section">
-      <%= render 'partials/settings_form', form_action_path: settings_instructor_dashboard_index_path(course_id: @selected_course.id) %>
-    </section>
-  </div>
+<div class="containers hall-building left-navbar">
+  <header class="section one">
+    <h1>Settings</h1>
+    <h2>Edit personal information</h2>
+  </header>
+  <section class="section">
+    <%= render 'partials/settings_form', form_action_path: settings_instructor_dashboard_index_path(course_id: @selected_course.id), source: 'instructor' %>
+  </section>
 </div>

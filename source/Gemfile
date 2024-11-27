@@ -5,6 +5,9 @@ ruby '3.3.5'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 7.1.4'
 
+# Use PostgreSQL as the database
+gem 'pg', '~> 1.2'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
 
@@ -33,7 +36,7 @@ gem 'jbuilder'
 # gem 'bcrypt', '~> 3.1.7'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %i[ windows jruby ]
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
@@ -47,15 +50,10 @@ gem 'ostruct'
 # Bootstrap for styling
 gem 'bootstrap', '~> 5.3.3'
 
-group :production do
-  # Use PostgreSQL as the database
-  gem "pg", "~> 1.2"
-end
-
 group :development, :test do
   gem 'faker'
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem 'debug', platforms: %i[ mri windows ]
+  gem 'debug', platforms: %i[mri windows]
   # See https://rspec.info/documentation/7.0/rspec-rails/
   gem 'rspec-rails', '~> 7.0.0'
 
@@ -81,9 +79,12 @@ group :development do
 
   # Ruby LSP Extension for VS Code
   gem 'rubocop'
+  gem 'rubocop-capybara'
   gem 'rubocop-packaging'
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
   gem 'rubocop-shopify'
   gem 'rubocop-thread_safety'
   gem 'ruby-lsp'
@@ -95,8 +96,8 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
-  gem 'selenium-webdriver'
   gem 'rails-controller-testing'
+  gem 'selenium-webdriver'
 end
 
 # Devise for User Authentication

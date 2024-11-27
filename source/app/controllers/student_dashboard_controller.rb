@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class StudentDashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_student_role
@@ -8,6 +9,17 @@ class StudentDashboardController < ApplicationController
     @upcoming_evaluations = upcoming_evaluations
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
+    @average_ratings_by_project = calculate_average_ratings_by_project
+    @project_data = project_data
+  end
+
+  def project_data
+    project = params[:project] || 'Overall'
+    if project == 'Overall'
+      @avg_ratings
+    else
+      @average_ratings_by_project[project] || {}
+    end
   end
 
   def teams
@@ -16,31 +28,27 @@ class StudentDashboardController < ApplicationController
 
   def evaluations
     @student_evaluations = student_evaluations
-
   end
 
   def feedback
     @avg_ratings = avg_ratings
     @received_evaluations = received_evaluations
-
+    @learning_insights = fetch_learning_insights
   end
 
   def new_evaluation
     @course = Course.find(params[:course_id])
     @projects = @course.projects
-    @evaluatees = get_evaluatees_for_new_evaluation
+    @evaluatees = load_evaluatees_for_new_evaluation
   end
 
   def submit_evaluation
+    evaluation = Evaluation.find(params[:evaluation][:id])
 
-    @evaluation = Evaluation.find(params[:evaluation][:id])
-    
-    if @evaluation.update(evaluation_params)
-      flash[:notice] = "Evaluation submitted successfully."
-      redirect_to evaluations_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+    if evaluation.update(evaluation_params)
+      handle_successful_evaluation_submission(evaluation)
     else
-      flash[:alert] = "Failed to submit evaluation. Please try again."
-      redirect_to new_evaluation_student_dashboard_index_path(course_id: @evaluation.project.course_id)
+      handle_failed_evaluation_submission(evaluation)
     end
   end
 
@@ -49,15 +57,55 @@ class StudentDashboardController < ApplicationController
     result = SettingsUpdateService.update(current_user, @settings_params)
     handle_service_response(result)
   end
-  
 
   private
 
-  def ensure_student_role
-    unless current_user.student?
-      flash[:alert] = "Access denied. Students only."
-      redirect_to root_path
+  def handle_successful_evaluation_submission(evaluation)
+    flash[:notice] = 'Evaluation submitted successfully.'
+    redirect_to evaluations_student_dashboard_index_path(course_id: evaluation.project.course_id)
+  end
+
+  def handle_failed_evaluation_submission(evaluation)
+    flash[:alert] = 'Failed to submit evaluation. Please try again.'
+    redirect_to new_evaluation_student_dashboard_index_path(course_id: evaluation.project.course_id)
+  end
+
+  def calculate_average_ratings_by_project
+    completed_evaluations = fetch_completed_evaluations
+
+    completed_evaluations.each_with_object({}) do |(project, evaluations), result|
+      result[project.title] = calculate_project_averages(evaluations)
     end
+  end
+
+  def fetch_completed_evaluations
+    Evaluation.joins(:project)
+              .where(projects: { course_id: @selected_course.id },
+                     evaluatee_id: @student.id,
+                     status: 'completed')
+              .group_by(&:project)
+  end
+
+  def calculate_project_averages(evaluations)
+    {
+      'Cooperation': calculate_average(evaluations.map(&:cooperation_rating).compact).round(2),
+      'Conceptual': calculate_average(evaluations.map(&:conceptual_rating).compact).round(2),
+      'Practical': calculate_average(evaluations.map(&:practical_rating).compact).round(2),
+      'Work Ethic': calculate_average(evaluations.map(&:work_ethic_rating).compact).round(2)
+    }
+  end
+
+  def calculate_average(ratings)
+    return 0.0 if ratings.empty?
+
+    ratings.sum.to_f / ratings.size
+  end
+
+  def ensure_student_role
+    return if current_user.student?
+
+    flash[:alert] = 'Access denied. Students only.'
+    redirect_to root_path
   end
 
   def set_student
@@ -65,33 +113,34 @@ class StudentDashboardController < ApplicationController
   end
 
   def upcoming_evaluations
-    upcoming_evaluations = Project.where(course_id: @selected_course.id).includes(:evaluations).select do |project|
+    projects_with_pending_evaluations = Project.where(course_id: @selected_course.id)
+                                               .includes(:evaluations)
+                                               .select do |project|
       project.evaluations.any? { |evaluation| evaluation.status == 'pending' }
-    end.map do |project|
+    end
+
+    upcoming_evaluations = projects_with_pending_evaluations.map do |project|
       {
         project: project,
         evaluations: project.evaluations.select { |evaluation| evaluation.status == 'pending' }
       }
     end
-    upcoming_evaluations.presence || {}
 
+    upcoming_evaluations.presence || {}
   end
 
   def avg_ratings
     completed_evaluations = Evaluation.joins(:project)
-                                      .where(projects: { course_id: @selected_course.id }, 
-                                              evaluatee_id: @student.id, 
-                                              status: 'completed')
+                                      .where(projects: { course_id: @selected_course.id },
+                                             evaluatee_id: @student.id,
+                                             status: 'completed')
     return [] if completed_evaluations.empty?
 
-    {
-      conceptual: completed_evaluations.average(:conceptual_rating)&.round(2) || 0.0,
-      cooperation: completed_evaluations.average(:cooperation_rating)&.round(2) || 0.0,
-      practical: completed_evaluations.average(:practical_rating)&.round(2) || 0.0,
-      work_ethic: completed_evaluations.average(:work_ethic_rating)&.round(2) || 0.0
-    }
+    calculate_project_averages(completed_evaluations)
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def student_evaluations
     projects = Project.where(course_id: @selected_course.id)
     return [] if projects.empty?
@@ -114,65 +163,47 @@ class StudentDashboardController < ApplicationController
         end,
         pending: Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending').map do |eval|
           {
-            member_name: eval.evaluatee.first_name,
+            member_name: eval.evaluatee.first_name
           }
         end
       }
     end
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error "Error fetching student evaluations: #{e.message}"
     []
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def received_evaluations
-    @progression_data = []
-
     projects = Project.where(course_id: @selected_course.id).includes(:evaluations)
-    
-    evaluations_data = projects.each_with_object({}) do |project, hash|
-      individual_ratings = project.evaluations
-                          .where(evaluatee_id: @student.id, status: 'completed')
-                          .order(:date_completed)
-      
-      individual_ratings.each do |rating|
-        @progression_data << {
-          date_completed: rating.date_completed,
-          cooperation: rating.cooperation_rating,
-          conceptual: rating.conceptual_rating,
-          practical: rating.practical_rating,
-          work_ethic: rating.work_ethic_rating
-        }
-      end
 
-      hash[project.id] = {
+    evaluations_data = projects.map do |project|
+      individual_ratings = project.evaluations
+                                  .where(evaluatee_id: @student.id, status: 'completed')
+                                  .order(:date_completed)
+      {
         project_title: project.title,
         due_date: project.due_date,
-        individual_ratings: individual_ratings,
-        avg_cooperation: individual_ratings.average(:cooperation_rating)&.round(2),
-        avg_conceptual: individual_ratings.average(:conceptual_rating)&.round(2),
-        avg_practical: individual_ratings.average(:practical_rating)&.round(2),
-        avg_work_ethic: individual_ratings.average(:work_ethic_rating)&.round(2)
+        individual_ratings: individual_ratings
       }
     end
-  
+
     evaluations_data || {}
-  end  
+  end
 
   def set_selected_course
     @selected_course = Course.find(params[:course_id])
   end
 
-  def get_evaluatees_for_new_evaluation
+  # rubocop:disable Metrics/AbcSize
+  def load_evaluatees_for_new_evaluation
     projects = Project.where(course_id: @course.id)
-    return [] if projects.empty?
+    return [] if projects.blank?
 
-    evaluatees = []
-
-    projects.each do |project|
-      pending_evaluations = Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending')
-      
-      pending_evaluations.each do |eval|
-        evaluatees << {
+    evaluatees = projects.flat_map do |project|
+      Evaluation.where(evaluator_id: @student.id, project_id: project.id, status: 'pending').map do |eval|
+        {
           id: eval.evaluatee_id,
           name: eval.evaluatee.first_name,
           project_id: project.id,
@@ -181,24 +212,100 @@ class StudentDashboardController < ApplicationController
         }
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     evaluatees.uniq { |e| [e[:id], e[:project_id]] }
   end
 
   def evaluation_params
-    params.require(:evaluation).permit(:id, :cooperation_rating, :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
+    params.require(:evaluation).permit(:id, :evaluator_id, :evaluatee_id, :project_id, :cooperation_rating,
+                                       :conceptual_rating, :practical_rating, :work_ethic_rating, :comment)
   end
 
   def user_params
     params.require(:user).permit(
-      :first_name, 
-      :last_name, 
-      :email, 
-      :birth_date, 
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
       :profile_picture,
       :remove_profile_picture,
-      :current_password, 
-      :password
+      :current_password,
+      :password,
+      :student_id
     )
   end
+
+  def collected_evaluations
+    @evaluations = Evaluation.where(evaluatee_id: @student.id, status: 'completed').order(:date_completed)
+  end
+
+  def aggregate_evaluation_data
+    @evaluation_data = @evaluations.group_by(&:project_id).map do |project_id, evaluations|
+      project = Project.find(project_id)
+
+      cooperation_rating, conceptual_rating, practical_rating, work_ethic_ratings = extract_rating(evaluations)
+
+      avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic = calculate_average_ratings(cooperation_rating, conceptual_rating,
+                                                                                                 practical_rating, work_ethic_ratings)
+
+      {
+        project_title: project.title,
+        date_completed: evaluations.map(&:date_completed).compact.max,
+        avg_cooperation: avg_cooperation,
+        avg_conceptual: avg_conceptual,
+        avg_practical: avg_practical,
+        avg_work_ethic: avg_work_ethic
+      }
+    end
+  end
+
+  def extract_rating(evaluations)
+    # Extract ratings and remove nil values
+    cooperation_ratings = evaluations.map(&:cooperation_rating).compact
+    conceptual_ratings = evaluations.map(&:conceptual_rating).compact
+    practical_ratings = evaluations.map(&:practical_rating).compact
+    work_ethic_ratings = evaluations.map(&:work_ethic_rating).compact
+
+    [cooperation_ratings, conceptual_ratings, practical_ratings, work_ethic_ratings]
+  end
+
+  def calculate_average_ratings(cooperation_rating, conceptual_rating, practical_rating, work_ethic_rating)
+    # Calculate averages
+    avg_cooperation = calculate_average(cooperation_rating).round(2)
+    avg_conceptual = calculate_average(conceptual_rating).round(2)
+    avg_practical = calculate_average(practical_rating).round(2)
+    avg_work_ethic = calculate_average(work_ethic_rating).round(2)
+
+    [avg_cooperation, avg_conceptual, avg_practical, avg_work_ethic]
+  end
+
+  def fetch_learning_insights
+    # Check if insights exist and are up-to-date
+    return @student.learning_insights if @student.learning_insights.present? && insights_up_to_date?
+
+    collected_evaluations # Ensure @evaluations is set
+    aggregate_evaluation_data
+
+    return nil unless @evaluation_data.present?
+
+    insights_service = LearningInsightsService.new(@evaluation_data)
+    insights = insights_service.generate_insights
+
+    # Save insights to student's record
+    @student.update(
+      learning_insights: insights,
+      insights_updated_at: Time.current
+    )
+
+    insights
+  end
+
+  def insights_up_to_date?
+    latest_evaluation_date = Evaluation.where(evaluatee_id: @student.id, status: 'completed').maximum(:updated_at)
+    return false if latest_evaluation_date.nil? || @student.insights_updated_at.nil?
+
+    @student.insights_updated_at >= latest_evaluation_date
+  end
 end
+# rubocop:enable Metrics/ClassLength

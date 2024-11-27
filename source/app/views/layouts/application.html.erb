@@ -27,7 +27,7 @@
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
       
-      <div class="content">
+      <div class="content <%= 'top-navbar' unless user_signed_in? %>">
         <%= yield %>
       </div>
 

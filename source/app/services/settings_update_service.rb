@@ -22,7 +22,7 @@ class SettingsUpdateService
 
   def update_password
     if @user.update_with_password(@settings_params)
-      { notice: "Password updated successfully. Please log in again.", redirect: :logout }
+      { notice: 'Password updated successfully. Please log in again.', redirect: :logout }
     else
       { alert: "Failed to update password: #{@user.errors.full_messages.join(', ')}" }
     end
@@ -31,17 +31,20 @@ class SettingsUpdateService
   def handle_profile_picture
     # Check if the profile picture should be removed
     if @settings_params[:remove_profile_picture] == '1'
-      @user.profile_picture.purge
+      @user.profile_picture.purge if @user.profile_picture.attached?
     elsif @settings_params[:profile_picture].present?
       @user.profile_picture.attach(@settings_params[:profile_picture])
     end
   end
 
   def update_basic_info
-    filtered_params = @settings_params.except(:password, :current_password, :remove_profile_picture).to_h.reject { |_, v| v.blank? }
-    
+    filtered_params = @settings_params.except(:password, :current_password,
+                                              :remove_profile_picture).to_h.reject do |_, v|
+      v.blank?
+    end
+
     if @user.update(filtered_params)
-      { notice: "Settings updated successfully." }
+      { notice: 'Settings updated successfully.' }
     else
       { alert: "Failed to update settings: #{@user.errors.full_messages.join(', ')}" }
     end

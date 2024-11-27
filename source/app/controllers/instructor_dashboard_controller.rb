@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class InstructorDashboardController < ApplicationController
   before_action :set_instructor, only: %i[index projects teams results settings]
   before_action :authenticate_user!
@@ -7,12 +8,6 @@ class InstructorDashboardController < ApplicationController
   def index
     load_instructor_teams
     load_instructor_evaluations
-    load_all_ratings
-
-    respond_to do |format|
-      format.html { render :index } # This will render app/views/instructor_dashboard/index.html.erb
-      format.json { render json: { teams: @teams, completed_evaluations: @completed_evaluations, pending_evaluations: @pending_evaluations, avg_overall_ratings: @avg_overall_ratings, all_ratings: @all_ratings } }
-    end
   end
 
   def projects
@@ -34,26 +29,52 @@ class InstructorDashboardController < ApplicationController
   end
 
   def results
-    @results = Evaluation.joins(student: { team: :instructor }).where(status: 'completed')
-
-    respond_to do |format|
-      format.html { render :results } # Render results view
-      format.json { render json: @results }
+    @results = results_query.map do |student|
+      {
+        student:,
+        overall_average: [student.cooperation, student.conceptual_contribution, student.practical_contribution,
+                          student.work_ethic].compact.sum / 4,
+        num_of_evaluations_received: student.num_of_evaluations_received
+      }
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
+  def results_query
+    User
+      .joins(evaluations_as_evaluatee: { project: :course })
+      .where(evaluations: { project_id: Project.where(course_id: @selected_course.id), status: 'completed' })
+      .select(
+        'users.id',
+        'users.student_id as student_id',
+        'users.last_name',
+        'users.first_name',
+        'AVG(evaluations.cooperation_rating) as cooperation',
+        'AVG(evaluations.conceptual_rating) as conceptual_contribution',
+        'AVG(evaluations.practical_rating) as practical_contribution',
+        'AVG(evaluations.work_ethic_rating) as work_ethic',
+        'COUNT(evaluations.id) as num_of_evaluations_received'
+      )
+      .order('users.last_name ASC, users.first_name ASC')
+      .group('users.id', 'users.last_name', 'users.first_name')
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def detailed_results
+    @selected_course = Course.find(params[:course_id]) # Ensure @selected_course is set
+    @student = User.find(params[:id])
+    @projects = Project.includes(:teams, teams: :students).where(course_id: @selected_course.id)
+    @evaluations = Evaluation.includes(:evaluator, :project)
+                             .where(evaluatee_id: @student.id, project_id: @projects.pluck(:id), status: 'completed')
+  end
+
   def settings
-
-    # Refactor to use settings view
-
-    # This is a placeholder for future settings functionality
     respond_to do |format|
       format.html { render :settings }
       format.json { render json: { instructor: @instructor, selected_course: @selected_course } }
     end
   end
 
-  
   def update_settings
     @settings_params = user_params
     result = SettingsUpdateService.update(current_user, @settings_params)
@@ -63,16 +84,14 @@ class InstructorDashboardController < ApplicationController
   private
 
   def set_selected_course
-    if params[:course_id]
-      @selected_course = current_user.courses_taught.find_by(id: params[:course_id])
-    end
-  
+    @selected_course = current_user.courses_taught.find_by(id: params[:course_id]) if params[:course_id]
+
     @selected_course ||= current_user.courses_taught.first
-  
-    unless @selected_course
-      flash[:alert] = "No courses available for selection."
-      redirect_to root_path # Or another appropriate path
-    end
+
+    return if @selected_course
+
+    flash[:alert] = 'No courses available for selection.'
+    redirect_to root_path # Or another appropriate path
   end
 
   def load_instructor_teams
@@ -85,17 +104,6 @@ class InstructorDashboardController < ApplicationController
 
     @completed_evaluations = instructor_evaluations.where(status: 'completed')
     @pending_evaluations = instructor_evaluations.where(status: 'pending')
-  end
-
-  def load_all_instructor_ratings
-    @avg_overall_ratings = {
-      conceptual_rating: average_rating(:conceptual),
-      practical_rating: average_rating(:practical),
-      cooperation_rating: average_rating(:cooperation),
-      work_ethic_rating: average_rating(:work_ethic)
-    }
-
-    @all_ratings = load_all_ratings
   end
 
   def ensure_instructor_role
@@ -112,50 +120,22 @@ class InstructorDashboardController < ApplicationController
   def average_rating(category)
     # Restrict average ratings to the selected course
     @instructor.teams.joins(:project)
-              .where(projects: { course_id: @selected_course.id })
-              .joins(students: :evaluations_as_evaluatee)
-              .average("evaluations.#{category}_rating")
+               .where(projects: { course_id: @selected_course.id })
+               .joins(students: :evaluations_as_evaluatee)
+               .average("evaluations.#{category}_rating")
   end
 
-  def load_all_ratings
-    # Only get ratings for the selected course's teams
-    teams_ratings = {}
-    team_ratings = @instructor.teams
-                              .joins(:project)
-                              .where(projects: { course_id: @selected_course.id })
-                              .joins(:evaluations)
-                              .group('teams.id', 'teams.name')
-                              .select(
-                                'teams.name',
-                                'AVG(evaluations.conceptual_rating) AS conceptual_avg',
-                                'AVG(evaluations.practical_rating) AS practical_avg',
-                                'AVG(evaluations.cooperation_rating) AS cooperation_avg',
-                                'AVG(evaluations.work_ethic_rating) AS work_ethic_avg'
-                              )
-
-    team_ratings.each do |team_rating|
-      teams_ratings[team_rating.name] = {
-        ratings: {
-          conceptual_rating: team_rating.conceptual_avg,
-          practical_rating: team_rating.practical_avg,
-          cooperation_rating: team_rating.cooperation_avg,
-          work_ethic_rating: team_rating.work_ethic_avg
-        }
-      }
-    end
-    teams_ratings
-  end
-  
   def user_params
     params.require(:user).permit(
-      :first_name, 
-      :last_name, 
-      :email, 
-      :birth_date, 
+      :first_name,
+      :last_name,
+      :email,
+      :birth_date,
       :profile_picture,
       :remove_profile_picture,
-      :current_password, 
+      :current_password,
       :password
     )
   end
 end
+# rubocop:enable Metrics/ClassLength

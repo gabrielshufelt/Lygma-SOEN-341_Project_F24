@@ -1,5 +1,5 @@
 <div class="settings-form">
-  <form action="<%= form_action_path %>" method="post" enctype="multipart/form-data">
+  <form action="<%= form_action_path %>" method="post" enctype="multipart/form-data" class="settings-flex">
     <%= hidden_field_tag :_method, 'patch' %>
     <%= csrf_meta_tags %>
     <div class="input-group">
@@ -44,6 +44,13 @@
       <label>New Password</label>
       <input type="password" placeholder="********" name="user[password]">
     </div>
+
+    <% if local_assigns[:source] == 'student' %>
+      <div class="input-group">
+        <label>Student ID</label>
+        <input type="number" placeholder="40001234", name="user[student_id]", value=<%= current_user.student_id %>>
+      </div>
+    <% end %>
 
     <button type="submit" class="button primary">Apply</button>
   </form>
