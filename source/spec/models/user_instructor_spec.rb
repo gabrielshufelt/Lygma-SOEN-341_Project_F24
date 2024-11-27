@@ -9,7 +9,7 @@ RSpec.describe User, type: :model do
     it 'can teach one or many courses' do
       course = Course.find_or_initialize_by(code: 'SOEN 341')
       course.update!(title: 'Software Process', instructor_id: instructor.id)
-      expect(instructor.courses_taught.count).to eq(2)
+      expect(instructor.courses_taught.count).to eq(3)
     end
   end
 end

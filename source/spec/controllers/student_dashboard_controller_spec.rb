@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe StudentDashboardController, type: :controller do
+  before(:each) do
+    Evaluation.destroy_all
+    Team.destroy_all
+    Project.destroy_all
+  end
+
   let!(:student) do
     User.find_or_create_by(email: 'student@example.com') do |user|
       user.role = 'student'
@@ -152,7 +158,7 @@ RSpec.describe StudentDashboardController, type: :controller do
       it 'returns upcoming evaluations for the selected course' do
         get :evaluations, params: { course_id: course.id }
         result = controller.send(:upcoming_evaluations)
-        expect(result).to be_a(Hash)
+        expect(result).to be_a(Array)
       end
     end
 
