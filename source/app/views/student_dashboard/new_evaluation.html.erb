@@ -1,18 +1,16 @@
-<div class="containers hall-building left-navbar">
-  <header class="section one eval">
-    <h1>New Evaluations</h1>
-  </header>
-  <section class="section">
-    <% if @evaluatees.empty? %>
-      <p>No pending evaluations found.</p>
-    <% else %>
-      <% @evaluatees.each do |evaluatee| %>
-        <%= render 'partials/collapsible_box',
-          title: "#{evaluatee[:name]} - #{evaluatee[:project_title]}",
-          collapsed: true,
-          content: render('evaluation_form', evaluatee: evaluatee)
-        %>
-      <% end %>
+<header class="section one eval">
+  <h1>New Evaluations</h1>
+</header>
+<section class="section">
+  <% if @evaluatees.empty? %>
+    <p>No pending evaluations found.</p>
+  <% else %>
+    <% @evaluatees.each do |evaluatee| %>
+      <%= render 'partials/collapsible_box',
+        title: "#{evaluatee[:name]} - #{evaluatee[:project_title]}",
+        collapsed: true,
+        content: render('evaluation_form', evaluatee: evaluatee)
+      %>
     <% end %>
-  </section>
-</div>
+  <% end %>
+</section>

@@ -26,9 +26,20 @@
       <% elsif !user_signed_in? %>
         <%= render 'layouts/home-navbar', selected: @selected %>
       <% end %>
+
+
       
       <div class="content <%= 'top-navbar' unless user_signed_in? %>">
+        <% if user_signed_in? %>
+          <div class="containers hall-building <%= 'left-navbar' unless current_page?(course_selection_index_path) %>">
+            <% flash.each do |type, msg| %>
+              <%= render "flashes/#{type}", msg: %>
+            <% end %>
+            <%= yield %>            
+          </div>
+        <% else %>
         <%= yield %>
+        <% end %>
       </div>
 
       <% unless user_signed_in? %>

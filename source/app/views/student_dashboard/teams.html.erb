@@ -1,25 +1,22 @@
-
-<div class="containers hall-building left-navbar" id="student-teams">
-	<header class="section one">
-		<h1>Teams</h1>
-	</header>
-	<section class="section">
-		<% unless @teams_by_project.empty? %>
-			<% @teams_by_project.each do |project_teams| %>
-				<%= render 'partials/collapsible_box',
-					title: "Project Name: #{project_teams[:project_title]}",
-					collapsed: true,
-					content: render('student_dashboard/teams', project_teams:)
-				%>
-			<% end %>
-		<% else %>
-			<div class="center-wrapper">
-				<section class="center-content">
-					<h3>No project or teams have been created yet.</h3>
-					<p>Teams and projects created by your instructor will appear here.</p>
-				</section>
-			</div>
+<header class="section one">
+	<h1>Teams</h1>
+</header>
+<section class="section">
+	<% unless @teams_by_project.empty? %>
+		<% @teams_by_project.each do |project_teams| %>
+			<%= render 'partials/collapsible_box',
+				title: "Project Name: #{project_teams[:project_title]}",
+				collapsed: true,
+				content: render('student_dashboard/teams', project_teams:)
+			%>
 		<% end %>
-	</section>
-</div>
+	<% else %>
+		<div class="center-wrapper">
+			<section class="center-content">
+				<h3>No project or teams have been created yet.</h3>
+				<p>Teams and projects created by your instructor will appear here.</p>
+			</section>
+		</div>
+	<% end %>
+</section>
 
