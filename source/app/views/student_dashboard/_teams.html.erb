@@ -5,16 +5,25 @@
       <li><span style="font-weight: 600">Name: </span><%= project_teams[:student_team]&.name %></li>
       <li><span style="font-weight: 600">Description: </span><%= project_teams[:student_team]&.description %></li>
       <li><span style="font-weight: 600">Members: </span><%= project_teams[:student_team_members] %></li>
+      <li><span style="font-weight: 600">Team Creation Deadline: </span><%= project_teams[:student_team]&.project&.team_creation_deadline %></li>
       <li style="display: flex; column-gap: 8px">
-        <%= link_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
-        <%= button_to "Leave", manage_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id, operation: 'remove'), 
-                                class: "button secondary", method: :delete %>
+        <%= button_to "Edit Details", edit_team_path(project_teams[:student_team]), class: "button primary" %>
+        <% if project_teams[:student_team]&.project&.team_creation_deadline && project_teams[:student_team].project.team_creation_deadline >= Date.today %>
+          <%= button_to "Leave", manage_member_team_path(id: project_teams[:student_team].id, user_id: current_user.id, project_id: project_teams[:student_team].project_id, operation: 'remove'), 
+                                class: "button secondary leave-team-button", method: :delete, form: { data: { turbo: false } } %>
+        <% else %>
+          <button class="button secondary" disabled>Leave</button>
+        <% end %>
       </li>
     <% else %>
       <li style="display: flex; column-gap: 8px; justify-content: space-between; align-items: center">
         Create or join a team to view your team details.
-        <%= link_to new_team_path(id: project_teams[:project_id]), class: "button primary", method: :get do %>
-          <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+        <% if project_teams[:student_team]&.project&.team_creation_deadline && project_teams[:student_team].project.team_creation_deadline >= Date.today %>
+          <%= link_to new_team_path(id: project_teams[:project_id]), class: "button primary", method: :get do %>
+            <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+          <% end %>
+        <% else %>
+          <button class="button primary" disabled>Create a new team</button>
         <% end %>
       </li>
     <% end %>
@@ -33,6 +42,7 @@
               <th>Description</th>
               <th>Members</th>
               <th>Project</th>
+              <th>Team Creation Deadline</th>
               <th>Capacity</th>
               <th>Actions</th>
             </tr>
@@ -52,6 +62,7 @@
                   <% end %>
                 </td>
                 <td><%= team.project.title %></td>
+                <td><%= team.project.team_creation_deadline %></td>
                 <td>
                   <span style="<%= 'color: var(--red)' unless team.joinable? %>">
                     <%= team.students.count %>/6
@@ -59,11 +70,19 @@
                 </td>
                 <td>
                   <% if team.id == project_teams[:student_team]&.id %>
-                    <%= button_to "Leave", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'remove'), 
-                                  class: "button secondary", method: :delete %>
+                    <% if team.project.team_creation_deadline && team.project.team_creation_deadline >= Date.today %>
+                      <%= button_to "Leave", manage_member_team_path(id: team.id, user_id: current_user.id, project_id: team.project_id, operation: 'remove'), 
+                                        class: "button secondary leave-team-button", method: :delete, form: { data: { turbo: false } } %>
+                    <% else %>
+                      <button class="button secondary" disabled>Leave</button>
+                    <% end %>
                   <% else %>
-                    <%= button_to "Join", manage_member_team_path(id: team.id, user_id: current_user.id, operation: 'add'), 
-                                  class: "button primary", method: :patch %>
+                    <% if team.project.team_creation_deadline && team.project.team_creation_deadline >= Date.today %>
+                      <%= button_to "Join", manage_member_team_path(id: team.id, user_id: current_user.id, project_id: team.project_id, operation: 'add'), 
+                                        class: "button primary join-team-button", method: :patch, form: { data: { turbo: false } } %>
+                    <% else %>
+                      <button class="button primary" disabled>Join</button>
+                    <% end %>
                   <% end %>
                 </td>
               </tr>
@@ -76,3 +95,89 @@
     <% end %>
   </ul>
 </section>
+
+<div id="confirm-leave-popup" class="confirm-popup" style="display: none;">
+  <h4>Are you sure you want to leave this team?</h4>
+  <div class="actions">
+    <button id="confirm-leave-yes" class="button primary">Yes</button>
+    <button id="confirm-leave-no" class="button secondary">No</button>
+  </div>
+</div>
+
+<div id="confirm-join-popup" class="confirm-popup" style="display: none;">
+  <h4>Are you sure you want to join this new team? You will leave your current team.</h4>
+  <div class="actions">
+    <button id="confirm-join-yes" class="button primary">Yes</button>
+    <button id="confirm-join-no" class="button secondary">No</button>
+  </div>
+</div>
+
+<div id="overlay" class="overlay" style="display: none;"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('JavaScript loaded and executed');
+
+  const confirmLeavePopup = document.getElementById('confirm-leave-popup');
+  const confirmJoinPopup = document.getElementById('confirm-join-popup');
+  const overlay = document.getElementById('overlay');
+  const confirmLeaveYes = document.getElementById('confirm-leave-yes');
+  const confirmLeaveNo = document.getElementById('confirm-leave-no');
+  const confirmJoinYes = document.getElementById('confirm-join-yes');
+  const confirmJoinNo = document.getElementById('confirm-join-no');
+  let formToSubmit = null;
+
+  function attachEventListeners() {
+    const leaveButtons = document.querySelectorAll('.leave-team-button');
+    const joinButtons = document.querySelectorAll('.join-team-button');
+
+    leaveButtons.forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Leave button clicked');
+        formToSubmit = button.closest('form');
+        confirmLeavePopup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+    });
+
+    joinButtons.forEach(button => {
+      button.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Join button clicked');
+        formToSubmit = button.closest('form');
+        confirmJoinPopup.style.display = 'block';
+        overlay.style.display = 'block';
+      });
+    });
+  }
+
+  attachEventListeners();
+
+  confirmLeaveYes.addEventListener('click', function() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  });
+
+  confirmLeaveNo.addEventListener('click', function() {
+    confirmLeavePopup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+
+  confirmJoinYes.addEventListener('click', function() {
+    if (formToSubmit) {
+      formToSubmit.submit();
+    }
+  });
+
+  confirmJoinNo.addEventListener('click', function() {
+    confirmJoinPopup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+
+  // Use MutationObserver to re-attach event listeners when the DOM changes
+  const observer = new MutationObserver(attachEventListeners);
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>

@@ -2,6 +2,7 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy manage_member]
   before_action :authenticate_user!
+  before_action :check_team_creation_deadline, only: %i[create manage_member destroy]
 
   # GET /teams or /teams.json
   def index
@@ -87,8 +88,8 @@ class TeamsController < ApplicationController
 
   # PATCH/DELETE /teams/:id/manage_member
   def manage_member
-    @team = Team.find(params[:id])
-    @user = User.find(params[:user_id])
+    set_team_and_user
+    remove_user_from_current_team
 
     if perform_member_operation(params[:operation])
       load_team_data
@@ -98,11 +99,17 @@ class TeamsController < ApplicationController
     end
   end
 
-  private
-
-  def role_based_dashboard_path
-    send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+  def set_team_and_user
+    @team = Team.find(params[:id])
+    @user = User.find(params[:user_id])
   end
+
+  def remove_user_from_current_team
+    current_team = @user.teams.find_by(project_id: @team.project_id)
+    current_team.remove_student(@user) if current_team && current_team != @team
+  end
+
+  private
 
   def perform_member_operation(operation)
     operation == 'add' ? @team.add_student(@user) : @team.remove_student(@user)
@@ -117,14 +124,14 @@ class TeamsController < ApplicationController
   def respond_success(operation)
     respond_to do |format|
       format.turbo_stream { render_turbo_streams }
-      format.html { redirect_to edit_team_path(@team), notice: member_success_message(operation) }
+      format.html { redirect_to role_based_dashboard_path, notice: member_success_message(operation) }
       format.json { render json: @team.students, status: :ok }
     end
   end
 
   def respond_failure(operation)
     respond_to do |format|
-      format.html { redirect_to edit_team_path(@team), alert: member_failure_message(operation) }
+      format.html { redirect_to role_based_dashboard_path, alert: member_failure_message(operation) }
       format.json { render json: @team.errors, status: :unprocessable_entity }
     end
   end
@@ -157,6 +164,20 @@ class TeamsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def team_params
     params.require(:team).permit(:name, :description, :project_id)
+  end
+
+  def role_based_dashboard_path
+    send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+  end
+
+  def check_team_creation_deadline
+    project = Project.find(params[:project_id] || team_params[:project_id])
+    return unless project.team_creation_deadline < Date.today
+
+    respond_to do |format|
+      format.html { redirect_to role_based_dashboard_path, alert: 'The team creation deadline has passed.' }
+      format.json { render json: { error: 'The team creation deadline has passed.' }, status: :unprocessable_entity }
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength
