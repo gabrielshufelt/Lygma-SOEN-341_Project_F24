@@ -11,7 +11,6 @@ Rails.application.routes.draw do
     member do
       patch :manage_member
       delete :manage_member
-      get 'search_members'
     end
   end
 
