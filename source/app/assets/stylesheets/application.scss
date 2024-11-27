@@ -61,10 +61,9 @@ p {
 	min-height: 100vh;
 	display: flex;
 	flex-grow: 1;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
-
+	flex-direction: column;
+	min-height: 100vh;
+	height: auto;
 	background-repeat: no-repeat;
 	background-size: cover;
 
@@ -77,9 +76,24 @@ p {
 		background-image: url("home-sign-up.jpg");
 	}
 
+	&.left-navbar {
+		padding-left: 225px;
+	}
+
+	&.top-navbar {
+		padding-top: 100px;
+	}
+
 	&.hall-building {
-		background-image: url("hall-building.jpg");
+		background-image: linear-gradient(90deg,
+				rgb(255, 255, 255) 0%,
+				rgba(255, 255, 255, 0.852) 70%,
+				rgba(255, 255, 255, 0.621) 100%),
+			url("hall-building.jpg");
 		background-position: center;
+		background-attachment: fixed;
+		background-size: cover;
+		z-index: 0;
 	}
 }
 
@@ -87,7 +101,7 @@ p {
 	margin: 0px 30px;
 	max-width: 100%;
 
-	> h2 {
+	>h2 {
 		font-weight: bold;
 		font-size: 2rem;
 		margin: 1em 0;
@@ -102,17 +116,6 @@ p {
 		justify-content: space-between;
 		align-items: center;
 	}
-}
-
-.gradient-filter {
-	height: 100%;
-	width: 100%;
-	background-image: linear-gradient(
-		90deg,
-		rgba(255, 255, 255, 1) 0%,
-		rgba(255, 255, 255, 0.85) 50%,
-		rgba(255, 255, 255, 0.5) 100%
-	);
 }
 
 .title {
@@ -149,12 +152,10 @@ p {
 	height: 100%;
 	width: 100%;
 	height: 100vh;
-	background-image: linear-gradient(
-		90deg,
-		rgba(255, 255, 255, 1) 0%,
-		rgba(255, 255, 255, 0.85) 50%,
-		rgba(255, 255, 255, 0.5) 100%
-	);
+	background-image: linear-gradient(90deg,
+			rgba(255, 255, 255, 1) 0%,
+			rgba(255, 255, 255, 0.85) 50%,
+			rgba(255, 255, 255, 0.5) 100%);
 }
 
 .simple-form {
@@ -260,6 +261,16 @@ footer {
 	padding: 1rem 0;
 }
 
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	height: 100px;
+	width: 100%;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .navbar .nav-link {
 	color: #000000 !important;
 }
@@ -288,6 +299,11 @@ footer {
 	width: fit-content;
 	min-width: 225px;
 	padding-top: 20px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	box-shadow: 3px 0 5px rgba(0, 0, 0, 0.377);
 }
 
 .nav-signedin-logo {
@@ -490,16 +506,22 @@ footer {
 		justify-content: space-between;
 		align-items: center;
 
-		> div {
+		>h2 {
+			font-size: 1rem;
+			line-height: 1;
+		}
+
+		>div {
 			flex: 1;
 			text-align: center;
 			margin-right: 10px;
 			color: white;
-			padding: 20px;
+			padding: 15px;
 			border-radius: 25px;
+			min-height: 191px;
 		}
 
-		> div:last-child {
+		>div:last-child {
 			margin-right: 0;
 		}
 
@@ -541,7 +563,7 @@ footer {
 
 .overview {
 	color: white;
-	padding: 15px 12px;
+	padding: 0px 12px;
 	border-radius: 17px;
 	white-space: nowrap;
 
@@ -639,6 +661,8 @@ footer {
 	margin-bottom: 1rem;
 	box-shadow: black 0px 0px 10px;
 	max-width: 100%;
+	background-color: white;
+	height: auto;
 }
 
 .collapsible-header {
@@ -1082,6 +1106,7 @@ footer {
 
 .completed-evaluations,
 .pending-evaluations {
+	background-color: white;
 	display: flex;
 	flex-direction: column;
 	padding: 15px;
@@ -1127,6 +1152,17 @@ footer {
 	gap: 1.5rem;
 	max-width: 500px;
 	margin: 2rem auto;
+	text-align: left;
+	align-items: flex-start;
+}
+
+.settings-flex {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	text-align: left;
+	width: 100%;
 }
 
 .input-group {
@@ -1136,6 +1172,7 @@ footer {
 	label {
 		font-weight: 600;
 		margin-bottom: 7px;
+		text-align: left;
 	}
 
 	input {
@@ -1266,76 +1303,82 @@ footer {
 }
 
 .profile-picture-img {
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+	border-radius: 50%;
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
 }
 
 .feedback-display {
-  margin: 30px auto;
-  padding: 25px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  transition: all 0.3s ease;
+	margin: 30px auto;
+	padding: 25px;
+	background: white;
+	border-radius: 15px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	max-width: 600px;
+	transition: all 0.3s ease;
 
-  h4 {
-    color: var(--dark-red);
-    margin-bottom: 15px;
-    font-size: 1.2em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+	h4 {
+		color: var(--dark-red);
+		margin-bottom: 15px;
+		font-size: 1.2em;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 
-    &::before {
-      content: '🤖';
-      font-size: 1.4em;
-    }
-  }
+		&::before {
+			content: "🤖";
+			font-size: 1.4em;
+		}
+	}
 
-  #ai-feedback {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #2c3e50;
-    transition: all 0.3s ease;
-    border-left: 4px solid var(--dark-red);
-    white-space: pre-line;
-    min-height: 100px;
+	#ai-feedback {
+		background: #f8f9fa;
+		padding: 20px;
+		border-radius: 10px;
+		font-size: 15px;
+		line-height: 1.6;
+		color: #2c3e50;
+		transition: all 0.3s ease;
+		border-left: 4px solid var(--dark-red);
+		white-space: pre-line;
+		min-height: 100px;
 
-    &.loading {
-      position: relative;
-      opacity: 0.7;
-      &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30px;
-        height: 30px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid var(--dark-red);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-    }
-  }
+		&.loading {
+			position: relative;
+			opacity: 0.7;
+
+			&::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 30px;
+				height: 30px;
+				border: 3px solid #f3f3f3;
+				border-top: 3px solid var(--dark-red);
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+		}
+	}
 }
 
 @keyframes spin {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+	0% {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+
+	100% {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
 }
 
 // Add this if you want a nice hover effect
 .feedback-display:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .feedback-header {
@@ -1406,4 +1449,57 @@ footer {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+}
+
+.insights-box {
+	margin: 30px auto;
+	padding: 25px;
+	background: white;
+	border-radius: 15px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	max-width: 800px;
+	transition: all 0.3s ease;
+
+	h2 {
+		color: var(--dark-red);
+		margin-bottom: 20px;
+		font-size: 1.5em;
+		font-weight: 600;
+
+		&::before {
+			content: '🤖';
+			font-size: 1.4em;
+		}
+	}
+
+	.insights-content {
+		background: #f8f9fa;
+		padding: 20px;
+		border-radius: 10px;
+		border-left: 4px solid var(--dark-red);
+		margin: 15px 0;
+
+		p,
+		ul {
+			font-size: 15px;
+			line-height: 1.6;
+			color: #2c3e50;
+			margin: 10px 0;
+		}
+
+		ul {
+			padding-left: 20px;
+		}
+
+		li {
+			margin: 8px 0;
+		}
+	}
+
+	.no-insights {
+		text-align: center;
+		color: #666;
+		font-style: italic;
+		padding: 20px;
+	}
 }
