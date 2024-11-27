@@ -13,28 +13,29 @@ class TeamsController < ApplicationController
 
   # GET /teams/new
   def new
-    @team = Team.new
-    load_projects_for_instructors
+    @project = Project.find(params[:id].to_i) if params[:id].present?
+    @team = Team.new(project_id: @project&.id)
+    load_projects
   end
 
   # GET /teams/1/edit
   def edit
     @team = Team.find(params[:id])
     @team_members = @team.students
-    available_students
-    load_projects_for_instructors
+    @available_students = available_students if current_user.instructor?
+    @projects = load_projects if current_user.instructor?
   end
 
   # POST /teams or /teams.json
   def create
     @team = Team.new(team_params)
-    load_projects_for_instructors
+    load_projects
 
     respond_to do |format|
       if @team.save
         format.html do
-          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
-                      notice: 'Team was successfully created.'
+          teams_dashboard_path = role_based_dashboard_path
+          redirect_to teams_dashboard_path, notice: 'Team was successfully created.'
         end
         format.json { render :show, status: :created, location: @team }
       else
@@ -47,13 +48,13 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1 or /teams/1.json
   def update
     available_students
-    load_projects_for_instructors
+    load_projects
 
     respond_to do |format|
       if @team.update(team_params)
         format.html do
-          redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id),
-                      notice: 'Team was successfully updated.'
+          teams_dashboard_path = role_based_dashboard_path
+          redirect_to teams_dashboard_path, notice: 'Team was successfully updated.'
         end
         format.json { render :show, status: :ok, location: @team }
       else
@@ -69,19 +70,15 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id), status: :see_other,
-                                                                                           notice: 'Team was successfully destroyed.'
+        teams_dashboard_path = role_based_dashboard_path
+        redirect_to teams_dashboard_path, notice: 'Team was successfully deleted.'
       end
       format.json { head :no_content }
     end
   end
 
-  def load_projects_for_instructors
-    @projects = if current_user.role == 'instructor'
-                  Project.where(course_id: current_user.courses_taught.pluck(:id))
-                else
-                  []
-                end
+  def load_projects
+    @projects = Project.where(course_id: @selected_course.id)
   end
 
   def available_students
@@ -102,6 +99,10 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def role_based_dashboard_path
+    send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
+  end
 
   def perform_member_operation(operation)
     operation == 'add' ? @team.add_student(@user) : @team.remove_student(@user)
