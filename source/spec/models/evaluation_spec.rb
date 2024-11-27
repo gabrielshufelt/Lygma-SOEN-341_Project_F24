@@ -3,20 +3,17 @@ require 'faker'
 
 RSpec.describe Evaluation, type: :model do
   let(:student1) do
-    User.create!(role: 'student', first_name: 'Jane', last_name: 'Doe', email: 'student@example.com',
-                 password: 'password', sex: 'female')
+    User.find_or_initialize_by(email: 'student@example.com')
   end
   let(:student2) do
-    User.create!(role: 'student', first_name: 'Sebastian', last_name: 'Cruz', email: 'sebastian.cruz@example.com',
-                 password: 'password', sex: 'male')
+    User.find_or_initialize_by(email: 'sebastian.cruz@example.com')
   end
   let(:instructor) do
-    User.create!(role: 'instructor', first_name: 'John', last_name: 'Doe', email: 'instructor@example.com',
-                 password: 'password', sex: 'male')
+    User.find_or_initialize_by(email: 'instructor@example.com')
   end
-  let(:course) { Course.create!(title: 'Example Course', code: 'EX 101', instructor: instructor) }
-  let(:project) { Project.create!(title: 'Project 1', due_date: Date.today, course: course) }
-  let(:team) { Team.create!(name: 'Team 1', project: project) }
+  let(:course) { Course.find_or_initialize_by(code: 'EX 101') }
+  let(:project) { Project.find_or_initialize_by(title: 'Project 1') }
+  let(:team) { Team.find_or_initialize_by(name: 'Team 1') }
 
   # Test for presence validation
   it 'is invalid without all necessary fields' do
