@@ -82,7 +82,11 @@ class TeamsController < ApplicationController
   end
 
   def available_students
-    @available_students = User.left_outer_joins(:teams).where(role: 'student').group('users.id').having('COUNT(teams.id) = 0')
+    @available_students = User.joins(:courses)
+                              .where(courses: { id: @team.project.course_id }, role: 'student')
+                              .left_outer_joins(:teams)
+                              .group('users.id')
+                              .having('COUNT(teams.id) = 0')
   end
 
   # PATCH/DELETE /teams/:id/manage_member

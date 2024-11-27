@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get 'settings/:course_id', to: 'instructor_dashboard#settings', as: 'settings'
       get 'projects/:course_id', to: 'instructor_dashboard#projects', as: 'projects'
       patch 'settings/:course_id', to: 'instructor_dashboard#update_settings'
+      post 'upload_roster/:course_id', to: 'instructor_dashboard#upload_roster', as: 'upload_roster'
     end
   end
 
