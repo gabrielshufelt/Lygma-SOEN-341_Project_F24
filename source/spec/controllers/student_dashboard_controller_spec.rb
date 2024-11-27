@@ -161,9 +161,9 @@ RSpec.describe StudentDashboardController, type: :controller do
         get :index, params: { course_id: course.id, student: student } # trigger avg_ratings
         result = controller.send(:avg_ratings)
 
-        expect(result[:'Conceptual']).to eq(5.0)
-        expect(result[:'Cooperation']).to eq(5.0)
-        expect(result[:'Practical']).to eq(5.0)
+        expect(result[:Conceptual]).to eq(5.0)
+        expect(result[:Cooperation]).to eq(5.0)
+        expect(result[:Practical]).to eq(5.0)
         expect(result[:'Work Ethic']).to eq(5.0)
       end
     end
