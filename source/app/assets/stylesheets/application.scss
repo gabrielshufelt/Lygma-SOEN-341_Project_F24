@@ -99,6 +99,10 @@ p {
 	}
 }
 
+.left-navbar {
+	padding-left: 225px;
+}
+
 .section {
 	margin: 0px 30px;
 	max-width: 100%;
@@ -1471,11 +1475,17 @@ footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 15px;
-	margin: 10px 0;
+	margin: 15px;
 	border-radius: 5px;
+	padding: 12px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	opacity: 1;
+
+	h4,
+	p {
+		padding: 0;
+		margin: 0;
+	}
 }
 
 .flash.success {
