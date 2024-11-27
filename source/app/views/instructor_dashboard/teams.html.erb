@@ -1,58 +1,56 @@
-<div class="containers hall-building">
-  <div class="gradient-filter">
-    <header class="section one">
-      <h1>Teams</h1>
-    </header>
-    <section class="instructor-dashboard teams">
-      <table class="table">
-        <thead>
+<div class="containers hall-building left-navbar">
+  <header class="section one">
+    <h1>Teams</h1>
+  </header>
+  <section class="instructor-dashboard teams">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Team Name</th>
+          <th>Description</th>
+          <th>Members</th>
+          <th>Project</th>
+          <th>Capacity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @teams.each do |team| %>
           <tr>
-            <th>Team Name</th>
-            <th>Description</th>
-            <th>Members</th>
-            <th>Project</th>
-            <th>Capacity</th>
-            <th>Actions</th>
+            <td><%= team.name %></td>
+            <td><%= team.description %></td>
+            <td>
+              <% if team.students.count > 0 %>
+                <% team.students.each_with_index do |s, index| %>
+                  <%= s.first_name + ' ' + s.last_name %><%= ', ' unless index == team.students.size - 1 %>
+                <% end %>
+              <% else %>
+                No members.
+              <% end %>
+            </td>
+            <td><%= team.project.title %></td>
+            <td>
+              <span style="<%= 'color: var(--red)' unless team.joinable? %>">
+                <%= team.students.count %>/6
+              </span>
+            </td>
+            <td>
+              <%= link_to edit_team_path(team) do %>
+                <i class="fa-solid fa-pen-to-square"></i>
+              <% end %>
+              <%= link_to team_path(team), method: :delete, data: { turbo_method: :delete } do %>
+                <i class="fa-solid fa-trash"></i>                 
+              <% end %>
+              <%= link_to team do %>
+                <i class="fa-solid fa-eye"></i>
+              <% end %>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <% @teams.each do |team| %>
-            <tr>
-              <td><%= team.name %></td>
-              <td><%= team.description %></td>
-              <td>
-                <% if team.students.count > 0 %>
-                  <% team.students.each_with_index do |s, index| %>
-                    <%= s.first_name + ' ' + s.last_name %><%= ', ' unless index == team.students.size - 1 %>
-                  <% end %>
-                <% else %>
-                  No members.
-                <% end %>
-              </td>
-              <td><%= team.project.title %></td>
-              <td>
-                <span style="<%= 'color: var(--red)' unless team.joinable? %>">
-                  <%= team.students.count %>/6
-                </span>
-              </td>
-              <td>
-                <%= link_to edit_team_path(team) do %>
-                  <i class="fa-solid fa-pen-to-square"></i>
-                <% end %>
-                <%= link_to team_path(team), method: :delete, data: { turbo_method: :delete } do %>
-                  <i class="fa-solid fa-trash"></i>                 
-                <% end %>
-                <%= link_to team do %>
-                 <i class="fa-solid fa-eye"></i>
-                <% end %>
-             </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= button_to new_team_path, class: "button primary", method: :get do %>
-        <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
-      <% end %>
-    </section>
-  </div>
+        <% end %>
+      </tbody>
+    </table>
+    <%= button_to new_team_path, class: "button primary", method: :get do %>
+      <i class="fa-solid fa-plus"></i>&nbsp;Create a new team
+    <% end %>
+  </section>
 </div>
