@@ -111,10 +111,6 @@ class TeamsController < ApplicationController
 
   private
 
-  def role_based_dashboard_path
-    send("teams_#{current_user.role}_dashboard_index_path", course_id: @selected_course.id)
-  end
-
   def perform_member_operation(operation)
     operation == 'add' ? @team.add_student(@user) : @team.remove_student(@user)
   end
