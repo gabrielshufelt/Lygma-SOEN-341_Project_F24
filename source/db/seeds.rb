@@ -113,6 +113,62 @@ student6.update!(
   student_id: '40247006'
 )
 
+# Create additional students not enrolled in any courses
+student7 = User.find_or_initialize_by(email: 'grace@example.com')
+student7.update!(
+  password: 'grace12345',
+  first_name: 'Grace',
+  last_name: 'Hopper',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(2002, 1, 1),
+  student_id: '40247007'
+)
+
+student8 = User.find_or_initialize_by(email: 'heidi@example.com')
+student8.update!(
+  password: 'heidi12345',
+  first_name: 'Heidi',
+  last_name: 'Lamarr',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(2001, 4, 15),
+  student_id: '40247008'
+)
+
+student9 = User.find_or_initialize_by(email: 'ivan@example.com')
+student9.update!(
+  password: 'ivan12345',
+  first_name: 'Ivan',
+  last_name: 'Sutherland',
+  role: 'student',
+  sex: 'male',
+  birth_date: Date.new(2000, 7, 20),
+  student_id: '40247009'
+)
+
+student10 = User.find_or_initialize_by(email: 'judy@example.com')
+student10.update!(
+  password: 'judy12345',
+  first_name: 'Judy',
+  last_name: 'Blume',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(1999, 10, 30),
+  student_id: '40247010'
+)
+
+student11 = User.find_or_initialize_by(email: 'luqman@realratings.com')
+student11.update!(
+  password: 'real3st3va',
+  first_name: 'Luqman',
+  last_name: 'Hakim',
+  role: 'student',
+  sex: 'male',
+  birth_date: Date.new(2000, 10, 31),
+  student_id: '40247011'
+ )
+
 # Assign unique student_id to existing student users without one
 User.where(role: 'student').each do |student|
   student.update(student_id: "40#{rand(1_000_000..9_999_999)}") unless student.student_id.present?
