@@ -117,7 +117,7 @@ class TeamsController < ApplicationController
   def respond_success(operation)
     respond_to do |format|
       format.turbo_stream { render_turbo_streams }
-      format.html { redirect_to edit_team_path(@team), notice: member_success_message(operation) }
+      format.html { redirect_to role_based_dashboard_path, notice: member_success_message(operation) }
       format.json { render json: @team.students, status: :ok }
     end
   end
