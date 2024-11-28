@@ -6,6 +6,13 @@
 	<div class="stats">
 	<h2>Overview for <%= "#{@selected_course.code} - #{@selected_course.title}" %></h2>
 		<div class="row top-stats">
+			<div class="total-students">
+				<h2>
+					<i class="fa-solid fa-user-graduate"></i><br/>
+					<%= @selected_course.students.count %><br/>
+					Students
+				</h2>
+			</div>
 			<div class="total-teams">
 				<h2>
 					<i class="fa-solid fa-users fa-lg"></i><br/>

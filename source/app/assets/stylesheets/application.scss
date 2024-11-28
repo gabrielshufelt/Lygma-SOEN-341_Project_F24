@@ -526,6 +526,9 @@ footer {
 		}
 
 		> div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			flex: 1;
 			text-align: center;
 			margin-right: 10px;
@@ -537,6 +540,10 @@ footer {
 
 		> div:last-child {
 			margin-right: 0;
+		}
+
+		.total-students {
+			background-color: #000;
 		}
 
 		.total-teams {
