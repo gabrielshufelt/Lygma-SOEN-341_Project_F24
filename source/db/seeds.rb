@@ -113,6 +113,62 @@ student6.update!(
   student_id: '40247006'
 )
 
+# Create additional students not enrolled in any courses
+student7 = User.find_or_initialize_by(email: 'grace@example.com')
+student7.update!(
+  password: 'grace12345',
+  first_name: 'Grace',
+  last_name: 'Hopper',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(2002, 1, 1),
+  student_id: '40247007'
+)
+
+student8 = User.find_or_initialize_by(email: 'heidi@example.com')
+student8.update!(
+  password: 'heidi12345',
+  first_name: 'Heidi',
+  last_name: 'Lamarr',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(2001, 4, 15),
+  student_id: '40247008'
+)
+
+student9 = User.find_or_initialize_by(email: 'ivan@example.com')
+student9.update!(
+  password: 'ivan12345',
+  first_name: 'Ivan',
+  last_name: 'Sutherland',
+  role: 'student',
+  sex: 'male',
+  birth_date: Date.new(2000, 7, 20),
+  student_id: '40247009'
+)
+
+student10 = User.find_or_initialize_by(email: 'judy@example.com')
+student10.update!(
+  password: 'judy12345',
+  first_name: 'Judy',
+  last_name: 'Blume',
+  role: 'student',
+  sex: 'female',
+  birth_date: Date.new(1999, 10, 30),
+  student_id: '40247010'
+)
+
+student11 = User.find_or_initialize_by(email: 'luqman@realratings.com')
+student11.update!(
+  password: 'real3st3va',
+  first_name: 'Luqman',
+  last_name: 'Hakim',
+  role: 'student',
+  sex: 'male',
+  birth_date: Date.new(2000, 10, 31),
+  student_id: '40247011'
+ )
+
 # Assign unique student_id to existing student users without one
 User.where(role: 'student').each do |student|
   student.update(student_id: "40#{rand(1_000_000..9_999_999)}") unless student.student_id.present?
@@ -137,7 +193,7 @@ course3.update!(
 )
 
 # Students enrolling in courses
-course1.enroll([student1, student2, student5, student6])
+course1.enroll([student1, student2, student3, student4, student5, student6])
 course2.enroll([student2, student4, student6])
 course3.enroll([student1, student2, student3, student4, student5, student6])
 
@@ -163,12 +219,6 @@ Evaluation.create!(
     { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 1.month.ago + 1.day, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.8, conceptual_rating: 4.6, practical_rating: 4.7, work_ethic_rating: 4.9, comment: 'Nice contribution!' },
     { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'completed', date_completed: 1.month.ago + 2.days, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.5, practical_rating: 5.0, work_ethic_rating: 5.2, comment: 'Good effort!' },
     { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 15.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 4.7, conceptual_rating: 4.8, practical_rating: 4.9, work_ethic_rating: 5.0, comment: 'Solid work!' },
-    { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 10.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 3.9, conceptual_rating: 4.0, practical_rating: 4.1, work_ethic_rating: 4.2, comment: 'Needs more focus!' },
-    { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 7.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 6.5, conceptual_rating: 6.7, practical_rating: 6.8, work_ethic_rating: 7.0, comment: 'Outstanding!' },
-    { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 2.days.ago, project_id: project1.id, team_id: team1.id, cooperation_rating: 5.3, conceptual_rating: 5.5, practical_rating: 5.7, work_ethic_rating: 5.9, comment: 'Consistent and reliable!' },
-    { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'completed', date_completed: 14.days.ago, project_id: project2.id, team_id: team1.id, cooperation_rating: 5.0, conceptual_rating: 5.2, practical_rating: 5.4, work_ethic_rating: 5.6, comment: 'Continued improvement!'},
-    { evaluator_id: student3.id, evaluatee_id: student1.id, status: 'completed', date_completed: 12.days.ago, project_id: project2.id, team_id: team1.id, cooperation_rating: 5.5, conceptual_rating: 5.7, practical_rating: 5.8, work_ethic_rating: 6.0, comment: 'Great progress from last sprint!'},
-    { evaluator_id: student4.id, evaluatee_id: student1.id, status: 'completed', date_completed: 10.days.ago, project_id: project2.id, team_id: team1.id, cooperation_rating: 5.2, conceptual_rating: 5.4, practical_rating: 5.6, work_ethic_rating: 5.8, comment: 'Much better teamwork this sprint!'},
     { evaluator_id: student5.id, evaluatee_id: student1.id, status: 'completed', date_completed: 8.days.ago, project_id: project2.id, team_id: team1.id, cooperation_rating: 6.7, conceptual_rating: 6.8, practical_rating: 6.9, work_ethic_rating: 7.0, comment: 'Exceptional contribution this sprint!'},
     { evaluator_id: student6.id, evaluatee_id: student1.id, status: 'completed', date_completed: 6.days.ago, project_id: project2.id, team_id: team1.id, cooperation_rating: 5.8, conceptual_rating: 6.0, practical_rating: 6.2, work_ethic_rating: 6.4, comment: 'Shows great leadership qualities!'},
     { evaluator_id: student2.id, evaluatee_id: student1.id, status: 'pending', project_id: project2.id, team_id: team1.id },

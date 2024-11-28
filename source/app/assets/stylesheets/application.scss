@@ -507,6 +507,12 @@ footer {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+
+		> h2 {
+			font-weight: bold;
+			font-size: 2rem;
+			margin: 1em 0;
+		}
 	}
 
 	.row {
@@ -520,6 +526,9 @@ footer {
 		}
 
 		> div {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			flex: 1;
 			text-align: center;
 			margin-right: 10px;
@@ -531,6 +540,10 @@ footer {
 
 		> div:last-child {
 			margin-right: 0;
+		}
+
+		.total-students {
+			background-color: #000;
 		}
 
 		.total-teams {
@@ -1471,6 +1484,16 @@ footer {
 		padding: 20px;
 	}
 }
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+  
 .flash {
 	display: flex;
 	align-items: center;
@@ -1480,12 +1503,17 @@ footer {
 	padding: 12px;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	opacity: 1;
+	transition: opacity 0.5s ease;
 
 	h4,
 	p {
 		padding: 0;
 		margin: 0;
 	}
+}
+
+.flash.fade-out {
+	animation: fadeOut 0.5s ease forwards;
 }
 
 .flash.success {
@@ -1526,4 +1554,90 @@ footer {
 	border: none;
 	font-size: 20px;
 	cursor: pointer;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal.show {
+  display: block !important;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.upload-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-form .form-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.upload-form .form-control {
+  padding: 10px;
+  border: 1px solid var(--light-gray);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.upload-form .button {
+  align-self: flex-end;
+}
+
+.button.secondary {
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+  border: 1px solid var(--dark-gray);
+}
+
+.button.secondary:hover {
+  background-color: var(--lighter-gray);
+  color: var(--dark-gray);
 }

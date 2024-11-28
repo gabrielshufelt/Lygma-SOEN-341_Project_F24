@@ -9,6 +9,11 @@
 
 <script>
   setTimeout(() => {
-    document.querySelector('.flash.error').remove();
-  }, 10000);
+    const flash = document.querySelector('.flash.error');
+    if (flash) {
+      flash.classList.add('fade-out');
+      
+      flash.addEventListener('animationend', () => flash.remove());
+    }
+  }, 5000);
 </script>

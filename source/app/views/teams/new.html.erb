@@ -1,4 +1,5 @@
+  <%= turbo_page_requires_reload %>
   <div class="title">
   <h1>New team</h1>
   </div>
-  <%= render "form", team: @team %>
+  <%= render "form", team: @team, project: @project %>

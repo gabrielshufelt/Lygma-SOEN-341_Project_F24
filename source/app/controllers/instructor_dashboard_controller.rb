@@ -81,6 +81,21 @@ class InstructorDashboardController < ApplicationController
     handle_service_response(result)
   end
 
+  def upload_roster
+    @selected_course = Course.find(params[:course_id])
+    result = RosterUploadService.new(params[:csv_file], @selected_course).call
+    handle_roster_upload_result(result)
+    redirect_to teams_instructor_dashboard_index_path(course_id: @selected_course.id)
+  end
+
+  def handle_roster_upload_result(result)
+    if result[:success]
+      flash[:notice] = "Roster uploaded successfully. #{result[:added]} students added."
+    else
+      flash[:alert] = "Failed to upload roster. Errors: #{result[:errors].join(', ')}"
+    end
+  end
+
   private
 
   def set_selected_course
