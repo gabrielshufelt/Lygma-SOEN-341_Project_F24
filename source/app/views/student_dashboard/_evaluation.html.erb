@@ -1,4 +1,4 @@
-<div class="upcoming-evaluation">
+<div class="upcoming-evaluation" style="<%= 'background-color: #ff9999' if upcoming_evaluation[:project].due_date < Date.today %>">
 	<h3> <%= upcoming_evaluation[:project].title %></h3>
 	<div class="upcoming-info">
 		<div class="clock-icon"><i class="fa-solid fa-clock"></i></div>
